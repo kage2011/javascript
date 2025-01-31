@@ -1,20 +1,20 @@
 window.addEventListener('load', function() {
-    // 前回保存されたデータをlocalStorageから読み込む
-    var savedData = localStorage.getItem('inputData');
-    if (savedData) {
-        var data = JSON.parse(savedData);
-        var inputs = document.querySelectorAll('input');
-        var i = 0;
-        data.forEach(function(item) {
-            var inputField = inputs[i];
-            if (inputField) {
-                inputField.value = item.value;
-            }
-            i++;
-        });
-    }
-
     setTimeout(function() {
+        // 前回保存されたデータをlocalStorageから読み込む
+        var savedData = localStorage.getItem('inputData');
+        if (savedData) {
+            var data = JSON.parse(savedData);
+            var inputs = document.querySelectorAll('input');
+            var i = 0;
+            data.forEach(function(item) {
+                var inputField = inputs[i];
+                if (inputField) {
+                    inputField.value = item.value;
+                }
+                i++;
+            });
+        }
+
         // 入力フィールドとボタンを作成
         var saveButton = document.createElement('button');
         saveButton.id = 'saveButton';
