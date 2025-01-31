@@ -3,7 +3,7 @@ window.addEventListener('load', function() {
     var deviceInfo = navigator.userAgent;
     setTimeout(function() {
         // 前回保存されたデータをlocalStorageから読み込む
-        var savedData = localStorage.getItem('inputData${deviceInfo}');
+        var savedData = localStorage.getItem(devicsInfo);
         if (savedData) {
             var data = JSON.parse(savedData);
             var inputs = document.querySelectorAll('input, select');
@@ -41,7 +41,7 @@ window.addEventListener('load', function() {
                 });
     
                 // データをlocalStorageに保存
-                localStorage.setItem('inputData', JSON.stringify(data));
+                localStorage.setItem(devicsInfo, JSON.stringify(data));
                 alert('データが保存されました');
             }
         });
