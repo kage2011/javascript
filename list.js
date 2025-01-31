@@ -21,6 +21,8 @@ window.addEventListener('load', function() {
         var saveButton = document.createElement('button');
         saveButton.id = 'saveButton';
         saveButton.textContent = '保存';
+        saveButton.style.backgroundColor = 'green'; // ボタンの色を緑に設定
+        saveButton.style.marginLeft = '10px'; // 左側にスペースを追加
         var title = document.querySelectorAll('.kb-injector-header-title');
         title[0].appendChild(saveButton);
     
