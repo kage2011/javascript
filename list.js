@@ -1,4 +1,4 @@
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('load', function() {
     // 入力フィールドとボタンを作成
     var saveButton = document.createElement('button');
     saveButton.id = 'saveButton';
