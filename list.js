@@ -23,7 +23,7 @@ window.addEventListener('load', function() {
         saveButton.textContent = '保存';
         saveButton.style.backgroundColor = 'lime'; // ボタンの色を緑に設定
         saveButton.style.marginLeft = '10px'; // 左側にスペースを追加
-        saveButton.style.margintop = '10px'; // スペースを追加
+        saveButton.style.verticalAlign = 'text-bottom';
         var title = document.querySelectorAll('.kb-injector-header-title');
         title[0].appendChild(saveButton);
     
