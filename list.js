@@ -37,5 +37,5 @@ window.addEventListener('load', function() {
             window.URL.revokeObjectURL(link.href);
         });
         
-    }, 1000);
+    }, 10000);
 });
