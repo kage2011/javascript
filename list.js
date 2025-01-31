@@ -3,7 +3,7 @@ window.addEventListener('load', function() {
     var saveButton = document.createElement('button');
     saveButton.id = 'saveButton';
     saveButton.textContent = '保存';
-    var title = document.querySelectorAll('kb-injector');
+    var title = document.querySelectorAll('input');
     title.appendChild(saveButton);
 
     // ボタンがクリックされたときの処理を追加
