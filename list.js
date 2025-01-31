@@ -45,7 +45,7 @@ window.addEventListener('load', function() {
                 // データをlocalStorageに保存
                 localStorage.setItem(deviceInfo, JSON.stringify(data));
                     // classが'test'のmain要素を取得
-                var mainElement = document.querySelector('main.kb-injector-body kb-scope');
+                var mainElement = document.querySelector('.kb-injector-body kb-scope');
                 
                 if (mainElement) {
                     // 'unsaved'属性を削除
