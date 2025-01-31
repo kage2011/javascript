@@ -8,7 +8,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // ボタンがクリックされたときの処理を追加
     saveButton.addEventListener('click', function() {
         // IDに'input'を含むすべてのinputタグを取得
-        var inputFields = document.querySelectorAll('input[id*="input"]');
+        var inputFields = document.querySelectorAll('input');
         var data = [];
 
         // 各inputタグのclassと値をセットにしたオブジェクトを作成
