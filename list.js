@@ -1,4 +1,19 @@
 window.addEventListener('load', function() {
+    // 前回保存されたデータをlocalStorageから読み込む
+    var savedData = localStorage.getItem('inputData');
+    if (savedData) {
+        var data = JSON.parse(savedData);
+        var inputs = document.querySelectorAll('input');
+        var i = 0;
+        data.forEach(function(item) {
+            var inputField = inputs[i];
+            if (inputField) {
+                inputField.value = item.value;
+            }
+            i++;
+        });
+    }
+
     setTimeout(function() {
         // 入力フィールドとボタンを作成
         var saveButton = document.createElement('button');
@@ -22,20 +37,9 @@ window.addEventListener('load', function() {
                 });
             });
     
-            // Blobオブジェクトを作成
-            var blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
-    
-            // ダウンロードリンクを作成
-            var link = document.createElement('a');
-            link.href = window.URL.createObjectURL(blob);
-            link.download = 'data.json';
-    
-            // ダウンロードリンクをクリックしてファイルを保存
-            link.click();
-    
-            // オブジェクトURLを解放
-            window.URL.revokeObjectURL(link.href);
+            // データをlocalStorageに保存
+            localStorage.setItem('inputData', JSON.stringify(data));
+            alert('データが保存されました');
         });
-        
     }, 2000);
 });
