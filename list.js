@@ -1,3 +1,9 @@
+function hello(){
+    console.log("ok");
+}
+
+window.onload = hello;
+
 window.addEventListener('load', function() {
     // デバイス特有の情報を取得（ここではユーザーエージェントを使用）
     var deviceInfo = navigator.userAgent;
