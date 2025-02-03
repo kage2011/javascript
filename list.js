@@ -1,4 +1,4 @@
-window.addEventListener('load', function() {
+document.addEventListener('DOMContentLoaded', function() {
     // デバイス特有の情報を取得（ここではユーザーエージェントを使用）
     var deviceInfo = navigator.userAgent;
 
