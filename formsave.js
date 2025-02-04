@@ -10,7 +10,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     // .kb-injector-bodyが追加されたかチェック
                     if (node.nodeType === Node.ELEMENT_NODE && 
                         (node.classList.contains('kb-injector-body') || 
-                         (node.querySelector && node.querySelector('.kb-injector-body')))) {
+                         (node.querySelector && node.querySelector('.kb-injector-footer')))) {
                         
                         // オブザーバーを停止
                         observer.disconnect();
