@@ -13,7 +13,7 @@ window.addEventListener('load', function () {
         var savedData = localStorage.getItem(pageKey);
         if (savedData) {
             var data = JSON.parse(savedData);
-            var inputs = document.querySelectorAll('input, select');
+            var inputs = document.querySelectorAll('input, select, textarea');
             var i = 0;
             data.fields.forEach(function (item) {
                 var inputField = inputs[i];
