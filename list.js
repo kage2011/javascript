@@ -1,9 +1,3 @@
-function hello() {
-    console.log("ok");
-}
-
-window.onload = hello;
-
 window.addEventListener('load', function () {
     // 現在のページのURLを取得（キーとして使用）
     var pageKey = window.location.href;
@@ -37,9 +31,51 @@ window.addEventListener('load', function () {
         saveButton.style.backgroundColor = 'lime'; // ボタンの色を緑に設定
         saveButton.style.marginLeft = '10px'; // 左側にスペースを追加
         saveButton.style.verticalAlign = 'text-bottom';
+window.addEventListener('load', function () {
+    // 現在のページのURLを取得（キーとして使用）
+    var pageKey = window.location.href;
+
+    setTimeout(function () {
+        // 前回保存されたデータをlocalStorageから読み込む
+        var savedData = localStorage.getItem(pageKey);
+        if (savedData) {
+            var data = JSON.parse(savedData);
+            var inputs = document.querySelectorAll('input, select, textarea');
+            var i = 0;
+            data.fields.forEach(function (item) {
+                var inputField = inputs[i];
+                if (inputField) {
+                    if (inputField.type === 'checkbox' || inputField.type === 'radio' ) {
+                        // checkboxの場合はchecked状態を復元
+                        inputField.checked = item.checked;
+                    } else {
+                        // それ以外の場合はvalueを復元
+                        inputField.value = item.value;
+                    }
+                }
+                i++;
+            });
+        }
+
+        // 入力フィールドとボタンを作成
+        var saveButton = document.createElement('button');
+        saveButton.id = 'saveButton';
+        saveButton.textContent = '保存';
+        saveButton.style.backgroundColor = 'lime'; // ボタンの色を緑に設定
+        saveButton.style.marginLeft = '10px'; // 左側にスペースを追加
+        saveButton.style.verticalAlign = 'text-bottom';
+        
+        var clearButton = document.createElement('button');
+        clearButton.id = 'clearButton';
+        clearButton.textContent = 'クリア';
+        clearButton.style.backgroundColor = 'red'; // ボタンの色を赤に設定
+        clearButton.style.marginLeft = '10px'; // 左側にスペースを追加
+        clearButton.style.verticalAlign = 'text-bottom';
+        
         var title = document.querySelectorAll('.kb-injector-header-title');
         if (title[0]) {
             title[0].appendChild(saveButton);
+            title[0].appendChild(clearButton);
         }
         
         // kb-injector-buttonクラスを持つすべての要素を取得
@@ -48,8 +84,7 @@ window.addEventListener('load', function () {
         // 各ボタンにクリックイベントを追加
         buttons.forEach(function (button) {
             button.addEventListener('click', function () {
-                console.log('kb-injector-buttonがクリックされました:', button);
-                // 必要に応じて他の処理をここに追加
+                localStorage.removeItem(pageKey);
             });
         });
 
@@ -93,6 +128,18 @@ window.addEventListener('load', function () {
                 alert('データが保存されました');
             } else {
                 alert('保存がキャンセルされました');
+            }
+        });
+        
+        // クリアボタンがクリックされたときの処理を追加
+        clearButton.addEventListener('click', function () {
+            var confirmClear = confirm('現在のページの保存データをクリアしますか？');
+            if (confirmClear) {
+                localStorage.removeItem(pageKey);
+                alert('保存データがクリアされました');
+                window.location.reload(); // ページをリロードして入力フィールドを初期化
+            } else {
+                alert('クリアがキャンセルされました');
             }
         });
     }, 2000);
