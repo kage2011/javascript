@@ -12,7 +12,7 @@ window.addEventListener('load', function () {
             data.fields.forEach(function (item) {
                 var inputField = inputs[i];
                 if (inputField) {
-                    if (inputField.type === 'checkbox' || inputField.type === 'radio' ) {
+                    if (inputField.type === 'checkbox' || inputField.type === 'radio') {
                         // checkboxの場合はchecked状態を復元
                         inputField.checked = item.checked;
                     } else {
@@ -24,63 +24,31 @@ window.addEventListener('load', function () {
             });
         }
 
-        // 入力フィールドとボタンを作成
+        // 保存ボタンを作成
         var saveButton = document.createElement('button');
         saveButton.id = 'saveButton';
         saveButton.textContent = '保存';
         saveButton.style.backgroundColor = 'lime'; // ボタンの色を緑に設定
         saveButton.style.marginLeft = '10px'; // 左側にスペースを追加
         saveButton.style.verticalAlign = 'text-bottom';
-window.addEventListener('load', function () {
-    // 現在のページのURLを取得（キーとして使用）
-    var pageKey = window.location.href;
 
-    setTimeout(function () {
-        // 前回保存されたデータをlocalStorageから読み込む
-        var savedData = localStorage.getItem(pageKey);
-        if (savedData) {
-            var data = JSON.parse(savedData);
-            var inputs = document.querySelectorAll('input, select, textarea');
-            var i = 0;
-            data.fields.forEach(function (item) {
-                var inputField = inputs[i];
-                if (inputField) {
-                    if (inputField.type === 'checkbox' || inputField.type === 'radio' ) {
-                        // checkboxの場合はchecked状態を復元
-                        inputField.checked = item.checked;
-                    } else {
-                        // それ以外の場合はvalueを復元
-                        inputField.value = item.value;
-                    }
-                }
-                i++;
-            });
-        }
-
-        // 入力フィールドとボタンを作成
-        var saveButton = document.createElement('button');
-        saveButton.id = 'saveButton';
-        saveButton.textContent = '保存';
-        saveButton.style.backgroundColor = 'lime'; // ボタンの色を緑に設定
-        saveButton.style.marginLeft = '10px'; // 左側にスペースを追加
-        saveButton.style.verticalAlign = 'text-bottom';
-        
+        // クリアボタンを作成
         var clearButton = document.createElement('button');
         clearButton.id = 'clearButton';
         clearButton.textContent = 'クリア';
         clearButton.style.backgroundColor = 'red'; // ボタンの色を赤に設定
         clearButton.style.marginLeft = '10px'; // 左側にスペースを追加
         clearButton.style.verticalAlign = 'text-bottom';
-        
+
         var title = document.querySelectorAll('.kb-injector-header-title');
         if (title[0]) {
             title[0].appendChild(saveButton);
             title[0].appendChild(clearButton);
         }
-        
+
         // kb-injector-buttonクラスを持つすべての要素を取得
         var buttons = document.querySelectorAll('.kb-injector-button');
-    
+
         // 各ボタンにクリックイベントを追加
         buttons.forEach(function (button) {
             button.addEventListener('click', function () {
@@ -88,7 +56,7 @@ window.addEventListener('load', function () {
             });
         });
 
-        // ボタンがクリックされたときの処理を追加
+        // 保存ボタンがクリックされたときの処理を追加
         saveButton.addEventListener('click', function () {
             // 警告を表示してユーザーに確認
             var confirmSave = confirm('共有のデバイス（職場のパソコンなど）では保存したデータが第三者に見られる危険があります。それでも保存しますか？');
@@ -102,7 +70,7 @@ window.addEventListener('load', function () {
 
                 // 各inputタグのclassと値をセットにしたオブジェクトを作成
                 inputFields.forEach(function (inputField) {
-                    if (inputField.type === 'checkbox' || inputField.type === 'radio' ) {
+                    if (inputField.type === 'checkbox' || inputField.type === 'radio') {
                         // checkboxの場合はchecked状態を保存
                         data.fields.push({
                             checked: inputField.checked
@@ -130,7 +98,7 @@ window.addEventListener('load', function () {
                 alert('保存がキャンセルされました');
             }
         });
-        
+
         // クリアボタンがクリックされたときの処理を追加
         clearButton.addEventListener('click', function () {
             var confirmClear = confirm('現在のページの保存データをクリアしますか？');
