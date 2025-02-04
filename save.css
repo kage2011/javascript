@@ -1,22 +1,22 @@
-.button {
-  background: linear-gradient(to right, #ff7e5f, #feb47b); /* グラデーション背景 */
+#saveButton {
+  background: linear-gradient(to right, #4CAF50, #81C784); /* 緑系のグラデーション背景 */
   border: none; /* 枠線なし */
-  border-radius: 12px; /* 丸みを持たせる */
+  border-radius: 8px; /* 角を丸くする */
   color: white; /* 文字色を白に */
   font-size: 16px; /* フォントサイズ */
   font-weight: bold; /* 太字 */
-  padding: 10px 20px; /* 余白 */
+  padding: 10px 20px; /* 余白を追加 */
   cursor: pointer; /* カーソルをポインターに */
-  transition: transform 0.2s, box-shadow 0.2s; /* ホバーアニメーション */
+  transition: transform 0.2s, box-shadow 0.2s; /* ホバー時のアニメーション */
   box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* シャドウを追加 */
 }
 
-.button:hover {
+#saveButton:hover {
   transform: scale(1.05); /* ホバー時に拡大 */
-  box-shadow: 0px 6px 8px rgba(0, 0, 0, 0.2); /* シャドウを強調 */
+  box-shadow: 0px 6px 8px rgba(0, 0, 0, 0.2); /* ホバー時のシャドウを強調 */
 }
 
-.button:active {
+#saveButton:active {
   transform: scale(0.95); /* クリック時に縮小 */
-  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1); /* シャドウを減少 */
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1); /* クリック時のシャドウを減少 */
 }
