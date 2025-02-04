@@ -1,0 +1,22 @@
+.button {
+  background: linear-gradient(to right, #ff7e5f, #feb47b); /* グラデーション背景 */
+  border: none; /* 枠線なし */
+  border-radius: 12px; /* 丸みを持たせる */
+  color: white; /* 文字色を白に */
+  font-size: 16px; /* フォントサイズ */
+  font-weight: bold; /* 太字 */
+  padding: 10px 20px; /* 余白 */
+  cursor: pointer; /* カーソルをポインターに */
+  transition: transform 0.2s, box-shadow 0.2s; /* ホバーアニメーション */
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* シャドウを追加 */
+}
+
+.button:hover {
+  transform: scale(1.05); /* ホバー時に拡大 */
+  box-shadow: 0px 6px 8px rgba(0, 0, 0, 0.2); /* シャドウを強調 */
+}
+
+.button:active {
+  transform: scale(0.95); /* クリック時に縮小 */
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1); /* シャドウを減少 */
+}
