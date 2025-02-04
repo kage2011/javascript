@@ -1,34 +1,43 @@
 window.addEventListener('load', function () {
+    // 現在のページのURLを取得（キーとして使用）
     var pageKey = window.location.href;
 
     setTimeout(function () {
+        // 前回保存されたデータをlocalStorageから読み込む
         var savedData = localStorage.getItem(pageKey);
         if (savedData) {
             var data = JSON.parse(savedData);
+            var inputs = document.querySelectorAll('input, select, textarea');
+            var i = 0;
             data.fields.forEach(function (item) {
-                var fieldElement = document.querySelector(`[field-id="${item.fieldId}"] input, [field-id="${item.fieldId}"] select, [field-id="${item.fieldId}"] textarea`);
-                if (fieldElement) {
-                    if (fieldElement.type === 'checkbox' || fieldElement.type === 'radio') {
-                        fieldElement.checked = item.checked;
+                var inputField = inputs[i];
+                if (inputField) {
+                    if (inputField.type === 'checkbox' || inputField.type === 'radio') {
+                        // checkboxの場合はchecked状態を復元
+                        inputField.checked = item.checked;
                     } else {
-                        fieldElement.value = item.value;
+                        // それ以外の場合はvalueを復元
+                        inputField.value = item.value;
                     }
                 }
+                i++;
             });
         }
 
+        // 保存ボタンを作成
         var saveButton = document.createElement('button');
         saveButton.id = 'saveButton';
         saveButton.textContent = '保存';
-        saveButton.style.backgroundColor = 'lime';
-        saveButton.style.marginLeft = '10px';
+        saveButton.style.backgroundColor = 'lime'; // ボタンの色を緑に設定
+        saveButton.style.marginLeft = '10px'; // 左側にスペースを追加
         saveButton.style.verticalAlign = 'text-bottom';
 
+        // クリアボタンを作成
         var clearButton = document.createElement('button');
         clearButton.id = 'clearButton';
         clearButton.textContent = 'クリア';
-        clearButton.style.backgroundColor = 'red';
-        clearButton.style.marginLeft = '10px';
+        clearButton.style.backgroundColor = 'red'; // ボタンの色を赤に設定
+        clearButton.style.marginLeft = '10px'; // 左側にスペースを追加
         clearButton.style.verticalAlign = 'text-bottom';
 
         var title = document.querySelectorAll('.kb-injector-header-title');
@@ -37,55 +46,80 @@ window.addEventListener('load', function () {
             title[0].appendChild(clearButton);
         }
 
-        saveButton.addEventListener('click', function () {
-            var confirmSave = confirm('共有のデバイスではデータが第三者に見られる危険があります。それでも保存しますか？');
-            if (confirmSave) {
-                var data = {
-                    url: pageKey,
-                    fields: []
-                };
+        // kb-injector-buttonクラスを持つすべての要素を取得
+        var buttons = document.querySelectorAll('.kb-injector-button');
 
-                var inputFields = document.querySelectorAll('.kb-field');
-                inputFields.forEach(function (field) {
-                    var fieldId = field.getAttribute('field-id');
-                    var inputField = field.querySelector('input, select, textarea');
-                    if (inputField) {
+        // 各ボタンにクリックイベントを追加
+        buttons.forEach(function (button) {
+            button.addEventListener('click', function () {
+                localStorage.removeItem(pageKey);
+            });
+        });
+
+        // ユーザーエージェントでモバイル端末を確認
+        function isMobile() {
+            return /Mobi/.test(navigator.userAgent); // ユーザーエージェントに'Mobi'が含まれているか
+        }
+
+        if (!isMobile()) {
+            saveButton.disabled = true; // デスクトップの場合は保存ボタンを無効化
+            saveButton.style.opacity = 0.5; // ボタンを半透明に
+        }
+
+        // 保存ボタンがクリックされたときの処理を追加
+        saveButton.addEventListener('click', function () {
+            if (isMobile()) {
+                // 警告を表示してユーザーに確認
+                var confirmSave = confirm('共有のデバイス（職場のパソコンなど）では保存したデータが第三者に見られる危険があります。それでも保存しますか？');
+                if (confirmSave) {
+                    // IDに'input'を含むすべてのinputタグを取得
+                    var inputFields = document.querySelectorAll('input, select, textarea');
+                    var data = {
+                        url: pageKey, // 保存時に現在のページのURLを含む
+                        fields: [] // 入力データを保存
+                    };
+
+                    // 各inputタグのclassと値をセットにしたオブジェクトを作成
+                    inputFields.forEach(function (inputField) {
                         if (inputField.type === 'checkbox' || inputField.type === 'radio') {
+                            // checkboxの場合はchecked状態を保存
                             data.fields.push({
-                                fieldId: fieldId,
                                 checked: inputField.checked
                             });
                         } else {
+                            // それ以外の場合はvalueを保存
                             data.fields.push({
-                                fieldId: fieldId,
                                 value: inputField.value
                             });
                         }
-                    }
-                });
+                    });
 
-                localStorage.setItem(pageKey, JSON.stringify(data));
-                
-                // classが'.kb-injector-body'のmain要素を取得
-                var mainElement = document.querySelector('.kb-injector-body');
-    
-                if (mainElement) {
-                    // 'unsaved'属性を削除
-                    mainElement.removeAttribute('unsaved');
+                    // データをlocalStorageに保存
+                    localStorage.setItem(pageKey, JSON.stringify(data));
+
+                    // classが'test'のmain要素を取得
+                    var mainElement = document.querySelector('.kb-injector-body');
+
+                    if (mainElement) {
+                        // 'unsaved'属性を削除
+                        mainElement.removeAttribute('unsaved');
+                    }
+                    alert('データが保存されました');
+                } else {
+                    alert('保存がキャンセルされました');
                 }
-                
-                alert('データが保存されました');
             } else {
-                alert('保存がキャンセルされました');
+                alert('このデバイスでは保存機能は利用できません。');
             }
         });
 
+        // クリアボタンがクリックされたときの処理を追加
         clearButton.addEventListener('click', function () {
             var confirmClear = confirm('現在のページの保存データをクリアしますか？');
             if (confirmClear) {
                 localStorage.removeItem(pageKey);
                 alert('保存データがクリアされました');
-                window.location.reload();
+                window.location.reload(); // ページをリロードして入力フィールドを初期化
             } else {
                 alert('クリアがキャンセルされました');
             }
