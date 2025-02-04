@@ -1,4 +1,7 @@
 document.addEventListener('DOMContentLoaded', function() {
+    // 現在のページのURLを取得（キーとして使用）
+    var pageKey = window.location.href;
+
     // MutationObserverを作成
     var observer = new MutationObserver(function(mutations) {
         mutations.forEach(function(mutation) {
