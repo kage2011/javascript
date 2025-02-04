@@ -65,6 +65,15 @@ window.addEventListener('load', function () {
                 });
 
                 localStorage.setItem(pageKey, JSON.stringify(data));
+                
+                // classが'.kb-injector-body'のmain要素を取得
+                var mainElement = document.querySelector('.kb-injector-body');
+    
+                if (mainElement) {
+                    // 'unsaved'属性を削除
+                    mainElement.removeAttribute('unsaved');
+                }
+                
                 alert('データが保存されました');
             } else {
                 alert('保存がキャンセルされました');
