@@ -41,6 +41,17 @@ window.addEventListener('load', function () {
         if (title[0]) {
             title[0].appendChild(saveButton);
         }
+        
+        // kb-injector-buttonクラスを持つすべての要素を取得
+        var buttons = document.querySelectorAll('.kb-injector-button');
+    
+        // 各ボタンにクリックイベントを追加
+        buttons.forEach(function (button) {
+            button.addEventListener('click', function () {
+                console.log('kb-injector-buttonがクリックされました:', button);
+                // 必要に応じて他の処理をここに追加
+            });
+        });
 
         // ボタンがクリックされたときの処理を追加
         saveButton.addEventListener('click', function () {
