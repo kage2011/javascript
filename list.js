@@ -18,7 +18,13 @@ window.addEventListener('load', function () {
             data.fields.forEach(function (item) {
                 var inputField = inputs[i];
                 if (inputField) {
-                    inputField.value = item.value; // 入力値を復元
+                    if (inputField.type === 'checkbox') {
+                        // checkboxの場合はchecked状態を復元
+                        inputField.checked = item.checked;
+                    } else {
+                        // それ以外の場合はvalueを復元
+                        inputField.value = item.value;
+                    }
                 }
                 i++;
             });
@@ -50,9 +56,17 @@ window.addEventListener('load', function () {
 
                 // 各inputタグのclassと値をセットにしたオブジェクトを作成
                 inputFields.forEach(function (inputField) {
-                    data.fields.push({
-                        value: inputField.value
-                    });
+                    if (inputField.type === 'checkbox') {
+                        // checkboxの場合はchecked状態を保存
+                        data.fields.push({
+                            checked: inputField.checked
+                        });
+                    } else {
+                        // それ以外の場合はvalueを保存
+                        data.fields.push({
+                            value: inputField.value
+                        });
+                    }
                 });
 
                 // データをlocalStorageに保存
