@@ -18,7 +18,7 @@ window.addEventListener('load', function () {
             data.fields.forEach(function (item) {
                 var inputField = inputs[i];
                 if (inputField) {
-                    if (inputField.type === 'checkbox') {
+                    if (inputField.type === 'checkbox' || inputField.type === 'radio' ) {
                         // checkboxの場合はchecked状態を復元
                         inputField.checked = item.checked;
                     } else {
@@ -56,7 +56,7 @@ window.addEventListener('load', function () {
 
                 // 各inputタグのclassと値をセットにしたオブジェクトを作成
                 inputFields.forEach(function (inputField) {
-                    if (inputField.type === 'checkbox') {
+                    if (inputField.type === 'checkbox' || inputField.type === 'radio' ) {
                         // checkboxの場合はchecked状態を保存
                         data.fields.push({
                             checked: inputField.checked
