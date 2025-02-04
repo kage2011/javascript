@@ -66,7 +66,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
                         // ユーザーエージェントでモバイル端末を確認
                         function isMobile() {
-                            return /Mobi/.test(navigator.userAgent);
+                            // return /Mobi/.test(navigator.userAgent);
+                            return true;
                         }
 
                         if (!isMobile()) {
