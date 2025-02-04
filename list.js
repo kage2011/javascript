@@ -42,7 +42,7 @@ window.addEventListener('load', function () {
             var confirmSave = confirm('共有のデバイス（職場のパソコンなど）では保存したデータが第三者に見られる危険があります。それでも保存しますか？');
             if (confirmSave) {
                 // IDに'input'を含むすべてのinputタグを取得
-                var inputFields = document.querySelectorAll('input, select');
+                var inputFields = document.querySelectorAll('input, select, textarea');
                 var data = {
                     url: pageKey, // 保存時に現在のページのURLを含む
                     fields: [] // 入力データを保存
