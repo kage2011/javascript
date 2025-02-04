@@ -1,8 +1,3 @@
-function hello(){
-    console.log("ok");
-}
-window.onload = hello;
-
 document.addEventListener('DOMContentLoaded', function() {
     // MutationObserverを作成
     var observer = new MutationObserver(function(mutations) {
