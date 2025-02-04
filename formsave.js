@@ -9,7 +9,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 mutation.addedNodes.forEach(function(node) {
                     // .kb-injector-bodyが追加されたかチェック
                     if (node.nodeType === Node.ELEMENT_NODE && 
-                        (node.classList.contains('kb-injector-body') || 
+                        (node.classList.contains('kb-injector-footer') || 
                          (node.querySelector && node.querySelector('.kb-injector-footer')))) {
                         
                         // オブザーバーを停止
