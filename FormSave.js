@@ -34,7 +34,7 @@ window.addEventListener('load', function () {
         var params = new URLSearchParams(window.location.search);
 
         // 使用例
-        const encryptedText = params; // Node-REDから取得した暗号化データをここに設定
+        const encryptedText = params.get(name); // Node-REDから取得した暗号化データをここに設定
         const password = 'og-ogsas'; // 使用したパスワードを設定
     
         try {
