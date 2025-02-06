@@ -20,7 +20,14 @@ window.addEventListener('load', function () {
             { iv: iv, mode: CryptoJS.mode.CBC, padding: CryptoJS.pad.Pkcs7 }
         );
     
-        return decryptedBytes.toString(CryptoJS.enc.Utf8);
+        const decryptedText = decryptedBytes.toString(CryptoJS.enc.Utf8);
+        
+        try {
+            return JSON.parse(decryptedText); // ここでJSONをパースする
+        } catch (e) {
+            console.error("JSONパースに失敗:", e);
+            return null;
+        }
     }
     // 現在のページのURLを取得（キーとして使用）
     var pageKey = window.location.href;
