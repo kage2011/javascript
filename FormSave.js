@@ -5,6 +5,10 @@ document.head.appendChild(script);
 
 window.addEventListener('load', function () {
     function decrypt(encryptedText, password) {
+        
+        // URLエンコードをデコード
+        encryptedText = decodeURIComponent(encryptedText);
+
         const parts = encryptedText.split(':');
         if (parts.length !== 2) {
             throw new Error('無効なデータ形式です。');
