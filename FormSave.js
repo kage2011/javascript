@@ -5,10 +5,7 @@ document.head.appendChild(script);
 
 window.addEventListener('load', function () {
     function decrypt(encryptedText, password) {
-        
-        // URLエンコードをデコード
-        encryptedText = decodeURIComponent(encryptedText);
-
+    
         const parts = encryptedText.split(':');
         if (parts.length !== 2) {
             throw new Error('無効なデータ形式です。');
@@ -26,12 +23,7 @@ window.addEventListener('load', function () {
     
         const decryptedText = decryptedBytes.toString(CryptoJS.enc.Utf8);
         
-        try {
-            return JSON.parse(decryptedText); // ここでJSONをパースする
-        } catch (e) {
-            console.error("JSONパースに失敗:", e);
-            return null;
-        }
+        return decryptedText;
     }
     // 現在のページのURLを取得（キーとして使用）
     var pageKey = window.location.href;
