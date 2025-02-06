@@ -26,11 +26,21 @@ window.addEventListener('load', function () {
                 { iv: iv, mode: CryptoJS.mode.CBC, padding: CryptoJS.pad.Pkcs7 }
             );
     
-            const decryptedText = decryptedBytes.toString(CryptoJS.enc.Utf8);
+            let decryptedText = decryptedBytes.toString(CryptoJS.enc.Utf8);
             console.log("🔹 復号後の文字列:", decryptedText);
     
-            const decryptedData = JSON.parse(decryptedText);
-            console.log("🔹 JSONパース後のデータ:", decryptedData);
+            // 修正: URLデコード
+            decryptedText = decodeURIComponent(decryptedText);
+            console.log("🔹 URLデコード後の文字列:", decryptedText);
+    
+            // 修正: クエリ文字列をオブジェクトに変換
+            const params = new URLSearchParams(decryptedText);
+            const decryptedData = {};
+            params.forEach((value, key) => {
+                decryptedData[key] = value;
+            });
+    
+            console.log("🔹 パース後のデータ:", decryptedData);
             
             return decryptedData;
         } catch (error) {
