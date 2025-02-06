@@ -5,25 +5,38 @@ document.head.appendChild(script);
 
 window.addEventListener('load', function () {
     function decrypt(encryptedText, password) {
+        try {
+            console.log("🔹 URLエンコードされた暗号化データ:", encryptedText);
+            
+            encryptedText = decodeURIComponent(encryptedText);
+            console.log("🔹 デコード後のデータ:", encryptedText);
     
-        const parts = encryptedText.split(':');
-        if (parts.length !== 2) {
-            throw new Error('無効なデータ形式です。');
+            const parts = encryptedText.split(':');
+            if (parts.length !== 2) {
+                throw new Error('無効なデータ形式です。');
+            }
+    
+            const iv = CryptoJS.enc.Hex.parse(parts[0]);
+            const encryptedData = CryptoJS.enc.Hex.parse(parts[1]);
+            const key = CryptoJS.SHA256(password); // AESキーを生成
+    
+            const decryptedBytes = CryptoJS.AES.decrypt(
+                { ciphertext: encryptedData },
+                key,
+                { iv: iv, mode: CryptoJS.mode.CBC, padding: CryptoJS.pad.Pkcs7 }
+            );
+    
+            const decryptedText = decryptedBytes.toString(CryptoJS.enc.Utf8);
+            console.log("🔹 復号後の文字列:", decryptedText);
+    
+            const decryptedData = JSON.parse(decryptedText);
+            console.log("🔹 JSONパース後のデータ:", decryptedData);
+            
+            return decryptedData;
+        } catch (error) {
+            console.error("❌ 復号エラー:", error);
+            return null;
         }
-    
-        const iv = CryptoJS.enc.Hex.parse(parts[0]);
-        const encryptedData = CryptoJS.enc.Hex.parse(parts[1]);
-        const key = CryptoJS.SHA256(password); // パスワードからAESキーを生成
-    
-        const decryptedBytes = CryptoJS.AES.decrypt(
-            { ciphertext: encryptedData },
-            key,
-            { iv: iv, mode: CryptoJS.mode.CBC, padding: CryptoJS.pad.Pkcs7 }
-        );
-    
-        const decryptedText = decryptedBytes.toString(CryptoJS.enc.Utf8);
-        
-        return decryptedText;
     }
     // 現在のページのURLを取得（キーとして使用）
     var pageKey = window.location.href;
