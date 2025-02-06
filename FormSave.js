@@ -37,7 +37,7 @@ window.addEventListener('load', function () {
             const params = new URLSearchParams(decryptedText);
             const decryptedData = {};
             params.forEach((value, key) => {
-                decryptedData[key] = value;
+                decryptedData[key] = value.replace(/^"|"$/g, ''); // 余計な " を削除
             });
     
             console.log("🔹 パース後のデータ:", decryptedData);
