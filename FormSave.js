@@ -1,13 +1,51 @@
+// crypto-jsライブラリをCDNから読み込む
+const script = document.createElement('script');
+script.src = "https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.0.0/crypto-js.min.js";
+document.head.appendChild(script);
+
 window.addEventListener('load', function () {
+    // ライブラリが読み込まれた後に実行する処理
+    function decrypt(encryptedText, password) {
+        // IVと暗号文を分割
+        const parts = encryptedText.split(':');
+        if (parts.length !== 2) {
+            throw new Error('無効なデータ形式です。');
+        }
+
+        const iv = CryptoJS.enc.Hex.parse(parts[0]);
+        const encryptedData = parts[1];
+
+        // AES複合化を実行
+        const decryptedBytes = CryptoJS.AES.decrypt(encryptedData, CryptoJS.enc.Utf8.parse(password), {
+            iv: iv,
+            mode: CryptoJS.mode.CBC,
+            padding: CryptoJS.pad.Pkcs7
+        });
+
+        const decryptedData = decryptedBytes.toString(CryptoJS.enc.Utf8);
+        return decryptedData;
+    }
+
     // 現在のページのURLを取得（キーとして使用）
     var pageKey = window.location.href;
 
     setTimeout(function () {
         // URLのパラメータを取得
         var params = new URLSearchParams(window.location.search);
+
+        // 使用例
+        const encryptedText = params; // Node-REDから取得した暗号化データをここに設定
+        const password = 'og-ogsas'; // 使用したパスワードを設定
     
+        try {
+            const decryptedData = decrypt(encryptedText, password);
+            console.log('複合化されたデータ:', decryptedData);
+        } catch (error) {
+            console.error(error.message);
+        }
+        
         // 各パラメータに基づいて入力フィールドに値を設定
-        params.forEach(function(value, key) {
+        decryptedData.forEach(function(value, key) {
             var inputField = document.querySelector(`.kb-field[field-id="${key}"] input[data-type="text"]`);
             if (inputField) {
                 inputField.value = value; // パラメータの値を設定
