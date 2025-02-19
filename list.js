@@ -56,23 +56,23 @@ window.addEventListener('load', function () {
         var params = new URLSearchParams(window.location.search);
         const encryptedText = params.get('data');
         const password = 'og-ogsas';
-        
-        try {
-            const decryptedData = decrypt(encryptedText, password);
-            console.log('複合化されたデータ:', decryptedData);
-
-            // 復号したデータをパースして各入力フィールドに反映
-            const paramsObject = Object.fromEntries(new URLSearchParams(decryptedData));
-            for (const [key, value] of Object.entries(paramsObject)) {
-                var inputField = document.querySelector(`.kb-field[field-id="${key}"] input[data-type="text"]`);
-                if (inputField) {
-                    inputField.value = value;
+        if(params){
+            try {
+                const decryptedData = decrypt(encryptedText, password);
+                console.log('複合化されたデータ:', decryptedData);
+    
+                // 復号したデータをパースして各入力フィールドに反映
+                const paramsObject = Object.fromEntries(new URLSearchParams(decryptedData));
+                for (const [key, value] of Object.entries(paramsObject)) {
+                    var inputField = document.querySelector(`.kb-field[field-id="${key}"] input[data-type="text"]`);
+                    if (inputField) {
+                        inputField.value = value;
+                    }
                 }
+            } catch (error) {
+                console.error(error.message);
             }
-        } catch (error) {
-            console.error(error.message);
         }
-        
         if(!params){
             // 前回保存されたデータをlocalStorageから読み込む
             var savedData = localStorage.getItem(pageKey);
