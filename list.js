@@ -56,7 +56,7 @@ window.addEventListener('load', function () {
         var params = new URLSearchParams(window.location.search);
         const encryptedText = params.get('data');
         const password = 'og-ogsas';
-        if(params){
+        if(params.size){
             try {
                 const decryptedData = decrypt(encryptedText, password);
                 console.log('複合化されたデータ:', decryptedData);
@@ -73,7 +73,7 @@ window.addEventListener('load', function () {
                 console.error(error.message);
             }
         }
-        if(!params){
+        if(!params.size){
             // 前回保存されたデータをlocalStorageから読み込む
             var savedData = localStorage.getItem(pageKey);
             if (savedData) {
