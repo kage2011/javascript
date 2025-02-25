@@ -64,7 +64,9 @@ window.addEventListener('load', function () {
                 // 復号したデータをパースして各入力フィールドに反映
                 const paramsObject = Object.fromEntries(new URLSearchParams(decryptedData));
                 for (const [key, value] of Object.entries(paramsObject)) {
-                    var inputField = document.querySelector(`.kb-field[field-id="${key}"]`);// input[data-type="text"]`);
+                    // var inputField = document.querySelector(`.kb-field[field-id="${key}"] input[data-type="text"]`);
+                    // var inputField = document.querySelector(`.kb-field[field-id="${key}"]`);// input[data-type="text"]`);
+                    var inputField = document.querySelector(`.kb-field[field-id="${key}"] input, .kb-field[field-id="${key}"] select, .kb-field[field-id="${key}"] textarea`);
                     if (inputField) {
                         inputField.value = value;
                     }
