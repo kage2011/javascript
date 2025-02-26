@@ -81,7 +81,7 @@ function extractType(field,key,idx) {
             inputtype = 1;
             break;
         case 'SUBTABLE':
-            for (let i = 0; i < field[key]["value"].length - 1; i++) {
+            for (let i = 0; i < field[key]["value"].length; i++) {
                 // 項目が複数ある場合は行を追加
                 if (i > 0) {
                     var parent = document.querySelector(`${idx}table.kb-table[field-id="${key}"] tbody`);
