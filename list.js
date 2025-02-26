@@ -3,12 +3,39 @@ const script = document.createElement('script');
 script.src = "https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.0.0/crypto-js.min.js";
 document.head.appendChild(script);
 
-// fetch APIを使用してPOSTデータを取得
-const urlParams = new URLSearchParams(window.location.search);
-const data = JSON.parse(atob(urlParams.get('data'))); // Base64デコード
+async function fetchData(hash) {
+    const url = 'https://urlshorter.kintonesendback.workers.dev/retrieve'; // Cloudflare WorkerのURL
 
-// データ処理
-console.log('Received data:', data);
+    const response = await fetch(url, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ hash: hash }) // ハッシュ値をJSON形式で送信
+    });
+
+    if (!response.ok) {
+        // レスポンスがエラーの場合
+        console.error('Error fetching data:', response.status, response.statusText);
+        return null;
+    }
+
+    const data = await response.json(); // レスポンスデータをJSON形式で取得
+    return data; // 取得したデータを返す
+}
+// 付与されたパラメータを取得
+var params = new URLSearchParams(window.location.search);
+const paramText = params.get('data');
+if(params.size){
+    fetchData(paramText)
+        .then(data => {
+            if (data) {
+                console.log('Retrieved data:', data);
+            } else {
+                console.log('No data found for the given hash.');
+            }
+        });
+}
 
 window.addEventListener('load', function () {
     function decrypt(encryptedText, password) {
