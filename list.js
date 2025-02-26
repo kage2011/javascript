@@ -88,7 +88,7 @@ function extractType(field,key) {
         default:
             break;
     }
-    if (inputField) {
+    if (query) {
         switch (inputtype) {
             case 1:
                 var inputField = document.querySelector(query);
