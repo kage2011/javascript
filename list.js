@@ -79,14 +79,20 @@ function extractType(field,key) {
             inputtype = 1;
             break;
         case 'SUBTABLE':
-            if (field[key]["value"].length > 1) {
-                var parent = document.querySelector(`table.kb-table[field-id="${key}"] tbody`);
-                var child = document.querySelector(`table.kb-table[field-id="${key}"] tbody tr`);
-                for (let i = 0; i < field[key]["value"].length - 1; i++) {
+            for (let i = 0; i < field[key]["value"].length - 1; i++) {
+                // 項目が複数ある場合は行を追加
+                if (i > 0) {
+                    var parent = document.querySelector(`table.kb-table[field-id="${key}"] tbody`);
+                    var child = document.querySelector(`table.kb-table[field-id="${key}"] tbody tr`);
                     var clone = child.cloneNode(true);
                     clone.setAttribute('row-idx', i + 1); // row-idx属性を変更
                     parent.appendChild(clone);
                 }
+                Object.keys(field[key]["value"][i]).forEach(function(subkey) {
+                    if (field[key]["value"][i][subkey]["type"] != 'NONE'){
+                        extractType(field[key]["value"][i],subkey);
+                    }
+                });
             }
             // field[key]["value"].forEach(function(sub) {
             //     Object.keys(sub["value"]).forEach(function(subkey) {
