@@ -35,12 +35,12 @@ function extractType(field,key) {
             inputtype = 1;
             break;
         case 'RADIO_BUTTON':
-            query = `.kb-field[field-id="${key}"] .kb-guide`;
+            query = `.kb-field[field-id="${key}"]`;
             value = field[key]["value"];
             inputtype = 2;
             break;
         case 'CHECK_BOX':
-            query = `.kb-field[field-id="${key}"] .kb-guide`;
+            query = `.kb-field[field-id="${key}"]`;
             value = field[key]["value"];
             inputtype = 2;
             break;
