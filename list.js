@@ -27,42 +27,56 @@ async function fetchData(hash) {
 function extractType(field,key) {
     var query;
     var value;
+    var inputtype = 0;
     switch (field[key]["type"]) {
         case 'SINGLE_LINE_TEXT':
             query = `.kb-field[field-id="${key}"] input`;
             value = field[key]["value"];
+            inputtype = 1;
             break;
         case 'RADIO_BUTTON':
-            query = `.kb-field[field-id="${key}"] input`;
+            query = `.kb-field[field-id="${key}"] .kb-guide`;
             value = field[key]["value"];
+            inputtype = 2;
             break;
         case 'CHECK_BOX':
             query = `.kb-field[field-id="${key}"] .kb-guide`;
             value = field[key]["value"];
+            inputtype = 2;
             break;
         case 'DROP_DOWN':
             query = `.kb-field[field-id="${key}"] select`;
             value = field[key]["value"];
+            inputtype = 1;
             break;
-        case 'USER_SELECT':
-            query = `.kb-field[field-id="${key}"] input`;
-            value = field[key]["value"];
-            break;
+        // case 'USER_SELECT':
+        //     query = `.kb-field[field-id="${key}"] input`;
+        //     value = field[key]["value"];
+        //     break;
         case 'NUMBER':
             query = `.kb-field[field-id="${key}"] input`;
             value = field[key]["value"];
+            inputtype = 1;
             break;
         case 'ORGANIZATION_SELECT':
             query = `.kb-field[field-id="${key}"] input`;
             value = field[key]["value"];
+            inputtype = 1;
             break;
         case 'DATE':
             query = `.kb-field[field-id="${key}"] input`;
             value = field[key]["value"];
+            inputtype = 1;
+            break;
+        case 'TIME':
+            query = `.kb-field[field-id="${key}"]`;
+            value = field[key]["value"];
+            inputtype = 3;
             break;
         case 'MULTI_LINE_TEXT':
             query = `.kb-field[field-id="${key}"] textarea`;
             value = field[key]["value"];
+            inputtype = 1;
             break;
         case 'SUBTABLE':
             Object.keys(field[key]["value"]).forEach(function(subkey) {
@@ -74,9 +88,25 @@ function extractType(field,key) {
         default:
             break;
     }
-    var inputField = document.querySelector(query);
     if (inputField) {
-        inputField.value = value;
+        switch (inputtype) {
+            case 1:
+                var inputField = document.querySelector(query);
+                inputField.value = value;
+            break;
+            case 2:
+                var inputField = document.querySelector(query);
+                inputField.textContent = value;
+            break;
+            case 3:
+                var inputhour = document.querySelector(query + " .kb-hour select");
+                var inputminute = document.querySelector(query + " .kb-minute select");
+                inputhour.value = value;
+                inputminute.value = value;
+            break;
+            default:
+            break;
+        }
     }    
 }
 
