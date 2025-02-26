@@ -25,12 +25,13 @@ async function fetchData(hash) {
 }
 // 付与されたパラメータを取得
 var params = new URLSearchParams(window.location.search);
+var cryptoData;
 const paramText = params.get('data');
 if(params.size){
     fetchData(paramText)
         .then(data => {
             if (data) {
-                console.log('Retrieved data:', data);
+                cryptoData = data;
             } else {
                 console.log('No data found for the given hash.');
             }
@@ -38,61 +39,35 @@ if(params.size){
 }
 
 window.addEventListener('load', function () {
+    // 復号化関数
     function decrypt(encryptedText, password) {
-        try {
-            console.log("🔹 URLエンコードされた暗号化データ:", encryptedText);
-            
-            encryptedText = decodeURIComponent(encryptedText);
-            console.log("🔹 デコード後のデータ:", encryptedText);
-    
-            const parts = encryptedText.split(':');
-            if (parts.length !== 2) {
-                throw new Error('無効なデータ形式です。');
+        const parts = encryptedText.split(':'); // IVと暗号文を分割
+        const iv = CryptoJS.enc.Hex.parse(parts[0]); // IVをHexからWordArrayに変換
+        const ciphertext = CryptoJS.enc.Hex.parse(parts[1]); // 暗号文をHexからWordArrayに変換
+
+        const key = CryptoJS.SHA256(password); // パスワードからキーを生成
+
+        const decrypted = CryptoJS.AES.decrypt(
+            { ciphertext: ciphertext },
+            key,
+            {
+                iv: iv,
+                mode: CryptoJS.mode.CBC,
+                padding: CryptoJS.pad.Pkcs7
             }
-    
-            const iv = CryptoJS.enc.Hex.parse(parts[0]);
-            const encryptedData = CryptoJS.enc.Hex.parse(parts[1]);
-            const key = CryptoJS.SHA256(password); // AESキーを生成
-    
-            const decryptedBytes = CryptoJS.AES.decrypt(
-                { ciphertext: encryptedData },
-                key,
-                { iv: iv, mode: CryptoJS.mode.CBC, padding: CryptoJS.pad.Pkcs7 }
-            );
-    
-            let decryptedText = decryptedBytes.toString(CryptoJS.enc.Utf8);
-            console.log("🔹 復号後の文字列:", decryptedText);
-    
-            // 修正: URLデコード
-            decryptedText = decodeURIComponent(decryptedText);
-            console.log("🔹 URLデコード後の文字列:", decryptedText);
-    
-            // 修正: クエリ文字列をオブジェクトに変換
-            const params = new URLSearchParams(decryptedText);
-            const decryptedData = {};
-            params.forEach((value, key) => {
-                decryptedData[key] = value.replace(/^"|"$/g, ''); // 余計な " を削除
-            });
-    
-            console.log("🔹 パース後のデータ:", decryptedData);
-            
-            return decryptedData;
-        } catch (error) {
-            console.error("❌ 復号エラー:", error);
-            return null;
-        }
+        );
+
+        return decrypted.toString(CryptoJS.enc.Utf8); // UTF-8形式で復号化されたテキストを返す
     }
     // 現在のページのURLを取得（キーとして使用）
     var pageKey = window.location.href;
 
     setTimeout(function () {
         // 付与されたパラメータを取得
-        var params = new URLSearchParams(window.location.search);
-        const encryptedText = params.get('data');
         const password = 'og-ogsas';
-        if(params.size){
+        if(cryptoData){
             try {
-                const decryptedData = decrypt(encryptedText, password);
+                const decryptedData = decrypt(cryptoData, password);
                 console.log('複合化されたデータ:', decryptedData);
     
                 // 復号したデータをパースして各入力フィールドに反映
