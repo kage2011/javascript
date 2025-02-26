@@ -95,8 +95,10 @@ function extractType(field,key) {
                 inputField.value = value;
             break;
             case 2:
-                var inputField = document.querySelector(query);
+                var inputcheck = document.querySelector(query + " input[value='" + value + "']");
+                var inputField = document.querySelector(query + " .kb-guide");
                 inputField.textContent = value;
+                inputcheck.checked = true;
             break;
             case 3:
                 var inputhour = document.querySelector(query + " .kb-hour select");
