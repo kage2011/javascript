@@ -3,6 +3,8 @@ const script = document.createElement('script');
 script.src = "https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.0.0/crypto-js.min.js";
 document.head.appendChild(script);
 
+var rowIndex = "";
+
 async function fetchData(hash) {
     const url = 'https://urlshorter.kintonesendback.workers.dev/retrieve'; // Cloudflare WorkerのURL
 
@@ -87,10 +89,11 @@ function extractType(field,key,idx) {
                     var clone = child.cloneNode(true);
                     clone.setAttribute('row-idx', i + 1); // row-idx属性を変更
                     parent.appendChild(clone);
+                    rowIndex = `row-idx="${i + 1}" `;
                 }
                 Object.keys(field[key]["value"][i]).forEach(function(subkey) {
                     if (field[key]["value"][i][subkey]["type"] != 'NONE'){
-                        extractType(field[key]["value"][i],subkey,`row-idx="${i + 1}" `);
+                        extractType(field[key]["value"][i],subkey,rowIndex);
                     }
                 });
             }
