@@ -84,7 +84,7 @@ function extractType(field,key) {
                 var child = document.querySelector(`table.kb-table[field-id="${key}"] tbody tr`);
                 for (let i = 0; i < field[key]["value"].length - 1; i++) {
                     var clone = child.cloneNode(true);
-                    clone["row-idx"] = (i + 1).toString();
+                    clone.setAttribute('row-idx', i + 1); // row-idx属性を変更
                     parent.appendChild(clone);
                 }
             }
