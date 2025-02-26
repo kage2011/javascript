@@ -80,7 +80,7 @@ function extractType(field,key) {
             break;
         case 'SUBTABLE':
             if (field[key]["value"].length > 1) {
-                var parent = document.querySelector(`.kb-table[field-id="${key}] tbody`);
+                var parent = document.querySelector(`.kb-table[field-id="${key}]`);
                 var child = document.querySelector(`.kb-table[field-id="${key}] tbody tr`);
                 for (let i = 0; i < field[key]["value"].length - 1; i++) {
                     var clone = child.cloneNode(true);
