@@ -58,11 +58,11 @@ function extractType(field,key) {
             value = field[key]["value"];
             inputtype = 1;
             break;
-        case 'ORGANIZATION_SELECT':
-            query = `.kb-field[field-id="${key}"] input`;
-            value = field[key]["value"];
-            inputtype = 1;
-            break;
+        // case 'ORGANIZATION_SELECT':
+        //     query = `.kb-field[field-id="${key}"] input`;
+        //     value = field[key]["value"];
+        //     inputtype = 1;
+        //     break;
         case 'DATE':
             query = `.kb-field[field-id="${key}"] input`;
             value = field[key]["value"];
@@ -101,8 +101,8 @@ function extractType(field,key) {
             case 3:
                 var inputhour = document.querySelector(query + " .kb-hour select");
                 var inputminute = document.querySelector(query + " .kb-minute select");
-                inputhour.value = value;
-                inputminute.value = value;
+                inputhour.value = value.split(":")[0];
+                inputminute.value = value.split(":")[1];
             break;
             default:
             break;
