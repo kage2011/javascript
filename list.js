@@ -32,12 +32,16 @@ function extractType(field,key) {
             query = `.kb-field[field-id="${key}"] input`;
             value = field[key]["value"];
             break;
-        case 'CHECK_BOX':
+        case 'RADIO_BUTTON':
             query = `.kb-field[field-id="${key}"] input`;
             value = field[key]["value"];
             break;
+        case 'CHECK_BOX':
+            query = `.kb-field[field-id="${key}"] .kb-guide`;
+            value = field[key]["value"];
+            break;
         case 'DROP_DOWN':
-            query = `.kb-field[field-id="${key}"] input`;
+            query = `.kb-field[field-id="${key}"] select`;
             value = field[key]["value"];
             break;
         case 'USER_SELECT':
@@ -57,7 +61,7 @@ function extractType(field,key) {
             value = field[key]["value"];
             break;
         case 'MULTI_LINE_TEXT':
-            query = `.kb-field[field-id="${key}"] input`;
+            query = `.kb-field[field-id="${key}"] textarea`;
             value = field[key]["value"];
             break;
         case 'SUBTABLE':
