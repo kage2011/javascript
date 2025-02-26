@@ -95,6 +95,11 @@ function extractType(field,key) {
                 inputField.value = value;
             break;
             case 2:
+                // var inputcheck = document.querySelector(query + " input[value='" + value + "']");
+                var inputchecks = document.querySelectorAll(query + " input");
+                inputchecks.forEach(element => {
+                    element.checked = false;                    
+                });
                 var inputcheck = document.querySelector(query + " input[value='" + value + "']");
                 var inputField = document.querySelector(query + " .kb-guide");
                 inputField.textContent = value;
