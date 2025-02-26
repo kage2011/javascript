@@ -79,11 +79,28 @@ function extractType(field,key) {
             inputtype = 1;
             break;
         case 'SUBTABLE':
-            Object.keys(field[key]["value"]).forEach(function(subkey) {
-                if (field[key]["value"][subkey]["type"] != 'NONE'){
-                    extractType(field[key]["value"],subkey);
+            if (field[key]["value"].length > 1) {
+                var parent = document.querySelector(`.kb-field[field-id="${key}] tbody`);
+                var child = document.querySelector(`.kb-field[field-id="${key}] tbody tr`);
+                for (let i = 0; i < field[key]["value"].length - 1; i++) {
+                    var clone = child.cloneNode(true);
+                    parent.appendChild(clone);
                 }
-            });
+            }
+            // field[key]["value"].forEach(function(sub) {
+            //     Object.keys(field[key]["value"]).forEach(function(subkey) {
+            //         if (field[key]["value"][subkey]["type"] != 'NONE'){
+            //             extractType(field[key]["value"],subkey);
+            //         }
+            //     });    
+            // });
+            // field[key]["value"].forEach(function(sub) {
+            //     Object.keys(field[key]["value"]).forEach(function(subkey) {
+            //         if (field[key]["value"][subkey]["type"] != 'NONE'){
+            //             extractType(field[key]["value"],subkey);
+            //         }
+            //     });    
+            // });
             return;
         default:
             break;
