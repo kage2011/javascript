@@ -23,6 +23,59 @@ async function fetchData(hash) {
     const data = await response.json(); // レスポンスデータをJSON形式で取得
     return data; // 取得したデータを返す
 }
+
+function extractType(field,key) {
+    var query;
+    var value;
+    switch (field[key].type) {
+        case 'SINGLE_LINE_TEXT':
+            query = `.kb-field[field-id="${key}"] input`;
+            value = field[key][value];
+            break;
+        case 'CHECK_BOX':
+            query = `.kb-field[field-id="${key}"] input`;
+            value = field[key][value];
+            break;
+        case 'DROP_DOWN':
+            query = `.kb-field[field-id="${key}"] input`;
+            value = field[key][value];
+            break;
+        case 'USER_SELECT':
+            query = `.kb-field[field-id="${key}"] input`;
+            value = field[key][value];
+            break;
+        case 'NUMBER':
+            query = `.kb-field[field-id="${key}"] input`;
+            value = field[key][value];
+            break;
+        case 'ORGANIZATION_SELECT':
+            query = `.kb-field[field-id="${key}"] input`;
+            value = field[key][value];
+            break;
+        case 'DATE':
+            query = `.kb-field[field-id="${key}"] input`;
+            value = field[key][value];
+            break;
+        case 'MULTI_LINE_TEXT':
+            query = `.kb-field[field-id="${key}"] input`;
+            value = field[key][value];
+            break;
+        case 'SUBTABLE':
+            Object.keys(field[key][value]).forEach(function(subkey) {
+                if (field[key][value][subkey][type] != 'NONE'){
+                    extractType(field[key][value],subkey);
+                }
+            });
+            return;
+        default:
+            break;
+    }
+    var inputField = document.querySelector(query);
+    if (inputField) {
+        inputField.value = value;
+    }    
+}
+
 // 付与されたパラメータを取得
 var params = new URLSearchParams(window.location.search);
 var cryptoData;
@@ -70,9 +123,8 @@ window.addEventListener('load', function () {
                 const decryptedData = decrypt(cryptoData, password);
                 const jsonparam = JSON.parse(decryptedData);
                 Object.keys(jsonparam).forEach(function(key) {
-                    var inputField = document.querySelector(`.kb-field[field-id="${key}"] input, .kb-field[field-id="${key}"] select, .kb-field[field-id="${key}"] textarea`);
-                    if (inputField) {
-                        inputField.value = jsonparam[key];
+                    if (jsonparam[key][type] != 'NONE'){
+                        extractType(jsonparam,key);
                     }
                 });
                 // // 復号したデータをパースして各入力フィールドに反映
