@@ -3,6 +3,13 @@ const script = document.createElement('script');
 script.src = "https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.0.0/crypto-js.min.js";
 document.head.appendChild(script);
 
+// fetch APIを使用してPOSTデータを取得
+const urlParams = new URLSearchParams(window.location.search);
+const data = JSON.parse(atob(urlParams.get('data'))); // Base64デコード
+
+// データ処理
+console.log('Received data:', data);
+
 window.addEventListener('load', function () {
     function decrypt(encryptedText, password) {
         try {
