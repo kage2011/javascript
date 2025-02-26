@@ -27,43 +27,43 @@ async function fetchData(hash) {
 function extractType(field,key) {
     var query;
     var value;
-    switch (field[key].type) {
+    switch (field[key]["type"]) {
         case 'SINGLE_LINE_TEXT':
             query = `.kb-field[field-id="${key}"] input`;
-            value = field[key][value];
+            value = field[key]["value"];
             break;
         case 'CHECK_BOX':
             query = `.kb-field[field-id="${key}"] input`;
-            value = field[key][value];
+            value = field[key]["value"];
             break;
         case 'DROP_DOWN':
             query = `.kb-field[field-id="${key}"] input`;
-            value = field[key][value];
+            value = field[key]["value"];
             break;
         case 'USER_SELECT':
             query = `.kb-field[field-id="${key}"] input`;
-            value = field[key][value];
+            value = field[key]["value"];
             break;
         case 'NUMBER':
             query = `.kb-field[field-id="${key}"] input`;
-            value = field[key][value];
+            value = field[key]["value"];
             break;
         case 'ORGANIZATION_SELECT':
             query = `.kb-field[field-id="${key}"] input`;
-            value = field[key][value];
+            value = field[key]["value"];
             break;
         case 'DATE':
             query = `.kb-field[field-id="${key}"] input`;
-            value = field[key][value];
+            value = field[key]["value"];
             break;
         case 'MULTI_LINE_TEXT':
             query = `.kb-field[field-id="${key}"] input`;
-            value = field[key][value];
+            value = field[key]["value"];
             break;
         case 'SUBTABLE':
-            Object.keys(field[key][value]).forEach(function(subkey) {
-                if (field[key][value][subkey][type] != 'NONE'){
-                    extractType(field[key][value],subkey);
+            Object.keys(field[key]["value"]).forEach(function(subkey) {
+                if (field[key]["value"][subkey]["type"] != 'NONE'){
+                    extractType(field[key]["value"],subkey);
                 }
             });
             return;
@@ -123,7 +123,7 @@ window.addEventListener('load', function () {
                 const decryptedData = decrypt(cryptoData, password);
                 const jsonparam = JSON.parse(decryptedData);
                 Object.keys(jsonparam).forEach(function(key) {
-                    if (jsonparam[key][type] != 'NONE'){
+                    if (jsonparam[key]["type"] != 'NONE'){
                         extractType(jsonparam,key);
                     }
                 });
