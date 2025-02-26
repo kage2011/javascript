@@ -80,7 +80,7 @@ function extractType(field,key) {
             break;
         case 'SUBTABLE':
             if (field[key]["value"].length > 1) {
-                var parent = document.querySelector(`table.kb-table[field-id="${key}"]`);
+                var parent = document.querySelector(`table.kb-table[field-id="${key}"] tbody`);
                 var child = document.querySelector(`table.kb-table[field-id="${key}"] tbody tr`);
                 for (let i = 0; i < field[key]["value"].length - 1; i++) {
                     var clone = child.cloneNode(true);
@@ -88,9 +88,9 @@ function extractType(field,key) {
                 }
             }
             // field[key]["value"].forEach(function(sub) {
-            //     Object.keys(field[key]["value"]).forEach(function(subkey) {
-            //         if (field[key]["value"][subkey]["type"] != 'NONE'){
-            //             extractType(field[key]["value"],subkey);
+            //     Object.keys(sub["value"]).forEach(function(subkey) {
+            //         if (sub["value"][subkey]["type"] != 'NONE'){
+            //             extractType(sub["value"],subkey);
             //         }
             //     });    
             // });
