@@ -24,28 +24,28 @@ async function fetchData(hash) {
     return data; // 取得したデータを返す
 }
 
-function extractType(field,key) {
+function extractType(field,key,idx) {
     var query;
     var value;
     var inputtype = 0;
     switch (field[key]["type"]) {
         case 'SINGLE_LINE_TEXT':
-            query = `.kb-field[field-id="${key}"] input`;
+            query = `${idx}.kb-field[field-id="${key}"] input`;
             value = field[key]["value"];
             inputtype = 1;
             break;
         case 'RADIO_BUTTON':
-            query = `.kb-field[field-id="${key}"]`;
+            query = `${idx}.kb-field[field-id="${key}"]`;
             value = field[key]["value"];
             inputtype = 2;
             break;
         case 'CHECK_BOX':
-            query = `.kb-field[field-id="${key}"]`;
+            query = `${idx}.kb-field[field-id="${key}"]`;
             value = field[key]["value"];
             inputtype = 2;
             break;
         case 'DROP_DOWN':
-            query = `.kb-field[field-id="${key}"] select`;
+            query = `${idx}.kb-field[field-id="${key}"] select`;
             value = field[key]["value"];
             inputtype = 1;
             break;
@@ -54,7 +54,7 @@ function extractType(field,key) {
         //     value = field[key]["value"];
         //     break;
         case 'NUMBER':
-            query = `.kb-field[field-id="${key}"] input`;
+            query = `${idx}.kb-field[field-id="${key}"] input`;
             value = field[key]["value"];
             inputtype = 1;
             break;
@@ -64,17 +64,17 @@ function extractType(field,key) {
         //     inputtype = 1;
         //     break;
         case 'DATE':
-            query = `.kb-field[field-id="${key}"] input`;
+            query = `${idx}.kb-field[field-id="${key}"] input`;
             value = field[key]["value"];
             inputtype = 1;
             break;
         case 'TIME':
-            query = `.kb-field[field-id="${key}"]`;
+            query = `${idx}.kb-field[field-id="${key}"]`;
             value = field[key]["value"];
             inputtype = 3;
             break;
         case 'MULTI_LINE_TEXT':
-            query = `.kb-field[field-id="${key}"] textarea`;
+            query = `${idx}.kb-field[field-id="${key}"] textarea`;
             value = field[key]["value"];
             inputtype = 1;
             break;
@@ -82,15 +82,15 @@ function extractType(field,key) {
             for (let i = 0; i < field[key]["value"].length - 1; i++) {
                 // 項目が複数ある場合は行を追加
                 if (i > 0) {
-                    var parent = document.querySelector(`table.kb-table[field-id="${key}"] tbody`);
-                    var child = document.querySelector(`table.kb-table[field-id="${key}"] tbody tr`);
+                    var parent = document.querySelector(`${idx}table.kb-table[field-id="${key}"] tbody`);
+                    var child = document.querySelector(`${idx}table.kb-table[field-id="${key}"] tbody tr`);
                     var clone = child.cloneNode(true);
                     clone.setAttribute('row-idx', i + 1); // row-idx属性を変更
                     parent.appendChild(clone);
                 }
                 Object.keys(field[key]["value"][i]).forEach(function(subkey) {
                     if (field[key]["value"][i][subkey]["type"] != 'NONE'){
-                        extractType(field[key]["value"][i],subkey);
+                        extractType(field[key]["value"][i],subkey,`row-idx="${i + 1}" `);
                     }
                 });
             }
@@ -189,7 +189,7 @@ window.addEventListener('load', function () {
                 const jsonparam = JSON.parse(decryptedData);
                 Object.keys(jsonparam).forEach(function(key) {
                     if (jsonparam[key]["type"] != 'NONE'){
-                        extractType(jsonparam,key);
+                        extractType(jsonparam,key,"");
                     }
                 });
                 // // 復号したデータをパースして各入力フィールドに反映
