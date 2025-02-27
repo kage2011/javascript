@@ -147,6 +147,7 @@ function getItemdata(item,key){
             //             `.kb-field[field-id="${key}"] select, ` + 
             //             `.kb-field[field-id="${key}"] textarea`;
             const ischeckbox = item.querySelector('.kb-checkbox');
+            const istime = item.querySelector('.kb-hour');
             if (ischeckbox) {
                 var span = item.querySelector('.kb-checkbox .kb-guide');
                 var data = {
@@ -156,7 +157,16 @@ function getItemdata(item,key){
                 }
                 return data;
             }
-
+            if (istime) {
+                var inputhour = item.querySelector('.kb-hour select');
+                var inputminute = item.querySelector('.kb-minute select');
+                var data = {
+                    id : key,
+                    type : type,
+                    value : inputhour.value + ":" + inputminute.value
+                }
+                return data;
+            }
             var query = `input, select, textarea`;
             var inputField = item.querySelector(query);
             var data = {
@@ -243,6 +253,7 @@ function setItemdata(item,key){
         default:
             break;
     }
+    return;
 }
 
 window.addEventListener('load', function () {
@@ -301,21 +312,6 @@ window.addEventListener('load', function () {
                 var data = JSON.parse(savedData);
                 Object.keys(data.fields).forEach(function(key) {
                     setItemdata(data.fields[key],key);
-                });
-                var inputs = document.querySelectorAll('input, select, textarea');
-                var i = 0;
-                data.fields.forEach(function (item) {
-                    var inputField = inputs[i];
-                    if (inputField) {
-                        if (inputField.type === 'checkbox' || inputField.type === 'radio') {
-                            // checkboxの場合はchecked状態を復元
-                            inputField.checked = item.checked;
-                        } else {
-                            // それ以外の場合はvalueを復元
-                            inputField.value = item.value;
-                        }
-                    }
-                    i++;
                 });
             }
         
