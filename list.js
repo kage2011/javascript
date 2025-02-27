@@ -208,9 +208,9 @@ function setItemdata(item,key){
     var value = item.value;
     switch (type) {
         case 'kb-field':
-            var query = `.kb-field[field-id="${key}"] input, ` +
-                        `.kb-field[field-id="${key}"] select, ` + 
-                        `.kb-field[field-id="${key}"] textarea`;
+            var query = `${rowIndex}.kb-field[field-id="${key}"] input, ` +
+                        `${rowIndex}.kb-field[field-id="${key}"] select, ` + 
+                        `${rowIndex}.kb-field[field-id="${key}"] textarea`;
             var ischeckbox = document.querySelector(`${rowIndex}.kb-field[field-id="${key}"] .kb-checkbox`);
             var istime = document.querySelector(`${rowIndex}.kb-field[field-id="${key}"] .kb-hour`);
             if (ischeckbox) {
