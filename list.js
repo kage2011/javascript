@@ -155,11 +155,13 @@ function getItemdata(item,key){
             }
             return data;
         case 'kb-table':
-            var query = `.kb-table[field-id="${key}"] > tbody > tr > input, ` + 
-                        `.kb-table[field-id="${key}"] > tbody > tr  > select, ` + 
-                        `.kb-table[field-id="${key}"] > tbody > tr  > textarea, ` + 
-                        `.kb-table[field-id="${key}"] > tbody > tr  > table`;
-            var inputFields = document.querySelectorAll(query);
+            var child = item.querySelector('tbody tr');
+            // var query = `.kb-table[field-id="${key}"] > tbody > tr > input, ` + 
+            //             `.kb-table[field-id="${key}"] > tbody > tr  > select, ` + 
+            //             `.kb-table[field-id="${key}"] > tbody > tr  > textarea, ` + 
+            //             `.kb-table[field-id="${key}"] > tbody > tr  > table`;
+            var query = `input, select, textarea, table`;
+            var inputFields = child.querySelectorAll(query);
             var subdata = [];
             inputFields.forEach(element => {
                 var id = element.getAttribute('field-id');
