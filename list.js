@@ -193,7 +193,7 @@ function getItemdata(item,key){
     }
 }
 
-kb.injector.build.then(function () {
+kb.injector.build().then(function () {
     console.log("kb.injector.build.then");
 });
 
