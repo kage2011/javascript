@@ -250,7 +250,12 @@ window.addEventListener('load', function () {
             var confirmSave = confirm('共有のデバイス（職場のパソコンなど）では保存したデータが第三者に見られる危険があります。それでも保存しますか？');
             if (confirmSave) {
                 // IDに'input'を含むすべてのinputタグを取得
-                var inputFields = document.querySelectorAll('input, select, textarea');
+                // var inputFields = document.querySelectorAll('input, select, textarea');
+                var inputFields = document.querySelectorAll('kb-injector-body .kb-scope *');
+                // 取得した要素をログに表示
+                inputFields.forEach(element => {
+                    console.log(element);
+                });
                 var data = {
                     url: pageKey, // 保存時に現在のページのURLを含む
                     fields: [] // 入力データを保存
@@ -272,7 +277,7 @@ window.addEventListener('load', function () {
                 });
 
                 // データをlocalStorageに保存
-                localStorage.setItem(pageKey, JSON.stringify(data));
+                localStorage.setItem(pageKey.split('?')[0], JSON.stringify(data));
 
                 // classが'test'のmain要素を取得
                 var mainElement = document.querySelector('.kb-injector-body');
