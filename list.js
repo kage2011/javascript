@@ -313,7 +313,7 @@ window.addEventListener('load', function () {
                     fielddata[id] = getItemdata(element,id);                    
                 });
                 var data = {
-                    url: pageKey, // 保存時に現在のページのURLを含む
+                    url: pageKey.split('?')[0], // 保存時に現在のページのURLを含む
                     fields: fielddata // 入力データを保存
                 };
 
