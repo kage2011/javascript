@@ -218,11 +218,20 @@ function setItemdata(item,key){
             }
             break;
         case 'kb-table':
-            value.forEach(element => {
-                Object.keys(element).forEach(function(subkey) {
-                    setItemdata(element[subkey],subkey);
+            for (let i = 0; i < value.length; i++) {
+                // 項目が複数ある場合は行を追加
+                if (i > 0) {
+                    var table = document.querySelector(`.kb-table[field-id="${key}"]`);
+                    var child = document.querySelector(`.kb-table[field-id="${key}"] tbody tr`);
+                    table.insertRow(child);
+                    rowIndex = `tr.kb-scope[row-idx="${i}"] `;
+                }
+                Object.keys(value[i]).forEach(function(subkey) {
+                    if (value[i][subkey]["type"] != 'NONE'){
+                        setItemdata(value[i][subkey],subkey);
+                    }
                 });
-            });
+            }
             break;
         default:
             break;
