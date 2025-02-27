@@ -95,13 +95,8 @@ function extractType(field,key,idx) {
                 // 項目が複数ある場合は行を追加
                 if (i > 0) {
                     var table = document.querySelector(`${idx}table.kb-table[field-id="${key}"]`);
-                    var parent = document.querySelector(`${idx}table.kb-table[field-id="${key}"] tbody`);
                     var child = document.querySelector(`${idx}table.kb-table[field-id="${key}"] tbody tr`);
                     table.insertRow(child);
-                    kb.event.call("kb.row.add." + key);
-                    var clone = child.cloneNode(true);
-                    clone.setAttribute('row-idx', i); // row-idx属性を変更
-                    parent.appendChild(clone);
                     rowIndex = `tr.kb-scope[row-idx="${i}"] `;
                 }
                 Object.keys(field[key]["value"][i]).forEach(function(subkey) {
