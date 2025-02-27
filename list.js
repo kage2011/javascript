@@ -193,9 +193,39 @@ function getItemdata(item,key){
     }
 }
 
-kb.injector.build().then(function () {
-    console.log("kb.injector.build.then");
-});
+// 監視対象のクラス名
+const targetClass = 'kb-injector-button';
+
+// 対象の要素を取得（複数ある場合）
+const targetNodes = document.querySelectorAll(`.${targetClass}`);
+
+// オプション設定
+const config = { childList: true, subtree: true, attributes: true, attributeFilter: ['class'] };
+
+// コールバック関数
+const callback = function(mutationsList, observer) {
+    for (let mutation of mutationsList) {
+        if (mutation.type === 'childList') {
+            console.log('子ノードの変更を検出しました');
+        } else if (mutation.type === 'attributes' && mutation.attributeName === 'class') {
+            console.log('クラス属性の変更を検出しました');
+        }
+    }
+    // 追加の処理
+    runAdditionalProcess();
+};
+
+// オブザーバーインスタンスを生成
+const observer = new MutationObserver(callback);
+
+// 監視を開始
+targetNodes.forEach(node => observer.observe(node, config));
+
+// フォーム構築完了後に実行したい処理
+function runAdditionalProcess() {
+    console.log('追加の処理を実行します');
+    // ここに追加の処理を記述
+}
 
 window.addEventListener('load', function () {
     // 復号化関数
