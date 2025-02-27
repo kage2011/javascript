@@ -146,6 +146,17 @@ function getItemdata(item,key){
             // var query = `.kb-field[field-id="${key}"] input, ` +
             //             `.kb-field[field-id="${key}"] select, ` + 
             //             `.kb-field[field-id="${key}"] textarea`;
+            const ischeckbox = item.querySelector('.kb-checkbox');
+            if (ischeckbox) {
+                var inputField = item.querySelector('.kb-checkbox kb-guide');
+                var data = {
+                    id : key,
+                    type : type,
+                    value : inputField.value
+                }
+                return data;
+            }
+
             var query = `input, select, textarea`;
             var inputField = item.querySelector(query);
             var data = {
