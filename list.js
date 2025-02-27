@@ -284,7 +284,7 @@ window.addEventListener('load', function () {
             if (savedData) {
                 var data = JSON.parse(savedData);
                 Object.keys(data.fields).forEach(function(key) {
-                    setItemdata(data.fields[key]);
+                    setItemdata(data.fields[key],key);
                 });
                 var inputs = document.querySelectorAll('input, select, textarea');
                 var i = 0;
