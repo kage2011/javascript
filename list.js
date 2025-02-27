@@ -81,7 +81,6 @@ function extractType(field,key,idx) {
             inputtype = 1;
             break;
         case 'SUBTABLE':
-            rowIndex = "";
             for (let i = 0; i < field[key]["value"].length; i++) {
                 // 項目が複数ある場合は行を追加
                 if (i > 0) {
@@ -98,6 +97,7 @@ function extractType(field,key,idx) {
                     }
                 });
             }
+            rowIndex = "";
             // field[key]["value"].forEach(function(sub) {
             //     Object.keys(sub["value"]).forEach(function(subkey) {
             //         if (sub["value"][subkey]["type"] != 'NONE'){
