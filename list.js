@@ -94,6 +94,7 @@ function extractType(field,key,idx) {
             for (let i = 0; i < field[key]["value"].length; i++) {
                 // 項目が複数ある場合は行を追加
                 if (i > 0) {
+                    kb.event.call("kb.row.add." + key);
                     var parent = document.querySelector(`${idx}table.kb-table[field-id="${key}"] tbody`);
                     var child = document.querySelector(`${idx}table.kb-table[field-id="${key}"] tbody tr`);
                     var clone = child.cloneNode(true);
