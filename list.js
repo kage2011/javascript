@@ -201,7 +201,7 @@ function setItemdata(item,key){
             var query = `.kb-field[field-id="${key}"] input, ` +
                         `.kb-field[field-id="${key}"] select, ` + 
                         `.kb-field[field-id="${key}"] textarea`;
-            var ischeckbox = document.querySelector('.kb-field[field-id="${key}"] .kb-checkbox');
+            var ischeckbox = document.querySelector(`.kb-field[field-id="${key}"] .kb-checkbox`);
             if (ischeckbox) {
                 var inputcheckboxs = document.querySelectorAll(`.kb-field[field-id="${key}"] input`);
                 inputcheckboxs.forEach(element => {
