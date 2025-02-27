@@ -85,6 +85,11 @@ function extractType(field,key,idx) {
             value = field[key]["value"];
             inputtype = 1;
             break;
+        case 'RICH_TEXT':
+            query = `${idx}.kb-field[field-id="${key}"] textarea`;
+            value = field[key]["value"];
+            inputtype = 1;
+            break;
         case 'SUBTABLE':
             for (let i = 0; i < field[key]["value"].length; i++) {
                 // 項目が複数ある場合は行を追加
