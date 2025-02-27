@@ -139,6 +139,40 @@ function extractType(field,key,idx) {
     }    
 }
 
+function getItemdata(item,key){
+    var type = item.getAttribute('class');
+    switch (type) {
+        case 'kb-field':
+            // var query = `.kb-field[field-id="${key}"] input, ` +
+            //             `.kb-field[field-id="${key}"] select, ` + 
+            //             `.kb-field[field-id="${key}"] textarea`;
+            var query = `input, select, textarea`;
+            var inputField = item.querySelector(query);
+            var data = {
+                id : key,
+                type : type,
+                value : inputField.value
+            }
+            return data;
+        case 'kb-table':
+            var query = `input, select, textarea, teble`;
+            var inputFields = item.querySelectorAll(query);
+            var subdata = [];
+            inputFields.forEach(element => {
+                var id = element.getAttribute('field-id');
+                subdata.push(getItemdata(element,id));
+            });
+            var data = {
+                id : key,
+                type : type,
+                value : subdata
+            }
+            return data;    
+        default:
+            return data;
+    }
+}
+
 window.addEventListener('load', function () {
     // 復号化関数
     function decrypt(encryptedText, password) {
@@ -251,14 +285,16 @@ window.addEventListener('load', function () {
             if (confirmSave) {
                 // IDに'input'を含むすべてのinputタグを取得
                 // var inputFields = document.querySelectorAll('input, select, textarea');
-                var inputFields = document.querySelectorAll('.kb-injector-body *');
+                var inputFields = document.querySelectorAll('.kb-injector-body .kb-field, .kb-injector-body .kb-table');
+                var fielddata = {};
                 // 取得した要素をログに表示
                 inputFields.forEach(element => {
-                    console.log(element);
+                    var id = element.getAttribute('field-id');
+                    fielddata.id.push(getItemdata(element,id));                    
                 });
                 var data = {
                     url: pageKey, // 保存時に現在のページのURLを含む
-                    fields: [] // 入力データを保存
+                    fields: fielddata // 入力データを保存
                 };
 
                 // 各inputタグのclassと値をセットにしたオブジェクトを作成
