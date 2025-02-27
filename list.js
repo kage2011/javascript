@@ -163,11 +163,11 @@ function getItemdata(item,key){
             var subarray = [];
             tr.forEach(element => {
                 var query = `.kb-field, .kb-table`;
-                var inputFields = child.querySelectorAll(query);
+                var inputFields = element.querySelectorAll(query);
                 var subdata = {};
-                inputFields.forEach(element => {
-                    var id = element.getAttribute('field-id');
-                    subdata[id] = getItemdata(element,id);
+                inputFields.forEach(input => {
+                    var id = input.getAttribute('field-id');
+                    subdata[id] = getItemdata(input,id);
                 });
                 subarray.push(subdata);    
             });
