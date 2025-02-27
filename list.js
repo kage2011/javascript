@@ -148,11 +148,11 @@ function getItemdata(item,key){
             //             `.kb-field[field-id="${key}"] textarea`;
             const ischeckbox = item.querySelector('.kb-checkbox');
             if (ischeckbox) {
-                var inputField = item.querySelector('.kb-checkbox .kb-guide');
+                var span = item.querySelector('.kb-checkbox .kb-guide');
                 var data = {
                     id : key,
                     type : type,
-                    value : inputField.value
+                    value : span.textContent
                 }
                 return data;
             }
