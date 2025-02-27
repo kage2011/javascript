@@ -317,21 +317,6 @@ window.addEventListener('load', function () {
                     fields: fielddata // 入力データを保存
                 };
 
-                // 各inputタグのclassと値をセットにしたオブジェクトを作成
-                inputFields.forEach(function (inputField) {
-                    if (inputField.type === 'checkbox' || inputField.type === 'radio') {
-                        // checkboxの場合はchecked状態を保存
-                        data.fields.push({
-                            checked: inputField.checked
-                        });
-                    } else {
-                        // それ以外の場合はvalueを保存
-                        data.fields.push({
-                            value: inputField.value
-                        });
-                    }
-                });
-
                 // データをlocalStorageに保存
                 localStorage.setItem(pageKey.split('?')[0], JSON.stringify(data));
 
