@@ -249,6 +249,7 @@ function setItemdata(item,key){
                     }
                 });
             }
+            rowIndex = "";
             break;
         default:
             break;
