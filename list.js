@@ -87,9 +87,9 @@ function extractType(field,key,idx) {
                     var parent = document.querySelector(`${idx}table.kb-table[field-id="${key}"] tbody`);
                     var child = document.querySelector(`${idx}table.kb-table[field-id="${key}"] tbody tr`);
                     var clone = child.cloneNode(true);
-                    clone.setAttribute('row-idx', i + 1); // row-idx属性を変更
+                    clone.setAttribute('row-idx', i); // row-idx属性を変更
                     parent.appendChild(clone);
-                    rowIndex = `row-idx="${i + 1}" `;
+                    rowIndex = `row-idx="${i}" `;
                 }
                 Object.keys(field[key]["value"][i]).forEach(function(subkey) {
                     if (field[key]["value"][i][subkey]["type"] != 'NONE'){
