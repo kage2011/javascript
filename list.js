@@ -251,7 +251,7 @@ window.addEventListener('load', function () {
             if (confirmSave) {
                 // IDに'input'を含むすべてのinputタグを取得
                 // var inputFields = document.querySelectorAll('input, select, textarea');
-                var inputFields = document.querySelectorAll('kb-injector-body kb-scope *');
+                var inputFields = document.querySelectorAll('.kb-injector-body kb-scope *');
                 // 取得した要素をログに表示
                 inputFields.forEach(element => {
                     console.log(element);
