@@ -162,7 +162,7 @@ function getItemdata(item,key){
             //             `.kb-table[field-id="${key}"] > tbody > tr  > table`;
             var subarray = [];
             tr.forEach(element => {
-                var query = `.kb-field, .kb-table`;
+                var query = `.kb-field:not(.kb-unuse), .kb-table(.kb-unuse)`;
                 var inputFields = element.querySelectorAll(query);
                 var subdata = {};
                 inputFields.forEach(input => {
