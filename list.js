@@ -197,7 +197,7 @@ function getItemdata(item,key){
 const targetClass = '.kb-injector-button';
 
 // 監視対象の親要素を取得します
-const parentNode = document.querySelector('.kb-field');
+const parentNode = document.body;  // 親要素が見つからない場合、全体のボディを監視
 
 // オプション設定
 const config = { childList: true, subtree: true };
@@ -209,7 +209,7 @@ const callback = function(mutationsList, observer) {
             console.log('子ノードの変更を検出しました');
             // 追加された要素が指定したクラスを持つかどうかを確認
             mutation.addedNodes.forEach(node => {
-                if (node.classList && node.classList.contains('kb-field')) {
+                if (node.nodeType === 1 && node.classList.contains('kb-field')) {
                     console.log('指定したクラスのフォームが構築されました');
                     runAdditionalProcess();
                     observer.disconnect(); // 監視を停止
@@ -224,12 +224,6 @@ const observer = new MutationObserver(callback);
 
 // 監視を開始
 observer.observe(parentNode, config);
-
-// フォーム構築完了後に実行したい処理
-function runAdditionalProcess() {
-    console.log('追加の処理を実行します');
-    // ここに追加の処理を記述
-}
 
 // フォーム構築完了後に実行したい処理
 function runAdditionalProcess() {
