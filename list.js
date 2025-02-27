@@ -211,21 +211,21 @@ function setItemdata(item,key){
             var query = `.kb-field[field-id="${key}"] input, ` +
                         `.kb-field[field-id="${key}"] select, ` + 
                         `.kb-field[field-id="${key}"] textarea`;
-            var ischeckbox = document.querySelector(`.kb-field[field-id="${key}"] .kb-checkbox`);
-            var istime = document.querySelector(`.kb-field[field-id="${key}"] .kb-hour`);
+            var ischeckbox = document.querySelector(`${rowIndex}.kb-field[field-id="${key}"] .kb-checkbox`);
+            var istime = document.querySelector(`${rowIndex}.kb-field[field-id="${key}"] .kb-hour`);
             if (ischeckbox) {
-                var inputcheckboxs = document.querySelectorAll(`.kb-field[field-id="${key}"] input`);
+                var inputcheckboxs = document.querySelectorAll(`${rowIndex}.kb-field[field-id="${key}"] input`);
                 inputcheckboxs.forEach(element => {
                     element.checked = false;
                 });
-                var inputcheck = document.querySelector(`.kb-field[field-id="${key}"] input[value=${value}]`);
-                var inputField = document.querySelector(`.kb-field[field-id="${key}"] .kb-guide`);
+                var inputcheck = document.querySelector(`${rowIndex}.kb-field[field-id="${key}"] input[value=${value}]`);
+                var inputField = document.querySelector(`${rowIndex}.kb-field[field-id="${key}"] .kb-guide`);
                 inputField.textContent = value;
                 inputcheck.checked = true;
             }
             else if (istime) {
-                var inputhour = document.querySelector(`.kb-field[field-id="${key}"] .kb-hour select`);
-                var inputminute = document.querySelector(`.kb-field[field-id="${key}"] .kb-minute select`);
+                var inputhour = document.querySelector(`${rowIndex}.kb-field[field-id="${key}"] .kb-hour select`);
+                var inputminute = document.querySelector(`${rowIndex}.kb-field[field-id="${key}"] .kb-minute select`);
                 inputhour.value = value.split(":")[0];
                 inputminute.value = value.split(":")[1];
             }
