@@ -290,7 +290,7 @@ window.addEventListener('load', function () {
                 // 取得した要素をログに表示
                 inputFields.forEach(element => {
                     var id = element.getAttribute('field-id');
-                    fielddata.id.push(getItemdata(element,id));                    
+                    fielddata.id = getItemdata(element,id);                    
                 });
                 var data = {
                     url: pageKey, // 保存時に現在のページのURLを含む
