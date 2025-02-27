@@ -244,7 +244,7 @@ window.addEventListener('load', function () {
         }
         if(!params.size){
             // 前回保存されたデータをlocalStorageから読み込む
-            var savedData = localStorage.getItem(pageKey);
+            var savedData = localStorage.getItem(pageKey.split('?')[0]);
             if (savedData) {
                 var data = JSON.parse(savedData);
                 var inputs = document.querySelectorAll('input, select, textarea');
