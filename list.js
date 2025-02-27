@@ -162,7 +162,7 @@ function getItemdata(item,key){
             //             `.kb-table[field-id="${key}"] > tbody > tr  > table`;
             var subarray = [];
             tr.forEach(element => {
-                var query = `.kb-field:not(.kb-unuse), .kb-table(.kb-unuse)`;
+                var query = `.kb-field, .kb-table`;
                 var inputFields = element.querySelectorAll(query);
                 var subdata = {};
                 inputFields.forEach(input => {
@@ -293,8 +293,8 @@ window.addEventListener('load', function () {
             var confirmSave = confirm('共有のデバイス（職場のパソコンなど）では保存したデータが第三者に見られる危険があります。それでも保存しますか？');
             if (confirmSave) {
                 // IDに'input'を含むすべてのinputタグを取得
-                // var inputFields = document.querySelectorAll('input, select, textarea');
-                var inputFields = document.querySelectorAll('.kb-injector-body > .kb-field, .kb-injector-body > .kb-table');
+                // var inputFields = document.querySelectorAll('input, select, textarea');`.kb-field:not(.kb-unuse), .kb-table(.kb-unuse)`
+                var inputFields = document.querySelectorAll('.kb-injector-body > .kb-field:not(.kb-unuse), .kb-injector-body > .kb-table:not(.kb-unuse)');
                 var fielddata = {};
                 // 取得した要素をログに表示
                 inputFields.forEach(element => {
