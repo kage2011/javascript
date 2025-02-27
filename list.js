@@ -193,6 +193,42 @@ function getItemdata(item,key){
     }
 }
 
+function setItemdata(item,key){
+    var type = item.type;
+    var value = item.value;
+    switch (type) {
+        case 'kb-field':
+            var query = `.kb-field[field-id="${key}"] input, ` +
+                        `.kb-field[field-id="${key}"] select, ` + 
+                        `.kb-field[field-id="${key}"] textarea`;
+            var ischeckbox = item.querySelector('.kb-checkbox');
+            if (ischeckbox) {
+                var inputcheckboxs = document.querySelectorAll(`.kb-field[field-id="${key}"] input`);
+                inputcheckboxs.forEach(element => {
+                    element.checked = false;
+                });
+                var inputcheck = document.querySelector(`.kb-field[field-id="${key}"] input[value=${value}]`);
+                var inputField = document.querySelector(`.kb-field[field-id="${key}"] .kb-guide`);
+                inputField.textContent = value;
+                inputcheck.checked = true;
+            }
+            else{
+                var inputField = document.querySelector(query);
+                inputField.value = value;
+            }
+            break;
+        case 'kb-table':
+            value.forEach(element => {
+                Object.keys(element).forEach(function(subkey) {
+                    setItemdata(element[subkey],subkey);
+                });
+            });
+            break;
+        default:
+            break;
+    }
+}
+
 window.addEventListener('load', function () {
     // 復号化関数
     function decrypt(encryptedText, password) {
@@ -247,6 +283,9 @@ window.addEventListener('load', function () {
             var savedData = localStorage.getItem(pageKey.split('?')[0]);
             if (savedData) {
                 var data = JSON.parse(savedData);
+                Object.keys(data.fields).forEach(function(key) {
+                    setItemdata(data.fields[key]);
+                });
                 var inputs = document.querySelectorAll('input, select, textarea');
                 var i = 0;
                 data.fields.forEach(function (item) {
