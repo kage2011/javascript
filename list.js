@@ -155,22 +155,26 @@ function getItemdata(item,key){
             }
             return data;
         case 'kb-table':
-            var child = item.querySelector('tbody tr');
+            var tr = item.querySelectorAll('tbody');
             // var query = `.kb-table[field-id="${key}"] > tbody > tr > input, ` + 
             //             `.kb-table[field-id="${key}"] > tbody > tr  > select, ` + 
             //             `.kb-table[field-id="${key}"] > tbody > tr  > textarea, ` + 
             //             `.kb-table[field-id="${key}"] > tbody > tr  > table`;
-            var query = `.kb-field, .kb-table`;
-            var inputFields = child.querySelectorAll(query);
-            var subdata = [];
-            inputFields.forEach(element => {
-                var id = element.getAttribute('field-id');
-                subdata.push(getItemdata(element,id));
+            var subarray = [];
+            tr.forEach(element => {
+                var query = `.kb-field, .kb-table`;
+                var inputFields = child.querySelectorAll(query);
+                var subdata = {};
+                inputFields.forEach(element => {
+                    var id = element.getAttribute('field-id');
+                    subdata[id] = getItemdata(element,id);
+                });
+                subarray.push(subdata);    
             });
             var data = {
                 id : key,
                 type : type,
-                value : subdata
+                value : subarray
             }
             return data;    
         default:
