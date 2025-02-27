@@ -155,7 +155,7 @@ function getItemdata(item,key){
             }
             return data;
         case 'kb-table':
-            var query = `> input, > select, > textarea, > teble`;
+            var query = `> input, > select, > textarea, > table`;
             var inputFields = item.querySelectorAll(query);
             var subdata = [];
             inputFields.forEach(element => {
