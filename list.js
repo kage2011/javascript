@@ -194,7 +194,7 @@ function getItemdata(item,key){
 }
 
 // 監視対象のクラス名
-const targetClass = 'kb-injector-button';
+const targetClass = '.kb-injector-button';
 
 // 対象の要素を取得（複数ある場合）
 const targetNodes = document.querySelectorAll(`.${targetClass}`);
