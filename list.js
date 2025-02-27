@@ -44,7 +44,12 @@ function extractType(field,key,idx) {
         case 'CHECK_BOX':
             query = `${idx}.kb-field[field-id="${key}"]`;
             value = field[key]["value"];
-            inputtype = 2;
+            if (value) {
+                inputtype = 2;
+            }
+            else{
+                inputtype = 0;
+            }
             break;
         case 'DROP_DOWN':
             query = `${idx}.kb-field[field-id="${key}"] select`;
@@ -98,20 +103,6 @@ function extractType(field,key,idx) {
                 });
             }
             rowIndex = "";
-            // field[key]["value"].forEach(function(sub) {
-            //     Object.keys(sub["value"]).forEach(function(subkey) {
-            //         if (sub["value"][subkey]["type"] != 'NONE'){
-            //             extractType(sub["value"],subkey);
-            //         }
-            //     });    
-            // });
-            // field[key]["value"].forEach(function(sub) {
-            //     Object.keys(field[key]["value"]).forEach(function(subkey) {
-            //         if (field[key]["value"][subkey]["type"] != 'NONE'){
-            //             extractType(field[key]["value"],subkey);
-            //         }
-            //     });    
-            // });
             return;
         default:
             break;
@@ -145,21 +136,6 @@ function extractType(field,key,idx) {
     }    
 }
 
-// 付与されたパラメータを取得
-var params = new URLSearchParams(window.location.search);
-var cryptoData;
-const paramText = params.get('data');
-if(params.size){
-    fetchData(paramText)
-        .then(data => {
-            if (data) {
-                cryptoData = data;
-            } else {
-                console.log('No data found for the given hash.');
-            }
-        });
-}
-
 window.addEventListener('load', function () {
     // 復号化関数
     function decrypt(encryptedText, password) {
@@ -186,6 +162,19 @@ window.addEventListener('load', function () {
 
     setTimeout(function () {
         // 付与されたパラメータを取得
+        var params = new URLSearchParams(window.location.search);
+        var cryptoData;
+        const paramText = params.get('data');
+        if(params.size){
+            fetchData(paramText)
+                .then(data => {
+                    if (data) {
+                        cryptoData = data;
+                    } else {
+                        console.log('No data found for the given hash.');
+                    }
+                });
+        }
         const password = 'og-ogsas';
         if(cryptoData){
             try {
