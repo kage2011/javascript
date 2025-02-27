@@ -209,14 +209,13 @@ window.addEventListener('load', function () {
     const callback = function(mutationsList, observer) {
         for (let mutation of mutationsList) {
             if (mutation.type === 'childList') {
-                console.log('子ノードの変更を検出しました');
                 // 追加された要素が指定したクラスを持つかどうかを確認
                 mutation.addedNodes.forEach(node => {
                     if (node.nodeType === 3)  {
                         console.log(node);
-                        console.log('指定したクラスのフォームが構築されました');
                         runAdditionalProcess();
                         observer.disconnect(); // 監視を停止
+                        return;
                     }
                 });
             }
@@ -231,54 +230,6 @@ window.addEventListener('load', function () {
 
     // フォーム構築完了後に実行したい処理
     function runAdditionalProcess() {
-        console.log('追加の処理を実行します');
-        // ここに追加の処理を記述
-    }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    // 復号化関数
-    function decrypt(encryptedText, password) {
-        const parts = encryptedText.split(':'); // IVと暗号文を分割
-        const iv = CryptoJS.enc.Hex.parse(parts[0]); // IVをHexからWordArrayに変換
-        const ciphertext = CryptoJS.enc.Hex.parse(parts[1]); // 暗号文をHexからWordArrayに変換
-
-        const key = CryptoJS.SHA256(password); // パスワードからキーを生成
-
-        const decrypted = CryptoJS.AES.decrypt(
-            { ciphertext: ciphertext },
-            key,
-            {
-                iv: iv,
-                mode: CryptoJS.mode.CBC,
-                padding: CryptoJS.pad.Pkcs7
-            }
-        );
-
-        return decrypted.toString(CryptoJS.enc.Utf8); // UTF-8形式で復号化されたテキストを返す
-    }
-    // 現在のページのURLを取得（キーとして使用）
-    var pageKey = window.location.href;
-
-    setTimeout(function () {
         // 付与されたパラメータを取得
         var params = new URLSearchParams(window.location.search);
         const paramText = params.get('data');
@@ -420,5 +371,172 @@ window.addEventListener('load', function () {
                 alert('クリアがキャンセルされました');
             }
         });
+    }
+
+    // 復号化関数
+    function decrypt(encryptedText, password) {
+        const parts = encryptedText.split(':'); // IVと暗号文を分割
+        const iv = CryptoJS.enc.Hex.parse(parts[0]); // IVをHexからWordArrayに変換
+        const ciphertext = CryptoJS.enc.Hex.parse(parts[1]); // 暗号文をHexからWordArrayに変換
+
+        const key = CryptoJS.SHA256(password); // パスワードからキーを生成
+
+        const decrypted = CryptoJS.AES.decrypt(
+            { ciphertext: ciphertext },
+            key,
+            {
+                iv: iv,
+                mode: CryptoJS.mode.CBC,
+                padding: CryptoJS.pad.Pkcs7
+            }
+        );
+
+        return decrypted.toString(CryptoJS.enc.Utf8); // UTF-8形式で復号化されたテキストを返す
+    }
+    // 現在のページのURLを取得（キーとして使用）
+    var pageKey = window.location.href;
+
+    setTimeout(function () {
+        // // 付与されたパラメータを取得
+        // var params = new URLSearchParams(window.location.search);
+        // const paramText = params.get('data');
+        // if(params.size){
+        //     fetchData(paramText)
+        //         .then(data => {
+        //             if (data) {
+        //                 const password = 'og-ogsas';
+        //                 try {
+        //                     const decryptedData = decrypt(data, password);
+        //                     const jsonparam = JSON.parse(decryptedData);
+        //                     Object.keys(jsonparam).forEach(function(key) {
+        //                         if (jsonparam[key]["type"] != 'NONE'){
+        //                             extractType(jsonparam,key,"");
+        //                         }
+        //                     });
+        //                 } catch (error) {
+        //                     console.error(error.message);
+        //                 }
+        //             } else {
+        //                 console.log('No data found for the given hash.');
+        //             }
+        //         });
+        // }
+        // if(!params.size){
+        //     // 前回保存されたデータをlocalStorageから読み込む
+        //     var savedData = localStorage.getItem(pageKey);
+        //     if (savedData) {
+        //         var data = JSON.parse(savedData);
+        //         var inputs = document.querySelectorAll('input, select, textarea');
+        //         var i = 0;
+        //         data.fields.forEach(function (item) {
+        //             var inputField = inputs[i];
+        //             if (inputField) {
+        //                 if (inputField.type === 'checkbox' || inputField.type === 'radio') {
+        //                     // checkboxの場合はchecked状態を復元
+        //                     inputField.checked = item.checked;
+        //                 } else {
+        //                     // それ以外の場合はvalueを復元
+        //                     inputField.value = item.value;
+        //                 }
+        //             }
+        //             i++;
+        //         });
+        //     }
+        
+        // }
+
+        // // 保存ボタンを作成
+        // var saveButton = document.createElement('button');
+        // saveButton.id = 'saveButton';
+        // saveButton.textContent = '保存';
+        // saveButton.style.backgroundColor = 'lime'; // ボタンの色を緑に設定
+        // saveButton.style.marginLeft = '10px'; // 左側にスペースを追加
+        // saveButton.style.verticalAlign = 'text-bottom';
+
+        // // クリアボタンを作成
+        // var clearButton = document.createElement('button');
+        // clearButton.id = 'clearButton';
+        // clearButton.textContent = 'クリア';
+        // clearButton.style.backgroundColor = 'red'; // ボタンの色を赤に設定
+        // clearButton.style.marginLeft = '10px'; // 左側にスペースを追加
+        // clearButton.style.verticalAlign = 'text-bottom';
+
+        // var title = document.querySelectorAll('.kb-injector-header-title');
+        // if (title[0]) {
+        //     title[0].appendChild(saveButton);
+        //     title[0].appendChild(clearButton);
+        // }
+
+        // // kb-injector-buttonクラスを持つすべての要素を取得
+        // var buttons = document.querySelectorAll('.kb-injector-button');
+
+        // // 各ボタンにクリックイベントを追加
+        // buttons.forEach(function (button) {
+        //     button.addEventListener('click', function () {
+        //         localStorage.removeItem(pageKey);
+        //     });
+        // });
+
+        // // 保存ボタンがクリックされたときの処理を追加
+        // saveButton.addEventListener('click', function () {
+        //     // 警告を表示してユーザーに確認
+        //     var confirmSave = confirm('共有のデバイス（職場のパソコンなど）では保存したデータが第三者に見られる危険があります。それでも保存しますか？');
+        //     if (confirmSave) {
+        //         // IDに'input'を含むすべてのinputタグを取得
+        //         // var inputFields = document.querySelectorAll('input, select, textarea');`.kb-field:not(.kb-unuse), .kb-table(.kb-unuse)`
+        //         var inputFields = document.querySelectorAll('.kb-injector-body > .kb-field:not(.kb-unuse), .kb-injector-body > .kb-table:not(.kb-unuse)');
+        //         var fielddata = {};
+        //         // 取得した要素をログに表示
+        //         inputFields.forEach(element => {
+        //             var id = element.getAttribute('field-id');
+        //             fielddata[id] = getItemdata(element,id);                    
+        //         });
+        //         var data = {
+        //             url: pageKey, // 保存時に現在のページのURLを含む
+        //             fields: fielddata // 入力データを保存
+        //         };
+
+        //         // 各inputタグのclassと値をセットにしたオブジェクトを作成
+        //         inputFields.forEach(function (inputField) {
+        //             if (inputField.type === 'checkbox' || inputField.type === 'radio') {
+        //                 // checkboxの場合はchecked状態を保存
+        //                 data.fields.push({
+        //                     checked: inputField.checked
+        //                 });
+        //             } else {
+        //                 // それ以外の場合はvalueを保存
+        //                 data.fields.push({
+        //                     value: inputField.value
+        //                 });
+        //             }
+        //         });
+
+        //         // データをlocalStorageに保存
+        //         localStorage.setItem(pageKey.split('?')[0], JSON.stringify(data));
+
+        //         // classが'test'のmain要素を取得
+        //         var mainElement = document.querySelector('.kb-injector-body');
+
+        //         if (mainElement) {
+        //             // 'unsaved'属性を削除
+        //             mainElement.removeAttribute('unsaved');
+        //         }
+        //         alert('データが保存されました');
+        //     } else {
+        //         alert('保存がキャンセルされました');
+        //     }
+        // });
+
+        // // クリアボタンがクリックされたときの処理を追加
+        // clearButton.addEventListener('click', function () {
+        //     var confirmClear = confirm('現在のページの保存データをクリアしますか？');
+        //     if (confirmClear) {
+        //         localStorage.removeItem(pageKey);
+        //         alert('保存データがクリアされました');
+        //         window.location.reload(); // ページをリロードして入力フィールドを初期化
+        //     } else {
+        //         alert('クリアがキャンセルされました');
+        //     }
+        // });
     }, 2000);
 });
