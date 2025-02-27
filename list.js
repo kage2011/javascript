@@ -160,7 +160,7 @@ function getItemdata(item,key){
             //             `.kb-table[field-id="${key}"] > tbody > tr  > select, ` + 
             //             `.kb-table[field-id="${key}"] > tbody > tr  > textarea, ` + 
             //             `.kb-table[field-id="${key}"] > tbody > tr  > table`;
-            var query = `input, select, textarea, table`;
+            var query = `.kb-field, .kb-table`;
             var inputFields = child.querySelectorAll(query);
             var subdata = [];
             inputFields.forEach(element => {
