@@ -202,6 +202,7 @@ function setItemdata(item,key){
                         `.kb-field[field-id="${key}"] select, ` + 
                         `.kb-field[field-id="${key}"] textarea`;
             var ischeckbox = document.querySelector(`.kb-field[field-id="${key}"] .kb-checkbox`);
+            var istime = document.querySelector(`.kb-field[field-id="${key}"] .kb-hour`);
             if (ischeckbox) {
                 var inputcheckboxs = document.querySelectorAll(`.kb-field[field-id="${key}"] input`);
                 inputcheckboxs.forEach(element => {
@@ -211,6 +212,12 @@ function setItemdata(item,key){
                 var inputField = document.querySelector(`.kb-field[field-id="${key}"] .kb-guide`);
                 inputField.textContent = value;
                 inputcheck.checked = true;
+            }
+            else if (istime) {
+                var inputhour = document.querySelector(`.kb-field[field-id="${key}"] .kb-hour select`);
+                var inputminute = document.querySelector(`.kb-field[field-id="${key}"] .kb-minute select`);
+                inputhour.value = value.split(":")[0];
+                inputminute.value = value.split(":")[1];
             }
             else{
                 var inputField = document.querySelector(query);
