@@ -155,7 +155,7 @@ function getItemdata(item,key){
             }
             return data;
         case 'kb-table':
-            var tr = item.querySelectorAll('tbody');
+            var tr = item.querySelectorAll('tr');
             // var query = `.kb-table[field-id="${key}"] > tbody > tr > input, ` + 
             //             `.kb-table[field-id="${key}"] > tbody > tr  > select, ` + 
             //             `.kb-table[field-id="${key}"] > tbody > tr  > textarea, ` + 
