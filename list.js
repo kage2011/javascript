@@ -193,6 +193,10 @@ function getItemdata(item,key){
     }
 }
 
+kb.injector.build.then(function () {
+    console.log("kb.injector.build.then");
+});
+
 window.addEventListener('load', function () {
     // 復号化関数
     function decrypt(encryptedText, password) {
