@@ -212,7 +212,8 @@ window.addEventListener('load', function () {
                 console.log('子ノードの変更を検出しました');
                 // 追加された要素が指定したクラスを持つかどうかを確認
                 mutation.addedNodes.forEach(node => {
-                    if (node.nodeType === 1 && node.classList.contains(targetClass)) {
+                    if (node.nodeType === 3)  {
+                        console.log(node);
                         console.log('指定したクラスのフォームが構築されました');
                         runAdditionalProcess();
                         observer.disconnect(); // 監視を停止
