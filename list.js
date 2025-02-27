@@ -163,41 +163,27 @@ window.addEventListener('load', function () {
     setTimeout(function () {
         // 付与されたパラメータを取得
         var params = new URLSearchParams(window.location.search);
-        var cryptoData;
         const paramText = params.get('data');
         if(params.size){
             fetchData(paramText)
                 .then(data => {
                     if (data) {
-                        cryptoData = data;
+                        const password = 'og-ogsas';
+                        try {
+                            const decryptedData = decrypt(data, password);
+                            const jsonparam = JSON.parse(decryptedData);
+                            Object.keys(jsonparam).forEach(function(key) {
+                                if (jsonparam[key]["type"] != 'NONE'){
+                                    extractType(jsonparam,key,"");
+                                }
+                            });
+                        } catch (error) {
+                            console.error(error.message);
+                        }
                     } else {
                         console.log('No data found for the given hash.');
                     }
                 });
-        }
-        const password = 'og-ogsas';
-        if(cryptoData){
-            try {
-                const decryptedData = decrypt(cryptoData, password);
-                const jsonparam = JSON.parse(decryptedData);
-                Object.keys(jsonparam).forEach(function(key) {
-                    if (jsonparam[key]["type"] != 'NONE'){
-                        extractType(jsonparam,key,"");
-                    }
-                });
-                // // 復号したデータをパースして各入力フィールドに反映
-                // const paramsObject = Object.fromEntries(new URLSearchParams(decryptedData));
-                // for (const [key, value] of Object.entries(paramsObject)) {
-                //     // var inputField = document.querySelector(`.kb-field[field-id="${key}"] input[data-type="text"]`);
-                //     // var inputField = document.querySelector(`.kb-field[field-id="${key}"]`);// input[data-type="text"]`);
-                //     var inputField = document.querySelector(`.kb-field[field-id="${key}"] input, .kb-field[field-id="${key}"] select, .kb-field[field-id="${key}"] textarea`);
-                //     if (inputField) {
-                //         inputField.value = value;
-                //     }
-                // }
-            } catch (error) {
-                console.error(error.message);
-            }
         }
         if(!params.size){
             // 前回保存されたデータをlocalStorageから読み込む
