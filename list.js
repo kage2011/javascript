@@ -196,30 +196,40 @@ function getItemdata(item,key){
 // 監視対象のクラス名
 const targetClass = '.kb-injector-button';
 
-// 対象の要素を取得（複数ある場合）
-const targetNodes = document.querySelectorAll(`.${targetClass}`);
+// 監視対象の親要素を取得します
+const parentNode = document.querySelector('.kb-field');
 
 // オプション設定
-const config = { childList: true, subtree: true, attributes: true, attributeFilter: ['class'] };
+const config = { childList: true, subtree: true };
 
 // コールバック関数
 const callback = function(mutationsList, observer) {
     for (let mutation of mutationsList) {
         if (mutation.type === 'childList') {
             console.log('子ノードの変更を検出しました');
-        } else if (mutation.type === 'attributes' && mutation.attributeName === 'class') {
-            console.log('クラス属性の変更を検出しました');
+            // 追加された要素が指定したクラスを持つかどうかを確認
+            mutation.addedNodes.forEach(node => {
+                if (node.classList && node.classList.contains('kb-field')) {
+                    console.log('指定したクラスのフォームが構築されました');
+                    runAdditionalProcess();
+                    observer.disconnect(); // 監視を停止
+                }
+            });
         }
     }
-    // 追加の処理
-    runAdditionalProcess();
 };
 
 // オブザーバーインスタンスを生成
 const observer = new MutationObserver(callback);
 
 // 監視を開始
-targetNodes.forEach(node => observer.observe(node, config));
+observer.observe(parentNode, config);
+
+// フォーム構築完了後に実行したい処理
+function runAdditionalProcess() {
+    console.log('追加の処理を実行します');
+    // ここに追加の処理を記述
+}
 
 // フォーム構築完了後に実行したい処理
 function runAdditionalProcess() {
