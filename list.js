@@ -258,9 +258,6 @@ function setItemdata(item,key){
 }
 
 window.addEventListener('load', function () {
-    // 監視対象のクラス名
-    const targetClass = '.kb-injector-button';
-
     // 監視対象の親要素を取得します
     const parentNode = document.body;  // 親要素が見つからない場合、全体のボディを監視
 
@@ -318,23 +315,11 @@ window.addEventListener('load', function () {
         }
         if(!params.size){
             // 前回保存されたデータをlocalStorageから読み込む
-            var savedData = localStorage.getItem(pageKey);
+            var savedData = localStorage.getItem(pageKey.split('?')[0]);
             if (savedData) {
                 var data = JSON.parse(savedData);
-                var inputs = document.querySelectorAll('input, select, textarea');
-                var i = 0;
-                data.fields.forEach(function (item) {
-                    var inputField = inputs[i];
-                    if (inputField) {
-                        if (inputField.type === 'checkbox' || inputField.type === 'radio') {
-                            // checkboxの場合はchecked状態を復元
-                            inputField.checked = item.checked;
-                        } else {
-                            // それ以外の場合はvalueを復元
-                            inputField.value = item.value;
-                        }
-                    }
-                    i++;
+                Object.keys(data.fields).forEach(function(key) {
+                    setItemdata(data.fields[key],key);
                 });
             }
         
@@ -387,24 +372,9 @@ window.addEventListener('load', function () {
                     fielddata[id] = getItemdata(element,id);                    
                 });
                 var data = {
-                    url: pageKey, // 保存時に現在のページのURLを含む
+                    url: pageKey.split('?')[0], // 保存時に現在のページのURLを含む
                     fields: fielddata // 入力データを保存
                 };
-
-                // 各inputタグのclassと値をセットにしたオブジェクトを作成
-                inputFields.forEach(function (inputField) {
-                    if (inputField.type === 'checkbox' || inputField.type === 'radio') {
-                        // checkboxの場合はchecked状態を保存
-                        data.fields.push({
-                            checked: inputField.checked
-                        });
-                    } else {
-                        // それ以外の場合はvalueを保存
-                        data.fields.push({
-                            value: inputField.value
-                        });
-                    }
-                });
 
                 // データをlocalStorageに保存
                 localStorage.setItem(pageKey.split('?')[0], JSON.stringify(data));
@@ -433,6 +403,7 @@ window.addEventListener('load', function () {
                 alert('クリアがキャンセルされました');
             }
         });
+    
     }
 
     // 復号化関数
