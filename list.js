@@ -213,7 +213,7 @@ function setItemdata(item,key){
                         `${rowIndex}.kb-field[field-id="${key}"] textarea`;
             var ischeckbox = document.querySelector(`${rowIndex}.kb-field[field-id="${key}"] .kb-checkbox`);
             var istime = document.querySelector(`${rowIndex}.kb-field[field-id="${key}"] .kb-hour`);
-            if (ischeckbox) {
+            if (ischeckbox && value) {
                 var inputcheckboxs = document.querySelectorAll(`${rowIndex}.kb-field[field-id="${key}"] input`);
                 inputcheckboxs.forEach(element => {
                     element.checked = false;
