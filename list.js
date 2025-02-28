@@ -147,6 +147,7 @@ function getItemdata(item,key){
             //             `.kb-field[field-id="${key}"] select, ` + 
             //             `.kb-field[field-id="${key}"] textarea`;
             const ischeckbox = item.querySelector('.kb-checkbox');
+            const istime = item.querySelector('.kb-hour');
             if (ischeckbox) {
                 var span = item.querySelector('.kb-checkbox .kb-guide');
                 var data = {
@@ -156,7 +157,16 @@ function getItemdata(item,key){
                 }
                 return data;
             }
-
+            if (istime) {
+                var inputhour = item.querySelector('.kb-hour select');
+                var inputminute = item.querySelector('.kb-minute select');
+                var data = {
+                    id : key,
+                    type : type,
+                    value : inputhour.value + ":" + inputminute.value
+                }
+                return data;
+            }
             var query = `input, select, textarea`;
             var inputField = item.querySelector(query);
             var data = {
@@ -193,9 +203,61 @@ function getItemdata(item,key){
     }
 }
 
+function setItemdata(item,key){
+    var type = item.type;
+    var value = item.value;
+    switch (type) {
+        case 'kb-field':
+            var query = `${rowIndex}.kb-field[field-id="${key}"] input, ` +
+                        `${rowIndex}.kb-field[field-id="${key}"] select, ` + 
+                        `${rowIndex}.kb-field[field-id="${key}"] textarea`;
+            var ischeckbox = document.querySelector(`${rowIndex}.kb-field[field-id="${key}"] .kb-checkbox`);
+            var istime = document.querySelector(`${rowIndex}.kb-field[field-id="${key}"] .kb-hour`);
+            if (ischeckbox) {
+                var inputcheckboxs = document.querySelectorAll(`${rowIndex}.kb-field[field-id="${key}"] input`);
+                inputcheckboxs.forEach(element => {
+                    element.checked = false;
+                });
+                var inputcheck = document.querySelector(`${rowIndex}.kb-field[field-id="${key}"] input[value=${value}]`);
+                var inputField = document.querySelector(`${rowIndex}.kb-field[field-id="${key}"] .kb-guide`);
+                inputField.textContent = value;
+                inputcheck.checked = true;
+            }
+            else if (istime) {
+                var inputhour = document.querySelector(`${rowIndex}.kb-field[field-id="${key}"] .kb-hour select`);
+                var inputminute = document.querySelector(`${rowIndex}.kb-field[field-id="${key}"] .kb-minute select`);
+                inputhour.value = value.split(":")[0];
+                inputminute.value = value.split(":")[1];
+            }
+            else{
+                var inputField = document.querySelector(query);
+                inputField.value = value;
+            }
+            break;
+        case 'kb-table':
+            for (let i = 0; i < value.length; i++) {
+                // 項目が複数ある場合は行を追加
+                if (i > 0) {
+                    var table = document.querySelector(`.kb-table[field-id="${key}"]`);
+                    var child = document.querySelector(`.kb-table[field-id="${key}"] tbody tr`);
+                    table.insertRow(child);
+                    rowIndex = `tr.kb-scope[row-idx="${i}"] `;
+                }
+                Object.keys(value[i]).forEach(function(subkey) {
+                    if (value[i][subkey]["type"] != 'NONE'){
+                        setItemdata(value[i][subkey],subkey);
+                    }
+                });
+            }
+            rowIndex = "";
+            break;
+        default:
+            break;
+    }
+    return;
+}
 
 window.addEventListener('load', function () {
-
     // 監視対象のクラス名
     const targetClass = '.kb-injector-button';
 
@@ -423,23 +485,11 @@ window.addEventListener('load', function () {
         // }
         // if(!params.size){
         //     // 前回保存されたデータをlocalStorageから読み込む
-        //     var savedData = localStorage.getItem(pageKey);
+        //     var savedData = localStorage.getItem(pageKey.split('?')[0]);
         //     if (savedData) {
         //         var data = JSON.parse(savedData);
-        //         var inputs = document.querySelectorAll('input, select, textarea');
-        //         var i = 0;
-        //         data.fields.forEach(function (item) {
-        //             var inputField = inputs[i];
-        //             if (inputField) {
-        //                 if (inputField.type === 'checkbox' || inputField.type === 'radio') {
-        //                     // checkboxの場合はchecked状態を復元
-        //                     inputField.checked = item.checked;
-        //                 } else {
-        //                     // それ以外の場合はvalueを復元
-        //                     inputField.value = item.value;
-        //                 }
-        //             }
-        //             i++;
+        //         Object.keys(data.fields).forEach(function(key) {
+        //             setItemdata(data.fields[key],key);
         //         });
         //     }
         
@@ -492,24 +542,9 @@ window.addEventListener('load', function () {
         //             fielddata[id] = getItemdata(element,id);                    
         //         });
         //         var data = {
-        //             url: pageKey, // 保存時に現在のページのURLを含む
+        //             url: pageKey.split('?')[0], // 保存時に現在のページのURLを含む
         //             fields: fielddata // 入力データを保存
         //         };
-
-        //         // 各inputタグのclassと値をセットにしたオブジェクトを作成
-        //         inputFields.forEach(function (inputField) {
-        //             if (inputField.type === 'checkbox' || inputField.type === 'radio') {
-        //                 // checkboxの場合はchecked状態を保存
-        //                 data.fields.push({
-        //                     checked: inputField.checked
-        //                 });
-        //             } else {
-        //                 // それ以外の場合はvalueを保存
-        //                 data.fields.push({
-        //                     value: inputField.value
-        //                 });
-        //             }
-        //         });
 
         //         // データをlocalStorageに保存
         //         localStorage.setItem(pageKey.split('?')[0], JSON.stringify(data));
