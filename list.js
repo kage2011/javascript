@@ -258,6 +258,11 @@ function setItemdata(item,key){
 }
 
 window.addEventListener('load', function () {
+
+    // 現在のページのURLを取得（キーとして使用）
+    var pageKey = window.location.href;
+
+
     // 監視対象の親要素を取得します
     const parentNode = document.body;  // 親要素が見つからない場合、全体のボディを監視
 
@@ -426,9 +431,6 @@ window.addEventListener('load', function () {
 
         return decrypted.toString(CryptoJS.enc.Utf8); // UTF-8形式で復号化されたテキストを返す
     }
-    // 現在のページのURLを取得（キーとして使用）
-    var pageKey = window.location.href;
-
     setTimeout(function () {
         // // 付与されたパラメータを取得
         // var params = new URLSearchParams(window.location.search);
