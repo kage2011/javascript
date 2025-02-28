@@ -257,6 +257,8 @@ function setItemdata(item,key){
     return;
 }
 
+var data_loaded = false;
+
 window.addEventListener('load', function () {
 
     // 現在のページのURLを取得（キーとして使用）
@@ -277,6 +279,9 @@ window.addEventListener('load', function () {
                 mutation.addedNodes.forEach(node => {
                     if (node.nodeType === 3)  {
                         console.log(node);
+                        if (data_loaded) {
+                            return;
+                        }
                         runAdditionalProcess();
                         observer.disconnect(); // 監視を停止
                         return;
@@ -294,6 +299,7 @@ window.addEventListener('load', function () {
 
     // フォーム構築完了後に実行したい処理
     function runAdditionalProcess() {
+        data_loaded = true;
         // 付与されたパラメータを取得
         var params = new URLSearchParams(window.location.search);
         const paramText = params.get('data');
