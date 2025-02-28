@@ -358,7 +358,7 @@ window.addEventListener('load', function () {
         // 各ボタンにクリックイベントを追加
         buttons.forEach(function (button) {
             button.addEventListener('click', function () {
-                localStorage.removeItem(pageKey);
+                localStorage.removeItem(pageKey.split('?')[0]);
             });
         });
 
