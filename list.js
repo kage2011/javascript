@@ -239,7 +239,7 @@ function setItemdata(item,key){
                 inputradios.forEach(element => {
                     element.checked = false;
                 });
-                var inpuradio = document.querySelector(`${rowIndex}.kb-field[field-id="${key}"] input[value=${value}]`);
+                var inputradio = document.querySelector(`${rowIndex}.kb-field[field-id="${key}"] input[value=${value}]`);
                 var inputField = document.querySelector(`${rowIndex}.kb-field[field-id="${key}"] .kb-guide`);
                 inputField.textContent = value;
                 inputradio.checked = true;
