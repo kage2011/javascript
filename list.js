@@ -147,9 +147,19 @@ function getItemdata(item,key){
             //             `.kb-field[field-id="${key}"] select, ` + 
             //             `.kb-field[field-id="${key}"] textarea`;
             const ischeckbox = item.querySelector('.kb-checkbox');
+            const isradio = item.querySelector('.kb-radio');
             const istime = item.querySelector('.kb-hour');
             if (ischeckbox) {
                 var span = item.querySelector('.kb-checkbox .kb-guide');
+                var data = {
+                    id : key,
+                    type : type,
+                    value : span.textContent
+                }
+                return data;
+            }
+            if (isradio) {
+                var span = item.querySelector('.kb-radio .kb-guide');
                 var data = {
                     id : key,
                     type : type,
@@ -212,6 +222,7 @@ function setItemdata(item,key){
                         `${rowIndex}.kb-field[field-id="${key}"] select, ` + 
                         `${rowIndex}.kb-field[field-id="${key}"] textarea`;
             var ischeckbox = document.querySelector(`${rowIndex}.kb-field[field-id="${key}"] .kb-checkbox`);
+            var isradio = document.querySelector(`${rowIndex}.kb-field[field-id="${key}"] .kb-radio`);
             var istime = document.querySelector(`${rowIndex}.kb-field[field-id="${key}"] .kb-hour`);
             if (ischeckbox && value) {
                 var inputcheckboxs = document.querySelectorAll(`${rowIndex}.kb-field[field-id="${key}"] input`);
@@ -222,6 +233,16 @@ function setItemdata(item,key){
                 var inputField = document.querySelector(`${rowIndex}.kb-field[field-id="${key}"] .kb-guide`);
                 inputField.textContent = value;
                 inputcheck.checked = true;
+            }
+            else if (isradio && value) {
+                var inputradios = document.querySelectorAll(`${rowIndex}.kb-field[field-id="${key}"] input`);
+                inputradios.forEach(element => {
+                    element.checked = false;
+                });
+                var inpuradio = document.querySelector(`${rowIndex}.kb-field[field-id="${key}"] input[value=${value}]`);
+                var inputField = document.querySelector(`${rowIndex}.kb-field[field-id="${key}"] .kb-guide`);
+                inputField.textContent = value;
+                inputradio.checked = true;
             }
             else if (istime) {
                 var inputhour = document.querySelector(`${rowIndex}.kb-field[field-id="${key}"] .kb-hour select`);
