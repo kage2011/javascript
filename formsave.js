@@ -9,7 +9,7 @@ async function fetchData(hash) {
     const url = 'https://bs61lgzu4g.execute-api.us-east-1.amazonaws.com/prod/sendback'; // 
 
     const response = await fetch(url, {
-        method: 'GET',
+        method: 'POST',
         headers: {
             'Content-Type': 'application/json'
         },
