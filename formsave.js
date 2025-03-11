@@ -23,7 +23,8 @@ async function fetchData(hash) {
     }
 
     const data = await response.json(); // レスポンスデータをJSON形式で取得
-    return data.data; // 取得したデータを返す
+    const jsondata = JSON.parse(data.body);
+    return jsondata.data; // 取得したデータを返す
 }
 
 function extractType(field,key,idx) {
