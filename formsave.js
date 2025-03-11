@@ -300,7 +300,6 @@ window.addEventListener('load', function () {
                 // 追加された要素が指定したクラスを持つかどうかを確認
                 mutation.addedNodes.forEach(node => {
                     if (node.nodeType === 3)  {
-                        console.log(node);
                         if (data_loaded) {
                             return;
                         }
