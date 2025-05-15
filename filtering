@@ -41,14 +41,12 @@ window.addEventListener('load', function () {
         if (typeDropdown && sizeTable) {
             const selectedType = typeDropdown.textContent; // 「種類」で選ばれた値
     
-            // サイズリストの絞り込み処理
-            const rows = Array.from(sizeTable.querySelectorAll('tr'));
+            // 各行の絞り込み処理
             rows.forEach(row => {
-                const sizeCell = row.querySelector('td'); // 各行のサイズセルを取得
-                const sizeValue = sizeCell ? sizeCell.textContent : '';
+                const spanElement = row.querySelector('td > div > div > span'); // span要素を取得
+                const spanText = spanElement ? spanElement.textContent : ''; // span内の文字列を取得
     
-                // 選ばれた文字列を含むか確認
-                if (sizeValue.includes(selectedType)) {
+                if (spanText.includes(selectedType)) {
                     row.style.display = ''; // 表示
                 } else {
                     row.style.display = 'none'; // 非表示
