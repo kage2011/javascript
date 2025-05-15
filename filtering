@@ -37,7 +37,7 @@ window.addEventListener('load', function () {
         const typeDropdown = document.querySelector('[field-id="種類"] .kb-field-value.kb-dropdown');
         
         // 「サイズ」リストの虫眼鏡ボタンの要素を取得
-        const sizeList = document.querySelector('[field-id="サイズ"] .kb-field-value.kb-list');
+        const sizeList = document.querySelector('body > div:nth-child(13) > div > div:nth-child(1) > table tr');
         
         // イベントリスナーを追加して絞り込み
         if (typeDropdown && sizeList) {
