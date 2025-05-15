@@ -40,7 +40,10 @@ window.addEventListener('load', function () {
         
         if (typeDropdown && sizeTable) {
             const selectedType = typeDropdown.textContent; // 「種類」で選ばれた値
-    
+            
+            // サイズリストのテーブルの行を取得
+            const rows = document.querySelectorAll('body > div:nth-child(13) > div > div:nth-child(1) > table > tbody > tr');    
+
             // 各行の絞り込み処理
             rows.forEach(row => {
                 const spanElement = row.querySelector('td > div > div > span'); // span要素を取得
