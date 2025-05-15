@@ -52,6 +52,7 @@ window.addEventListener('load', function () {
                 // displayの変更を監視
                 const styleObserver = new MutationObserver((mutationsList) => {
                     mutationsList.forEach(mutation => {
+                        console.log(mutation);
                         if (mutation.type === 'attributes' && mutation.attributeName === 'style') {
                             const displayStyle = window.getComputedStyle(targetElement).display;
                             if (displayStyle === 'flex') {
