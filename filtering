@@ -5,13 +5,14 @@ window.addEventListener('load', function () {
     // オプション設定
     const config = { childList: true, subtree: true };
     var data_loaded = false;
+
     // コールバック関数
     const callback = function(mutationsList, observer) {
         for (let mutation of mutationsList) {
             if (mutation.type === 'childList') {
                 // 追加された要素が指定したクラスを持つかどうかを確認
                 mutation.addedNodes.forEach(node => {
-                    if (node.nodeType === 3)  {
+                    if (node.nodeType === 1 && node.matches('body > div:nth-child(13) > div > div:nth-child(1) > table')) {
                         if (data_loaded) {
                             return;
                         }
@@ -36,59 +37,37 @@ window.addEventListener('load', function () {
         // 「種類」ドロップダウンの要素を取得
         const typeDropdown = document.querySelector('[field-id="種類"] .kb-field-value.kb-dropdown');
         
-        // 「サイズ」リストの虫眼鏡ボタンの要素を取得
-        const sizeList = document.querySelector('body > div:nth-child(13) > div > div:nth-child(1) > table tr');
+        // 「サイズ」リストのtable要素を取得
+        const sizeTable = document.querySelector('body > div:nth-child(13) > div > div:nth-child(1) > table');
         
         // イベントリスナーを追加して絞り込み
-        if (typeDropdown && sizeList) {
+        if (typeDropdown && sizeTable) {
           typeDropdown.addEventListener('change', (event) => {
             const selectedType = event.target.value; // 「種類」で選ばれた値
-        
-            // サイズリストをフィルタリング（以下はサンプル）
-            const filteredSizes = getFilteredSizes(selectedType); // 絞り込んだサイズを取得する関数
-            updateSizeList(sizeList, filteredSizes); // サイズリストを更新する関数
+            
+            // フィルタリング処理
+            const rows = Array.from(sizeTable.querySelectorAll('tr'));
+            rows.forEach(row => {
+              const sizeCell = row.querySelector('td');
+              const sizeValue = sizeCell ? sizeCell.textContent : '';
+              if (shouldDisplaySize(selectedType, sizeValue)) {
+                  row.style.display = ''; // 表示
+              } else {
+                  row.style.display = 'none'; // 非表示
+              }
+            });
           });
         } else {
           console.error('対象の要素が見つかりませんでした！');
         }
-        
-        // サンプル関数：フィルタリングされたサイズを取得
-        function getFilteredSizes(type) {
-          const sizeMap = {
+    }
+
+    // 表示条件を定義する関数
+    function shouldDisplaySize(type, size) {
+        const filterMap = {
             '保護着': ['S', 'M', 'L'],
             '作業服': ['XS', 'M', 'XL']
-          };
-          return sizeMap[type] || [];
-        }
-        
-        // サンプル関数：サイズリストを更新
-        function updateSizeList(listElement, sizes) {
-          listElement.innerHTML = ''; // 既存のリストをクリア
-          sizes.forEach(size => {
-            const listItem = document.createElement('div');
-            listItem.textContent = size;
-            listElement.appendChild(listItem);
-          });
-        }
-    }
-    // 復号化関数
-    function decrypt(encryptedText, password) {
-        const parts = encryptedText.split(':'); // IVと暗号文を分割
-        const iv = CryptoJS.enc.Hex.parse(parts[0]); // IVをHexからWordArrayに変換
-        const ciphertext = CryptoJS.enc.Hex.parse(parts[1]); // 暗号文をHexからWordArrayに変換
-
-        const key = CryptoJS.SHA256(password); // パスワードからキーを生成
-
-        const decrypted = CryptoJS.AES.decrypt(
-            { ciphertext: ciphertext },
-            key,
-            {
-                iv: iv,
-                mode: CryptoJS.mode.CBC,
-                padding: CryptoJS.pad.Pkcs7
-            }
-        );
-
-        return decrypted.toString(CryptoJS.enc.Utf8); // UTF-8形式で復号化されたテキストを返す
+        };
+        return filterMap[type]?.includes(size);
     }
 });
