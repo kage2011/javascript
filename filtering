@@ -40,8 +40,6 @@ window.addEventListener('load', function () {
     observer.observe(parentNode, config);
 
     function runAdditionalProcess() {
-        // 「虫眼鏡ボタン」の要素を取得
-        const searchButton = document.querySelector('body > div.kb-injector > div > main > table:nth-child(3) > tbody > tr > td:nth-child(2) > div > div > button.kb-icon.kb-icon-lookup.kb-search');        // 「種類」ドロップダウンの要素を取得
         const typeDropdown = document.querySelector('[field-id="種類"] .kb-field-value.kb-dropdown > span');
         
         // 「サイズ」リストのtable要素を取得
