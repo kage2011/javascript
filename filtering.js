@@ -51,7 +51,7 @@ window.addEventListener('load', function () {
     
                 // オプション設定：style属性の変更を監視
                 const styleConfig = { attributes: true, attributeFilter: ['style'] };
-                styleObserver.observe(targetElement, styleConfig);
+                styleObserver.observe(element, styleConfig);
             } else {
                 console.error('対象の要素が見つかりませんでした！');
             }
