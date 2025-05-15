@@ -36,7 +36,7 @@ window.addEventListener('load', function () {
         const typeDropdown = document.querySelector('[field-id="種類"] .kb-field-value.kb-dropdown > span');
         
         // 「サイズ」リストのtable要素を取得
-        const sizeTable = document.querySelector('body > div:nth-child(13) > div > div:nth-child(1) > table');
+        const sizeTable = document.querySelector('body > div:nth-child(13) > div > div:nth-child(1) > table > tbody ');
         
         if (typeDropdown && sizeTable) {
             const selectedType = typeDropdown.textContent; // 「種類」で選ばれた値
