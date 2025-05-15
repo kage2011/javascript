@@ -60,7 +60,7 @@ window.addEventListener('load', function () {
 
     function runAdditionalProcess() {
         const typeDropdown = document.querySelector('[field-id="種類"] .kb-field-value.kb-dropdown > span');
-        const sizeTable = document.querySelector('body > div:nth-child(13) > div > div:nth-child(1) > table > tbody');
+        const sizeTable = document.querySelectorAll('body > div > div > div > table > tbody');
         
         if (typeDropdown && sizeTable) {
             let selectedType = typeDropdown.textContent;
