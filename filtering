@@ -12,7 +12,7 @@ window.addEventListener('load', function () {
             if (mutation.type === 'childList') {
                 // 追加された要素が指定したクラスを持つかどうかを確認
                 mutation.addedNodes.forEach(node => {
-                    if (node.nodeType === 1 && node.matches('body > div:nth-child(13) > div > div:nth-child(1) > table')) {
+                    if (node.nodeType === 1 && node.matches('body > div:nth-child(13) > div > div:nth-child(1) > table > tbody > tr >td > div > span')) {
                         if (data_loaded) {
                             return;
                         }
