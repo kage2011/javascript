@@ -39,7 +39,7 @@ window.addEventListener('load', function () {
         const sizeTable = document.querySelector('body > div:nth-child(13) > div > div:nth-child(1) > table');
         
         if (typeDropdown && sizeTable) {
-            const selectedType = typeDropdown.value; // 「種類」で選ばれた値
+            const selectedType = typeDropdown.textContent; // 「種類」で選ばれた値
     
             // サイズリストの絞り込み処理
             const rows = Array.from(sizeTable.querySelectorAll('tr'));
