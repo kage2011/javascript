@@ -31,37 +31,32 @@ window.addEventListener('load', function () {
     // 監視を開始
     observer.observe(parentNode, config);
 
-    // フォーム構築完了後に実行したい処理
     function runAdditionalProcess() {
-        data_loaded = true;
         // 「種類」ドロップダウンの要素を取得
         const typeDropdown = document.querySelector('[field-id="種類"] .kb-field-value.kb-dropdown');
         
         // 「サイズ」リストのtable要素を取得
         const sizeTable = document.querySelector('body > div:nth-child(13) > div > div:nth-child(1) > table');
         
-        // イベントリスナーを追加して絞り込み
         if (typeDropdown && sizeTable) {
-          typeDropdown.addEventListener('change', (event) => {
-            const selectedType = event.target.value; // 「種類」で選ばれた値
-            
-            // フィルタリング処理
+            const selectedType = typeDropdown.value; // 「種類」で選ばれた値
+    
+            // サイズリストの絞り込み処理
             const rows = Array.from(sizeTable.querySelectorAll('tr'));
             rows.forEach(row => {
-              const sizeCell = row.querySelector('td');
-              const sizeValue = sizeCell ? sizeCell.textContent : '';
-              if (shouldDisplaySize(selectedType, sizeValue)) {
-                  row.style.display = ''; // 表示
-              } else {
-                  row.style.display = 'none'; // 非表示
-              }
+                const sizeCell = row.querySelector('td'); // 各行のサイズセルを取得
+                const sizeValue = sizeCell ? sizeCell.textContent : '';
+                if (shouldDisplaySize(selectedType, sizeValue)) {
+                    row.style.display = ''; // 表示
+                } else {
+                    row.style.display = 'none'; // 非表示
+                }
             });
-          });
         } else {
-          console.error('対象の要素が見つかりませんでした！');
+            console.error('「種類」のドロップダウンまたはテーブルが見つかりませんでした！');
         }
     }
-
+    
     // 表示条件を定義する関数
     function shouldDisplaySize(type, size) {
         const filterMap = {
