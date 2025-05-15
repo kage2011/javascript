@@ -11,7 +11,7 @@ window.addEventListener('load', function () {
             if (mutation.type === 'childList') {
                 mutation.addedNodes.forEach(node => {
                     console.log(node);
-                    if (node.nodeType === 1 && node.tagName === 'div.kb-injector') {
+                    if (node.nodeType === 1 && node.matchs('div.kb-injector')) {
                         // body > div を動的に監視
                         const table = node.querySelector('table > tbody');
                         if (table) {
