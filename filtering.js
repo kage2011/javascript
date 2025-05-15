@@ -36,8 +36,15 @@ window.addEventListener('load', function () {
         const parentNode = document.body; // 親要素を監視
         // オプション設定
         const config = { childList: true, subtree: true };
+        // MutationObserverを設定
         const Observer = new MutationObserver((mutationsList) => {
-            console.log(mutationsList);
+            mutationsList.forEach(mutation => {
+                mutation.addedNodes.forEach(node => {
+                    if (node.nodeType === Node.ELEMENT_NODE && node.innerText.includes("サイズ")) {
+                        console.log("サイズが含まれる要素:", node);
+                    }
+                });
+            });
         });
         Observer.observe(parentNode, config);
         const targetElements = document.querySelectorAll('body > div');
