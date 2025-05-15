@@ -33,125 +33,25 @@ window.addEventListener('load', function () {
     // フォーム構築完了後に実行したい処理
     function runAdditionalProcess() {
         data_loaded = true;
-        // kb-injector-buttonクラスを持つすべての要素を取得
-        var buttons = document.querySelectorAll('[field-id="種類"] .kb-field-value.kb-dropdown');
-        // 付与されたパラメータを取得
-        var params = new URLSearchParams(window.location.search);
-        const paramText = params.get('data');
-        if(params.size){
-            fetchData(paramText)
-                .then(data => {
-                    if (data) {
-                        const password = 'og-ogsas';
-                        try {
-                            const decryptedData = decrypt(data, password);
-                            const jsonparam = JSON.parse(decryptedData);
-                            Object.keys(jsonparam).forEach(function(key) {
-                                if (jsonparam[key]["type"] != 'NONE'){
-                                    extractType(jsonparam,key,"");
-                                }
-                            });
-                        } catch (error) {
-                            console.error(error.message);
-                        }
-                    } else {
-                        console.log('No data found for the given hash.');
-                    }
-                });
-        }
-        if(!params.size){
-            // 前回保存されたデータをlocalStorageから読み込む
-            var savedData = localStorage.getItem(pageKey.split('?')[0]);
-            if (savedData) {
-                var data = JSON.parse(savedData);
-                Object.keys(data.fields).forEach(function(key) {
-                    setItemdata(data.fields[key],key);
-                });
-            }
+        // ドロップダウン要素を取得
+        const dropdown = document.querySelector('[field-id="種類"] .kb-field-value.kb-dropdown');
         
+        // イベントリスナーを追加
+        if (dropdown) {
+          dropdown.addEventListener('change', (event) => {
+            const selectedValue = event.target.value; // 選択された値を取得
+            ValueCheck(selectedValue); // 関数を呼び出し、値を渡す
+          });
+        } else {
+          console.error('ドロップダウン要素が見つかりませんでした！');
         }
-
-        // 保存ボタンを作成
-        var saveButton = document.createElement('button');
-        saveButton.id = 'saveButton';
-        saveButton.textContent = '保存';
-        saveButton.style.backgroundColor = 'lime'; // ボタンの色を緑に設定
-        saveButton.style.marginLeft = '10px'; // 左側にスペースを追加
-        saveButton.style.verticalAlign = 'text-bottom';
-
-        // クリアボタンを作成
-        var clearButton = document.createElement('button');
-        clearButton.id = 'clearButton';
-        clearButton.textContent = 'クリア';
-        clearButton.style.backgroundColor = 'red'; // ボタンの色を赤に設定
-        clearButton.style.marginLeft = '10px'; // 左側にスペースを追加
-        clearButton.style.verticalAlign = 'text-bottom';
-
-        var title = document.querySelectorAll('.kb-injector-header-title');
-        if (title[0]) {
-            title[0].appendChild(saveButton);
-            title[0].appendChild(clearButton);
+        
+        // Sample ValueCheck Function
+        function ValueCheck(value) {
+          console.log('選択された値:', value);
+          // ここで任意の処理を追加！
         }
-
-        // kb-injector-buttonクラスを持つすべての要素を取得
-        var buttons = document.querySelectorAll('.kb-injector-button');
-
-        // 各ボタンにクリックイベントを追加
-        buttons.forEach(function (button) {
-            button.addEventListener('click', function () {
-                localStorage.removeItem(pageKey.split('?')[0]);
-            });
-        });
-
-        // 保存ボタンがクリックされたときの処理を追加
-        saveButton.addEventListener('click', function () {
-            // 警告を表示してユーザーに確認
-            var confirmSave = confirm('共有のデバイス（職場のパソコンなど）では保存したデータが第三者に見られる危険があります。それでも保存しますか？');
-            if (confirmSave) {
-                // IDに'input'を含むすべてのinputタグを取得
-                // var inputFields = document.querySelectorAll('input, select, textarea');`.kb-field:not(.kb-unuse), .kb-table(.kb-unuse)`
-                var inputFields = document.querySelectorAll('.kb-injector-body > .kb-field:not(.kb-unuse), .kb-injector-body > .kb-table:not(.kb-unuse)');
-                var fielddata = {};
-                // 取得した要素をログに表示
-                inputFields.forEach(element => {
-                    var id = element.getAttribute('field-id');
-                    fielddata[id] = getItemdata(element,id);                    
-                });
-                var data = {
-                    url: pageKey.split('?')[0], // 保存時に現在のページのURLを含む
-                    fields: fielddata // 入力データを保存
-                };
-
-                // データをlocalStorageに保存
-                localStorage.setItem(pageKey.split('?')[0], JSON.stringify(data));
-
-                // classが'test'のmain要素を取得
-                var mainElement = document.querySelector('.kb-injector-body');
-
-                if (mainElement) {
-                    // 'unsaved'属性を削除
-                    mainElement.removeAttribute('unsaved');
-                }
-                alert('データが保存されました');
-            } else {
-                alert('保存がキャンセルされました');
-            }
-        });
-
-        // クリアボタンがクリックされたときの処理を追加
-        clearButton.addEventListener('click', function () {
-            var confirmClear = confirm('現在のページの保存データをクリアしますか？');
-            if (confirmClear) {
-                localStorage.removeItem(pageKey);
-                alert('保存データがクリアされました');
-                window.location.reload(); // ページをリロードして入力フィールドを初期化
-            } else {
-                alert('クリアがキャンセルされました');
-            }
-        });
-    
     }
-
     // 復号化関数
     function decrypt(encryptedText, password) {
         const parts = encryptedText.split(':'); // IVと暗号文を分割
