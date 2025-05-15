@@ -32,6 +32,9 @@ window.addEventListener('load', function () {
     observer.observe(parentNode, config);
 
     function startObservingTargetElement() {
+        const styleObserver = new MutationObserver((mutationsList) => {
+            console.log();
+        });
         const targetElements = document.querySelectorAll('body > div');
         // すべてのbody > div要素を取得
         // const allDivs = document.querySelectorAll('body > div');
@@ -52,7 +55,6 @@ window.addEventListener('load', function () {
                 // displayの変更を監視
                 const styleObserver = new MutationObserver((mutationsList) => {
                     mutationsList.forEach(mutation => {
-                        console.log(mutation);
                         if (mutation.type === 'attributes' && mutation.attributeName === 'style') {
                             const displayStyle = window.getComputedStyle(targetElement).display;
                             if (displayStyle === 'flex') {
