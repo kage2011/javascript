@@ -1,1 +1,85 @@
 
+window.addEventListener('load', function () {
+    // 監視対象の親要素を取得
+    const parentNode = document.body; // 親要素を監視
+
+    // オプション設定
+    const config = { childList: true, subtree: true };
+
+    // コールバック関数
+    const callback = function(mutationsList, observer) {
+        for (let mutation of mutationsList) {
+            if (mutation.type === 'childList') {
+                mutation.addedNodes.forEach(node => {
+                    console.log(node);
+                    if (node.nodeType === 1 && node.matches('div.kb-injector')) {
+                        console.log('行が生成されました！');
+
+                        // 行が生成されたらtargetElementの監視を開始
+                        startObservingTargetElement();
+                        
+                        observer.disconnect(); // 監視を停止
+                        return;
+                    }
+                });
+            }
+        }
+    };
+
+    // オブザーバーインスタンスを生成
+    const observer = new MutationObserver(callback);
+
+    // 監視を開始
+    observer.observe(parentNode, config);
+
+    function startObservingTargetElement() {
+        const targetElements = document.querySelectorAll('body > div:nth-child');
+        tergetElements.forEach(element => {
+            if (element) {
+                // displayの変更を監視
+                const styleObserver = new MutationObserver((mutationsList) => {
+                    mutationsList.forEach(mutation => {
+                        if (mutation.type === 'attributes' && mutation.attributeName === 'style') {
+                            const displayStyle = window.getComputedStyle(targetElement).display;
+                            if (displayStyle === 'flex') {
+                                console.log('displayがflexに変更されました！');
+                                runAdditionalProcess(); // フィルタリング処理を実行
+                            }
+                        }
+                    });
+                });
+    
+                // オプション設定：style属性の変更を監視
+                const styleConfig = { attributes: true, attributeFilter: ['style'] };
+                styleObserver.observe(targetElement, styleConfig);
+            } else {
+                console.error('対象の要素が見つかりませんでした！');
+            }
+        });
+    }
+
+    function runAdditionalProcess() {
+        const typeDropdown = document.querySelector('[field-id="種類"] .kb-field-value.kb-dropdown > span');
+        const sizeTable = document.querySelector('body > div:nth-child(13) > div > div:nth-child(1) > table > tbody');
+        
+        if (typeDropdown && sizeTable) {
+            let selectedType = typeDropdown.textContent;
+            selectedType = selectedType.split('（')[0].trim(); // '('の前を取得してトリム
+            if (selectedType === "兼用帽子"){
+                selectedType = "帽子";
+            }
+            const rows = Array.from(sizeTable.querySelectorAll('tr'));
+            rows.forEach(row => {
+                const spanElement = row.querySelector('td > div > div > span');
+                const spanText = spanElement ? spanElement.textContent : '';
+                if (spanText.includes(selectedType)) {
+                    row.style.display = ''; // 表示
+                } else {
+                    row.style.display = 'none'; // 非表示
+                }
+            });
+        } else {
+            console.error('「種類」のドロップダウンまたはテーブルが見つかりませんでした！');
+        }
+    }
+});
