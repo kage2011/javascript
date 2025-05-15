@@ -11,7 +11,6 @@ window.addEventListener('load', function () {
         for (let mutation of mutationsList) {
             if (mutation.type === 'childList') {
                 mutation.addedNodes.forEach(node => {
-                    console.log(node);
                     if (node.nodeType === 1 && node.matches('div.kb-injector')) {
                         console.log('行が生成されました！');
 
@@ -34,6 +33,19 @@ window.addEventListener('load', function () {
 
     function startObservingTargetElement() {
         const targetElements = document.querySelectorAll('body > div');
+        // すべてのbody > div要素を取得
+        const allDivs = document.querySelectorAll('body > div');
+        
+        // 条件を満たすdiv要素をフィルタリング
+        const matchingDivs = Array.from(allDivs).filter(div => {
+            // 指定された構造のtable > thead > tr > th > divを探す
+            const targetDiv = div.querySelector('div > div > table > thead > tr > th > div');
+            return targetDiv && targetDiv.textContent === '品名'; // textが「品名」か確認
+        });
+        
+        // 結果をコンソールに表示
+        console.log('条件に一致した要素:', matchingDivs);
+        
         targetElements.forEach(element => {
             if (element) {
                 // displayの変更を監視
