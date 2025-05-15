@@ -46,7 +46,9 @@ window.addEventListener('load', function () {
             rows.forEach(row => {
                 const sizeCell = row.querySelector('td'); // 各行のサイズセルを取得
                 const sizeValue = sizeCell ? sizeCell.textContent : '';
-                if (shouldDisplaySize(selectedType, sizeValue)) {
+    
+                // 選ばれた文字列を含むか確認
+                if (sizeValue.includes(selectedType)) {
                     row.style.display = ''; // 表示
                 } else {
                     row.style.display = 'none'; // 非表示
