@@ -33,7 +33,7 @@ window.addEventListener('load', function () {
 
     function startObservingTargetElement() {
         const styleObserver = new MutationObserver((mutationsList) => {
-            console.log();
+            console.log(mutationsList);
         });
         const targetElements = document.querySelectorAll('body > div');
         // すべてのbody > div要素を取得
