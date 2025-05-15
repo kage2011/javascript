@@ -19,9 +19,10 @@ window.addEventListener('load', function () {
                             return;
                         }
                         // 「虫眼鏡ボタン」の要素を取得
-                        const searchButton = document.querySelector('body > div.kb-injector > div > main > table:nth-child(3) > tbody > tr > td:nth-child(2) > div > div > button.kb-icon.kb-icon-lookup.kb-search');        // 「種類」ドロップダウンの要素を取得
+                        const searchButton = document.querySelector('body > div.kb-injector > div > main > table:nth-child(3) > tbody > tr > td:nth-child(2) > div > div > button.kb-icon.kb-icon-lookup.kb-search');
+                        
                         if (searchButton) {
-                            searchButton.addEventListener('click', runAdditionalProcess());
+                            searchButton.addEventListener('click', runAdditionalProcess); // 修正: 関数を直接渡す
                         }
                         runAdditionalProcess();
                         data_loaded = true; // 初回実行フラグを設定
@@ -47,7 +48,7 @@ window.addEventListener('load', function () {
         
         if (typeDropdown && sizeTable) {
             let selectedType = typeDropdown.textContent; // 「種類」で選ばれた値
-            selectedType = selectedType.split('（')[0].trim(); // '('の前まで取得し、トリミング
+            selectedType = selectedType.split('（')[0].trim(); // '（'の前まで取得し、トリミング
             
             // サイズリストのテーブルの行を取得
             const rows = Array.from(sizeTable.querySelectorAll('tr'));
