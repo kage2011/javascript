@@ -22,7 +22,9 @@ window.addEventListener('load', function () {
                         const searchButton = document.querySelector('body > div.kb-injector > div > main > table:nth-child(3) > tbody > tr > td:nth-child(2) > div > div > button.kb-icon.kb-icon-lookup.kb-search');
                         
                         if (searchButton) {
-                            searchButton.addEventListener('click', runAdditionalProcess); // 修正: 関数を直接渡す
+                            searchButton.addEventListener('click', function(event){
+                                runAdditionalProcess() 
+                            }); // 修正: 関数を直接渡す
                         }
                         runAdditionalProcess();
                         data_loaded = true; // 初回実行フラグを設定
