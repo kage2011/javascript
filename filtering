@@ -12,11 +12,14 @@ window.addEventListener('load', function () {
             if (mutation.type === 'childList') {
                 // 追加された要素が指定したクラスを持つかどうかを確認
                 mutation.addedNodes.forEach(node => {
-                    if (node.nodeType === 1 && node.matches('body > div:nth-child(13) > div > div:nth-child(1) > table > tbody > tr ')) {
+                    if (node.nodeType === 1 && node.matches('body > div:nth-child(13) > div > div:nth-child(1) > table > tbody > tr')) {
                         if (data_loaded) {
+                            // 要素がすでに生成されている場合でもフィルタリングを実行
+                            runAdditionalProcess();
                             return;
                         }
                         runAdditionalProcess();
+                        data_loaded = true; // 初回実行フラグを設定
                         observer.disconnect(); // 監視を停止
                         return;
                     }
@@ -36,20 +39,20 @@ window.addEventListener('load', function () {
         const typeDropdown = document.querySelector('[field-id="種類"] .kb-field-value.kb-dropdown > span');
         
         // 「サイズ」リストのtable要素を取得
-        const sizeTable = document.querySelector('body > div:nth-child(13) > div > div:nth-child(1) > table > tbody ');
+        const sizeTable = document.querySelector('body > div:nth-child(13) > div > div:nth-child(1) > table > tbody');
         
         if (typeDropdown && sizeTable) {
-            const selectedType = typeDropdown.textContent; // 「種類」で選ばれた値
+            let selectedType = typeDropdown.textContent; // 「種類」で選ばれた値
             selectedType = selectedType.split('(')[0].trim(); // '('の前まで取得し、トリミング
+            
             // サイズリストのテーブルの行を取得
             const rows = Array.from(sizeTable.querySelectorAll('tr'));
-            // const rows = document.querySelectorAll('body > div:nth-child(13) > div > div:nth-child(1) > table > tbody > tr');    
 
             // 各行の絞り込み処理
             rows.forEach(row => {
                 const spanElement = row.querySelector('td > div > div > span'); // span要素を取得
                 const spanText = spanElement ? spanElement.textContent : ''; // span内の文字列を取得
-    
+
                 if (spanText.includes(selectedType)) {
                     row.style.display = ''; // 表示
                 } else {
@@ -59,14 +62,5 @@ window.addEventListener('load', function () {
         } else {
             console.error('「種類」のドロップダウンまたはテーブルが見つかりませんでした！');
         }
-    }
-    
-    // 表示条件を定義する関数
-    function shouldDisplaySize(type, size) {
-        const filterMap = {
-            '保護着': ['S', 'M', 'L'],
-            '作業服': ['XS', 'M', 'XL']
-        };
-        return filterMap[type]?.includes(size);
-    }
+    }    
 });
