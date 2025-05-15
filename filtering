@@ -34,7 +34,7 @@ window.addEventListener('load', function () {
     function runAdditionalProcess() {
         data_loaded = true;
         // kb-injector-buttonクラスを持つすべての要素を取得
-        var buttons = document.querySelectorAll('div.kb-field-value.kb-dropdown');
+        var buttons = document.querySelectorAll('[field-id="種類"] .kb-field-value.kb-dropdown');
         // 付与されたパラメータを取得
         var params = new URLSearchParams(window.location.search);
         const paramText = params.get('data');
