@@ -41,8 +41,8 @@ window.addEventListener('load', function () {
             console.log(mutationsList);
             mutationsList.forEach(mutation => {
                 mutation.addedNodes.forEach(node => {
-                    if (node.nodeType === Node.ELEMENT_NODE && node.innerText.includes("作業服")) {
-                        console.log("作業服が含まれる要素:", node);
+                    if (node.nodeType === Node.ELEMENT_NODE && node.innerText.includes("種類")) {
+                        console.log("種類が含まれる要素:", node);
                     }
                 });
             });
