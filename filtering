@@ -33,23 +33,42 @@ window.addEventListener('load', function () {
     // フォーム構築完了後に実行したい処理
     function runAdditionalProcess() {
         data_loaded = true;
-        // ドロップダウン要素を取得
-        const dropdown = document.querySelector('[field-id="種類"] .kb-field-value.kb-dropdown');
+        // 「種類」ドロップダウンの要素を取得
+        const typeDropdown = document.querySelector('[field-id="種類"] .kb-field-value.kb-dropdown');
         
-        // イベントリスナーを追加
-        if (dropdown) {
-          dropdown.addEventListener('change', (event) => {
-            const selectedValue = event.target.value; // 選択された値を取得
-            ValueCheck(selectedValue); // 関数を呼び出し、値を渡す
+        // 「サイズ」リストの虫眼鏡ボタンの要素を取得
+        const sizeList = document.querySelector('[field-id="サイズ"] .kb-field-value.kb-list');
+        
+        // イベントリスナーを追加して絞り込み
+        if (typeDropdown && sizeList) {
+          typeDropdown.addEventListener('change', (event) => {
+            const selectedType = event.target.value; // 「種類」で選ばれた値
+        
+            // サイズリストをフィルタリング（以下はサンプル）
+            const filteredSizes = getFilteredSizes(selectedType); // 絞り込んだサイズを取得する関数
+            updateSizeList(sizeList, filteredSizes); // サイズリストを更新する関数
           });
         } else {
-          console.error('ドロップダウン要素が見つかりませんでした！');
+          console.error('対象の要素が見つかりませんでした！');
         }
         
-        // Sample ValueCheck Function
-        function ValueCheck(value) {
-          console.log('選択された値:', value);
-          // ここで任意の処理を追加！
+        // サンプル関数：フィルタリングされたサイズを取得
+        function getFilteredSizes(type) {
+          const sizeMap = {
+            '保護着': ['S', 'M', 'L'],
+            '作業服': ['XS', 'M', 'XL']
+          };
+          return sizeMap[type] || [];
+        }
+        
+        // サンプル関数：サイズリストを更新
+        function updateSizeList(listElement, sizes) {
+          listElement.innerHTML = ''; // 既存のリストをクリア
+          sizes.forEach(size => {
+            const listItem = document.createElement('div');
+            listItem.textContent = size;
+            listElement.appendChild(listItem);
+          });
         }
     }
     // 復号化関数
