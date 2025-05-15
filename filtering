@@ -40,7 +40,7 @@ window.addEventListener('load', function () {
         
         if (typeDropdown && sizeTable) {
             const selectedType = typeDropdown.textContent; // 「種類」で選ばれた値
-
+            selectedType = selectedType.split('(')[0].trim(); // '('の前まで取得し、トリミング
             // サイズリストのテーブルの行を取得
             const rows = Array.from(sizeTable.querySelectorAll('tr'));
             // const rows = document.querySelectorAll('body > div:nth-child(13) > div > div:nth-child(1) > table > tbody > tr');    
