@@ -11,7 +11,7 @@ window.addEventListener('load', function () {
             if (mutation.type === 'childList') {
                 mutation.addedNodes.forEach(node => {
                     console.log(node);
-                    if (node.nodeType === 1 && node.matches('div.kb-injector > div ')) {
+                    if (node.nodeType === 1 && node.matches('div')) {
                         console.log('行が生成されました！');
 
                         // 行が生成されたらtargetElementの監視を開始
