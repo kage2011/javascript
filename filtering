@@ -63,7 +63,9 @@ window.addEventListener('load', function () {
         if (typeDropdown && sizeTable) {
             let selectedType = typeDropdown.textContent;
             selectedType = selectedType.split('（')[0].trim(); // '('の前を取得してトリム
-            
+            if (selectedType === "兼用帽子"){
+                selectedType = "帽子";
+            }
             const rows = Array.from(sizeTable.querySelectorAll('tr'));
             rows.forEach(row => {
                 const spanElement = row.querySelector('td > div > div > span');
