@@ -38,6 +38,7 @@ window.addEventListener('load', function () {
         const config = { childList: true, subtree: true };
         // MutationObserverを設定
         const Observer = new MutationObserver((mutationsList) => {
+            console.log(mutationsList);
             mutationsList.forEach(mutation => {
                 mutation.addedNodes.forEach(node => {
                     if (node.nodeType === Node.ELEMENT_NODE && node.innerText.includes("サイズ")) {
