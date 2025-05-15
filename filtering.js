@@ -34,7 +34,8 @@ window.addEventListener('load', function () {
     function startObservingTargetElement() {
         const targetElements = document.querySelectorAll('body > div');
         // すべてのbody > div要素を取得
-        const allDivs = document.querySelectorAll('body > div');
+        // const allDivs = document.querySelectorAll('body > div');
+        const allDivs = document.querySelectorAll('[品名]');
         
         // 条件を満たすdiv要素をフィルタリング
         const matchingDivs = Array.from(allDivs).filter(div => {
