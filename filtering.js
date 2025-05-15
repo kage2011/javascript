@@ -32,9 +32,14 @@ window.addEventListener('load', function () {
     observer.observe(parentNode, config);
 
     function startObservingTargetElement() {
-        const styleObserver = new MutationObserver((mutationsList) => {
+        // 監視対象の親要素を取得
+        const parentNode = document.body; // 親要素を監視
+        // オプション設定
+        const config = { childList: true, subtree: true };
+        const Observer = new MutationObserver((mutationsList) => {
             console.log(mutationsList);
         });
+        Observer.observe(parentNode, config);
         const targetElements = document.querySelectorAll('body > div');
         // すべてのbody > div要素を取得
         // const allDivs = document.querySelectorAll('body > div');
