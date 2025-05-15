@@ -33,7 +33,7 @@ window.addEventListener('load', function () {
 
     function runAdditionalProcess() {
         // 「種類」ドロップダウンの要素を取得
-        const typeDropdown = document.querySelector('[field-id="種類"] .kb-field-value.kb-dropdown');
+        const typeDropdown = document.querySelector('[field-id="種類"] .kb-field-value.kb-dropdown > span');
         
         // 「サイズ」リストのtable要素を取得
         const sizeTable = document.querySelector('body > div:nth-child(13) > div > div:nth-child(1) > table');
