@@ -1,1 +1,73 @@
+window.addEventListener('load', function () {
+    // 監視対象の親要素を取得します
+    const parentNode = document.body;  // 親要素が見つからない場合、全体のボディを監視
 
+    // オプション設定
+    const config = { childList: true, subtree: true };
+    var data_loaded = false;
+
+    // コールバック関数
+    const callback = function(mutationsList, observer) {
+        for (let mutation of mutationsList) {
+            if (mutation.type === 'childList') {
+                // 追加された要素が指定したクラスを持つかどうかを確認
+                mutation.addedNodes.forEach(node => {
+                    if (node.nodeType === 1 && node.matches('body > div:nth-child(13) > div > div:nth-child(1) > table > tbody > tr')) {
+                        if (data_loaded) {
+                            // 要素がすでに生成されている場合でもフィルタリングを実行
+                            runAdditionalProcess();
+                            return;
+                        }
+                        // 「虫眼鏡ボタン」の要素を取得
+                        const searchButton = document.querySelector('body > div.kb-injector > div > main > table:nth-child(3) > tbody > tr > td:nth-child(2) > div > div > button.kb-icon.kb-icon-lookup.kb-search');
+                        
+                        if (searchButton) {
+                            searchButton.addEventListener('click', function(event){
+                                runAdditionalProcess() 
+                            }); // 修正: 関数を直接渡す
+                        }
+                        runAdditionalProcess();
+                        data_loaded = true; // 初回実行フラグを設定
+                        observer.disconnect(); // 監視を停止
+                        return;
+                    }
+                });
+            }
+        }
+    };
+
+    // オブザーバーインスタンスを生成
+    const observer = new MutationObserver(callback);
+
+    // 監視を開始
+    observer.observe(parentNode, config);
+
+    function runAdditionalProcess() {
+        const typeDropdown = document.querySelector('[field-id="種類"] .kb-field-value.kb-dropdown > span');
+        
+        // 「サイズ」リストのtable要素を取得
+        const sizeTable = document.querySelector('body > div:nth-child(13) > div > div:nth-child(1) > table > tbody');
+        
+        if (typeDropdown && sizeTable) {
+            let selectedType = typeDropdown.textContent; // 「種類」で選ばれた値
+            selectedType = selectedType.split('（')[0].trim(); // '（'の前まで取得し、トリミング
+            
+            // サイズリストのテーブルの行を取得
+            const rows = Array.from(sizeTable.querySelectorAll('tr'));
+
+            // 各行の絞り込み処理
+            rows.forEach(row => {
+                const spanElement = row.querySelector('td > div > div > span'); // span要素を取得
+                const spanText = spanElement ? spanElement.textContent : ''; // span内の文字列を取得
+
+                if (spanText.includes(selectedType)) {
+                    row.style.display = ''; // 表示
+                } else {
+                    row.style.display = 'none'; // 非表示
+                }
+            });
+        } else {
+            console.error('「種類」のドロップダウンまたはテーブルが見つかりませんでした！');
+        }
+    }    
+});
