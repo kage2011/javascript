@@ -88,7 +88,8 @@ window.addEventListener('load', function () {
                                     rows.forEach((row) => {
                                         if (parseInt(row.getAttribute("row-idx")) === showidx) {
                                             const targetValue2 = row.querySelector("td:nth-child(1) > div > div.kb-field-value.kb-dropdown > span");
-                                            console.log(targetValue2.textContent);
+                                            console.log(targetValue2);
+                                            console.log(targetValue2.value);
                                             const targetValue = row.querySelector("td:nth-child(1) > div > div.kb-field-value.kb-dropdown > span")?.textContent;
                                             if (targetValue) {
                                                 console.log("取得した値:", targetValue);
