@@ -1,6 +1,5 @@
 
 window.addEventListener('load', function () {
-    let isinit = false;
     let showidx = 0;
     let added = false;
     let selectedValue;
@@ -15,9 +14,14 @@ window.addEventListener('load', function () {
         mutationsList.forEach(mutation => {
             mutation.addedNodes.forEach(node => {
                 if (node.nodeType === Node.ELEMENT_NODE && node.querySelector('[field-id="作業服"]')) {
-                    if (!isinit){
-                        startObservingTargetElement();
-                    };
+                    var elem = node.querySelector('[field-id="作業服"]');
+                    var dropdown = elem.querySelector('select');
+                    dropdown.addEventListener('change', () => {
+                        var selectedValue = elem.querySelector('tbody > tr > td > div > div > span').textContent;
+                        var targetElement = elem.querySelector('[field-id="サイズ"] > input');
+                        targetElement.textContent = selectedValue;
+                    });
+                    startObservingTargetElement();
                     // 目的のボタン要素を取得
                     const targetElement = node.querySelector('.kb-icon.kb-icon-lookup.kb-search');
                     if (targetElement && isinit && !added) {
@@ -35,7 +39,6 @@ window.addEventListener('load', function () {
                         });
                         added = true;
                     }
-                    isinit = true;
                 }
             });
         });
