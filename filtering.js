@@ -16,10 +16,12 @@ window.addEventListener('load', function () {
             var targetElement = node.querySelector('[field-id="サイズ"] > div > input');
             targetElement.value = selectedValue;
 
-            // changeイベントを作成して発火
-            var changeEvent = new Event('click');
-            var searchbutton = node.querySelector('.kb-icon.kb-icon-lookup.kb-search')
-            searchbutton.dispatchEvent(changeEvent);
+            if (selectedValue){
+                // changeイベントを作成して発火
+                var changeEvent = new Event('click');
+                var searchbutton = node.querySelector('.kb-icon.kb-icon-lookup.kb-search')
+                searchbutton.dispatchEvent(changeEvent);
+            }
         });
     }
 
