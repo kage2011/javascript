@@ -10,9 +10,9 @@ window.addEventListener('load', function () {
         var dropdown = node.querySelector('select');
         dropdown.addEventListener('change', () => {
             var selectedValue = node.querySelector('tbody > tr > td > div > div > span').textContent;
-            selectedType = selectedType.split('（')[0].trim(); // '('の前を取得してトリム
-            if (selectedType === "兼用帽子"){
-                selectedType = "帽子";
+            selectedValue = selectedValue.split('（')[0].trim(); // '('の前を取得してトリム
+            if (selectedValue === "兼用帽子"){
+                selectedValue = "帽子";
             }
             var targetElement = node.querySelector('[field-id="サイズ"] > div > input');
             targetElement.value = selectedValue;
