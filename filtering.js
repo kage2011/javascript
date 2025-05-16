@@ -101,7 +101,7 @@ window.addEventListener('load', function () {
     }
 
     function startObservingDispleychange() {
-        const targetElements = document.querySelectorAll('body > div:nth-child');
+        const targetElements = document.querySelectorAll('body > div');
         tergetElements.forEach(element => {
             if (element) {
                 // displayの変更を監視
