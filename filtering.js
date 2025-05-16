@@ -8,42 +8,30 @@ window.addEventListener('load', function () {
     // オプション設定
     const config = { childList: true, subtree: true };
 
-    function addevent(mutationsList){
-        mutationsList.forEach(mutation => {
-            mutation.addedNodes.forEach(node => {
-                if (node.nodeType === Node.ELEMENT_NODE && node.querySelector('[field-id="作業服"]')) {
-                    var elem = node.querySelector('[field-id="作業服"]');
-                    var dropdown = elem.querySelector('select');
-                    dropdown.addEventListener('change', () => {
-                        var selectedValue = elem.querySelector('tbody > tr > td > div > div > span').textContent;
-                        var targetElement = elem.querySelector('[field-id="サイズ"] > div > input');
-                        targetElement.value = selectedValue;
-                    });
-                    startObservingTargetElement();
-                    // // 目的のボタン要素を取得
-                    // const targetElement = node.querySelector('.kb-icon.kb-icon-lookup.kb-search');
-                    // if (targetElement ) {
-                    //     targetElement.addEventListener('click', () => {
-                    //         // 親要素をたどり、`row-idx`を取得
-                    //         let current = targetElement;
-                    //         while (current && !current.hasAttribute('row-idx')) {
-                    //             current = current.parentElement;
-                    //         }
-                    //         if (current && current.hasAttribute('row-idx')) {
-                    //             const rowIdx = current.getAttribute('row-idx');
-                    //             showidx = parseInt(rowIdx);
-                    //             startObservingDispleychange();
-                    //         }
-                    //     });
-                    // }
-                }
-            });
+    function addevent(node){
+        var dropdown = node.querySelector('select');
+        dropdown.addEventListener('change', () => {
+            var selectedValue = node.querySelector('tbody > tr > td > div > div > span').textContent;
+            selectedType = selectedType.split('（')[0].trim(); // '('の前を取得してトリム
+            if (selectedType === "兼用帽子"){
+                selectedType = "帽子";
+            }
+            var targetElement = node.querySelector('[field-id="サイズ"] > div > input');
+            targetElement.value = selectedValue;
         });
     }
 
     // オブザーバーインスタンスを生成
     const observer = new MutationObserver((mutationsList) => {
-        addevent(mutationsList);
+        mutationsList.forEach(mutation => {
+            mutation.addedNodes.forEach(elem => {
+                if (elem.nodeType === Node.ELEMENT_NODE && elem.querySelector('[field-id="作業服"]')) {
+                    var node = elem.innerText.includes("種類");
+                    addevent(node);
+                    startObservingTargetElement();
+                }
+            });
+        });
     });
 
     // 監視を開始
@@ -59,12 +47,7 @@ window.addEventListener('load', function () {
             mutationsList.forEach(mutation => {
                 mutation.addedNodes.forEach(node => {
                     if (node.nodeType === Node.ELEMENT_NODE && node.innerText.includes("種類")){
-                        var dropdown = node.querySelector('select');
-                        dropdown.addEventListener('change', () => {
-                            var selectedValue = node.querySelector('td > div > div > span').textContent;
-                            var targetElement = node.querySelector('[field-id="サイズ"] > div > input');
-                            targetElement.value = selectedValue;
-                        });
+                        addevent(node);
                     }
                 });
             });
