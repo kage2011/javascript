@@ -2,11 +2,8 @@
 window.addEventListener('load', function () {
     let isinit = false;
     let showidx = 0;
-    let delidx = 0;
     let added = false;
     let selectedValue;
-    let rowdltbtn = false;
-    let isstyleobserve = false;
     // 監視対象の親要素を取得
     const parentNode = document.body; // 親要素を監視
 
@@ -18,7 +15,6 @@ window.addEventListener('load', function () {
         mutationsList.forEach(mutation => {
             mutation.addedNodes.forEach(node => {
                 if (node.nodeType === Node.ELEMENT_NODE && node.innerText.includes("種類")) {
-                    console.log("種類が含まれる要素:", node);
                     if (!isinit){
                         startObservingTargetElement();
                     };
@@ -33,11 +29,8 @@ window.addEventListener('load', function () {
                             }
                             if (current && current.hasAttribute('row-idx')) {
                                 const rowIdx = current.getAttribute('row-idx');
-                                console.log("取得した row-idx 値:", rowIdx);
                                 showidx = parseInt(rowIdx);
                                 startObservingDispleychange();
-                            } else {
-                                console.log("row-idx 属性が見つかりませんでした。");
                             }
                         });
                         added = true;
@@ -79,21 +72,16 @@ window.addEventListener('load', function () {
                     mutationsList.forEach(mutation => {
                         if (mutation.type === 'attributes' && mutation.attributeName === 'style') {
                             const displayStyle = window.getComputedStyle(mutation.target).display; // mutation.target を使用
-                            if (displayStyle === 'flex') {
-                                console.log("displayがflexになった要素:", mutation.target);
-                                
+                            if (displayStyle === 'flex') {                                
                                 // 子要素に"品名"が含まれるか確認
                                 const has品名 = [...mutation.target.querySelectorAll("*")].some(el => el.textContent.includes("品名"));
                                 if (has品名) {
-                                    console.log("品名が含まれる要素が見つかりました:", mutation.target);
-                
                                     // row-idxと一致する値を検索
                                     const rows = document.querySelectorAll("body > div.kb-injector > div > main > table:nth-child(3) > tbody > tr");
                                     rows.forEach((row) => {
                                         if (parseInt(row.getAttribute("row-idx")) === showidx) {
                                             const targetValue = row.querySelector("td:nth-child(1) > div > div.kb-field-value.kb-dropdown > span")?.textContent;
                                             if (targetValue) {
-                                                console.log("取得した値:", targetValue);
                                                 selectedValue = targetValue; 
                                             } else {
                                                 selectedValue = "";
@@ -111,8 +99,6 @@ window.addEventListener('load', function () {
                 // オプション設定：style属性の変更を監視
                 const styleConfig = { attributes: true, attributeFilter: ['style'] };
                 styleObserver.observe(element, styleConfig);
-            } else {
-                console.error('対象の要素が見つかりませんでした！');
             }
         });
     }
@@ -124,7 +110,6 @@ window.addEventListener('load', function () {
         if (target instanceof HTMLElement) { // targetがHTML要素であることを確認
             // querySelectorAllを実行
             const rows = target.querySelectorAll('div > div > div > table > tbody > tr');
-            console.log(rows);
             if (selectedValue) {
                 let selectedType = selectedValue;
                 selectedType = selectedType.split('（')[0].trim(); // '('の前を取得してトリム
@@ -140,11 +125,7 @@ window.addEventListener('load', function () {
                         row.style.display = 'none'; // 非表示
                     }
                 });
-            } else {
-                console.error('「種類」のドロップダウンまたはテーブルが見つかりませんでした！');
             }
-            } else {
-            console.log("mutation.targetが有効なHTMLElementではありません:", target);
         }        
     }
 });
