@@ -1,6 +1,7 @@
 
 window.addEventListener('load', function () {
     let isinit = false;
+    let showidx = 0;
     // 監視対象の親要素を取得
     const parentNode = document.body; // 親要素を監視
 
@@ -28,7 +29,8 @@ window.addEventListener('load', function () {
                             if (current && current.hasAttribute('row-idx')) {
                                 const rowIdx = current.getAttribute('row-idx');
                                 console.log("取得した row-idx 値:", rowIdx);
-                                // 必要に応じて他の処理を追加
+                                showidx = parseInt(rowIdx);
+                                startObservingDispleychange();
                             } else {
                                 console.log("row-idx 属性が見つかりませんでした。");
                             }
@@ -70,10 +72,7 @@ window.addEventListener('load', function () {
             const targetDiv = div.querySelector('div > div > table > thead > tr > th > div');
             return targetDiv && targetDiv.textContent === '品名'; // textが「品名」か確認
         });
-        
-        // 結果をコンソールに表示
-        console.log('条件に一致した要素:', matchingDivs);
-        
+                
         targetElements.forEach(element => {
             if (element) {
                 // displayの変更を監視
@@ -97,6 +96,26 @@ window.addEventListener('load', function () {
             }
         });
     }
+
+    function startObservingDispleychange() {
+        // オプション設定：style属性の変更を監視
+        const styleConfig = { attributes: true, attributeFilter: ['style'] };
+        // displayの変更を監視
+        const styleObserver = new MutationObserver((mutationsList) => {
+            mutationsList.forEach(mutation => {
+                if (mutation.type === 'attributes' && mutation.attributeName === 'style') {
+                    const displayStyle = window.getComputedStyle(targetElement).display;
+                    if (displayStyle === 'flex') {
+                        console.log('displayがflexに変更されました！');
+                        runAdditionalProcess(); // フィルタリング処理を実行
+                    }
+                }
+            });
+        });
+        styleObserver.observe(element, styleConfig);
+    }
+
+
 
     function runAdditionalProcess() {
         const typeDropdown = document.querySelector('[field-id="種類"] .kb-field-value.kb-dropdown > span');
