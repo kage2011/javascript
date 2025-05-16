@@ -158,7 +158,7 @@ window.addEventListener('load', function () {
                 selectedType = "帽子";
             }
             console.log(sizeTable);
-            const rows = sizeTable[rowIdx + 1].querySelectorAll('tr'); // NodeListから特定の要素を選択
+            const rows = sizeTable[showidx + 1].querySelectorAll('tr'); // NodeListから特定の要素を選択
             rows.forEach(row => {
                 const spanElement = row.querySelector('td > div > div > span');
                 const spanText = spanElement ? spanElement.textContent : '';
