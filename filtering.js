@@ -102,7 +102,7 @@ window.addEventListener('load', function () {
 
     function startObservingDispleychange() {
         const targetElements = document.querySelectorAll('body > div');
-        tergetElements.forEach(element => {
+        targetElements.forEach(element => {
             if (element) {
                 // displayの変更を監視
                 const styleObserver = new MutationObserver((mutationsList) => {
