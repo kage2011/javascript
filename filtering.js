@@ -35,9 +35,7 @@ window.addEventListener('load', function () {
                                 const rowIdx = current.getAttribute('row-idx');
                                 console.log("取得した row-idx 値:", rowIdx);
                                 showidx = parseInt(rowIdx);
-                                if (!isstyleobserve){
-                                    startObservingDispleychange();
-                                }
+                                startObservingDispleychange();
                             } else {
                                 console.log("row-idx 属性が見つかりませんでした。");
                             }
@@ -73,7 +71,6 @@ window.addEventListener('load', function () {
     }
 
     function startObservingDispleychange() {
-        isstyleobserve = true;
         const targetElements = document.querySelectorAll('body > div');
         targetElements.forEach(element => {
             if (element) {
