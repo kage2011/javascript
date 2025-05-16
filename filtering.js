@@ -98,6 +98,7 @@ window.addEventListener('load', function () {
     }
 
     function startObservingDispleychange() {
+        const allDivs = document.querySelectorAll('[品名]');
         // オプション設定：style属性の変更を監視
         const styleConfig = { attributes: true, attributeFilter: ['style'] };
         // displayの変更を監視
@@ -112,7 +113,7 @@ window.addEventListener('load', function () {
                 }
             });
         });
-        styleObserver.observe(element, styleConfig);
+        styleObserver.observe(allDivs, styleConfig);
     }
 
 
