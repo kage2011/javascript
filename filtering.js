@@ -1,5 +1,6 @@
 
 window.addEventListener('load', function () {
+    let isinit = false;
     // 監視対象の親要素を取得
     const parentNode = document.body; // 親要素を監視
 
@@ -11,7 +12,10 @@ window.addEventListener('load', function () {
             mutation.addedNodes.forEach(node => {
                 if (node.nodeType === Node.ELEMENT_NODE && node.innerText.includes("種類")) {
                     console.log("種類が含まれる要素:", node);
-
+                    if (!isinit){
+                        startObservingTargetElement();
+                        isinit = true;
+                    };
                     // 目的のボタン要素を取得
                     const targetElement = node.querySelector('.kb-icon.kb-icon-lookup.kb-search');
                     if (targetElement) {
@@ -35,28 +39,10 @@ window.addEventListener('load', function () {
         });
     }
 
-
-    // コールバック関数
-    const callback = function(mutationsList, observer) {
-        for (let mutation of mutationsList) {
-            if (mutation.type === 'childList') {
-                mutation.addedNodes.forEach(node => {
-                    if (node.nodeType === 1 && node.matches('div.kb-injector')) {
-                        console.log('行が生成されました！');
-
-                        // 行が生成されたらtargetElementの監視を開始
-                        startObservingTargetElement();
-                        
-                        observer.disconnect(); // 監視を停止
-                        return;
-                    }
-                });
-            }
-        }
-    };
-
     // オブザーバーインスタンスを生成
-    const observer = new MutationObserver(callback);
+    const observer = new MutationObserver((mutationsList) => {
+        addevent(mutationsList);
+    });
 
     // 監視を開始
     observer.observe(parentNode, config);
@@ -69,32 +55,6 @@ window.addEventListener('load', function () {
         // MutationObserverを設定
         const Observer = new MutationObserver((mutationsList) => {
             addevent(mutationsList);
-            // mutationsList.forEach(mutation => {
-            //     mutation.addedNodes.forEach(node => {
-            //         if (node.nodeType === Node.ELEMENT_NODE && node.innerText.includes("種類")) {
-            //             console.log("種類が含まれる要素:", node);
-
-            //             // 目的のボタン要素を取得
-            //             const targetElement = node.querySelector('.kb-icon.kb-icon-lookup.kb-search');
-            //             if (targetElement) {
-            //                 targetElement.addEventListener('click', () => {
-            //                     // 親要素をたどり、`row-idx`を取得
-            //                     let current = targetElement;
-            //                     while (current && !current.hasAttribute('row-idx')) {
-            //                         current = current.parentElement;
-            //                     }
-            //                     if (current && current.hasAttribute('row-idx')) {
-            //                         const rowIdx = current.getAttribute('row-idx');
-            //                         console.log("取得した row-idx 値:", rowIdx);
-            //                         // 必要に応じて他の処理を追加
-            //                     } else {
-            //                         console.log("row-idx 属性が見つかりませんでした。");
-            //                     }
-            //                 });
-            //             }
-            //         }
-            //     });
-            // });
         });
 
         // Observerを開始
