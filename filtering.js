@@ -2,6 +2,7 @@
 window.addEventListener('load', function () {
     let isinit = false;
     let showidx = 0;
+    let delidx = 0;
     let added = false;
     let selectedValue;
     // 監視対象の親要素を取得
@@ -21,7 +22,8 @@ window.addEventListener('load', function () {
                     };
                     // 目的のボタン要素を取得
                     const targetElement = node.querySelector('.kb-icon.kb-icon-lookup.kb-search');
-                    if (targetElement && isinit && !added) {
+                    const delbtn = node.querySelector('.kb-icon.kb-icon-lookup.kb-search');
+                    if (targetElement && delbtn && isinit && !added) {
                         targetElement.addEventListener('click', () => {
                             // 親要素をたどり、`row-idx`を取得
                             let current = targetElement;
@@ -33,6 +35,29 @@ window.addEventListener('load', function () {
                                 console.log("取得した row-idx 値:", rowIdx);
                                 showidx = parseInt(rowIdx);
                                 startObservingDispleychange();
+                            } else {
+                                console.log("row-idx 属性が見つかりませんでした。");
+                            }
+                        });
+                        delbtn.addEventListener('click', () => {
+                            // 親要素をたどり、`row-idx`を取得
+                            let current = targetElement;
+                            while (current && !current.hasAttribute('row-idx')) {
+                                current = current.parentElement;
+                            }
+                            if (current && current.hasAttribute('row-idx')) {
+                                const rowIdx = current.getAttribute('row-idx');
+                                console.log("取得したdelete row-idx 値:", rowIdx);
+                                delidx = parseInt(rowIdx);
+                                const sizeTable = document.querySelectorAll('body > div > div > div > table > tbody');
+
+                                if (sizeTable.length > 0) {
+                                    const firstTbody = sizeTable[1 + delidx]; // 1番目の要素を取得
+                                    firstTbody.parentNode.removeChild(firstTbody); // 要素を削除
+                                    console.log('1番目のtbodyを削除しました:', firstTbody);
+                                } else {
+                                    console.log('tbody要素が見つかりませんでした。');
+                                }                                
                             } else {
                                 console.log("row-idx 属性が見つかりませんでした。");
                             }
