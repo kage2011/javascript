@@ -24,7 +24,7 @@ window.addEventListener('load', function () {
                     // 目的のボタン要素を取得
                     const targetElement = node.querySelector('.kb-icon.kb-icon-lookup.kb-search');
                     const delbtn = node.querySelector('.kb-icon.kb-icon-del.kb-table-row-del');//kb-icon kb-icon-del kb-table-row-del
-                    const okbtn = node.querySelector('.kb-dialog-button');//kb-icon kb-icon-del kb-table-row-del
+                    const dlgbtns = documant.querySelectorAll('.kb-dialog-button');//kb-icon kb-icon-del kb-table-row-del
                     if (targetElement && delbtn && okbtn && isinit && !added) {
                         targetElement.addEventListener('click', () => {
                             // 親要素をたどり、`row-idx`を取得
@@ -56,22 +56,28 @@ window.addEventListener('load', function () {
                                 console.log("row-idx 属性が見つかりませんでした。");
                             }
                         });
-                        okbtn.addEventListener('click', () => {
-                            if (okbtn.trim().textContent = "OK"){
-                                if (rowdltbtn){
-                                    const sizeTable = document.querySelectorAll('body > div > div > div > table > tbody');
-    
-                                    if (sizeTable.length > 0) {
-                                        const firstTbody = sizeTable[1 + delidx]; // 1番目の要素を取得
-                                        firstTbody.parentNode.removeChild(firstTbody); // 要素を削除
-                                        console.log('1番目のtbodyを削除しました:', firstTbody);
-                                    } else {
-                                        console.log('tbody要素が見つかりませんでした。');
-                                    }                                
-                                }    
+                        dlgbtns.forEach( dlgbtn=> {
+                            if (dlgbtn.trim().textContent === "OK"){
+                                dlgbtn.addEventListener('click', () => {
+                                    if (rowdltbtn){
+                                        const sizeTable = document.querySelectorAll('body > div > div > div > table > tbody');
+        
+                                        if (sizeTable.length > 0) {
+                                            const firstTbody = sizeTable[1 + delidx]; // 1番目の要素を取得
+                                            firstTbody.parentNode.removeChild(firstTbody); // 要素を削除
+                                            console.log('1番目のtbodyを削除しました:', firstTbody);
+                                        } else {
+                                            console.log('tbody要素が見つかりませんでした。');
+                                        }                                
+                                    }    
+                                    rowdltbtn = false;
+                                });
+                            }else{
+                                dlgbtn.addEventListener('click', () => {
+                                    rowdltbtn = false;
+                                });
                             }
-                            rowdltbtn = false;
-                        });
+                            });    
                         added = true;
                     }
                     isinit = true;
