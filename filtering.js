@@ -6,6 +6,7 @@ window.addEventListener('load', function () {
     let added = false;
     let selectedValue;
     let rowdltbtn = false;
+    let isstyleobserve = false;
     // 監視対象の親要素を取得
     const parentNode = document.body; // 親要素を監視
 
@@ -36,7 +37,9 @@ window.addEventListener('load', function () {
                                 const rowIdx = current.getAttribute('row-idx');
                                 console.log("取得した row-idx 値:", rowIdx);
                                 showidx = parseInt(rowIdx);
-                                startObservingDispleychange();
+                                if (!isstyleobserve){
+                                    startObservingDispleychange();
+                                }
                             } else {
                                 console.log("row-idx 属性が見つかりませんでした。");
                             }
@@ -110,6 +113,7 @@ window.addEventListener('load', function () {
     }
 
     function startObservingDispleychange() {
+        isstyleobserve = true;
         const targetElements = document.querySelectorAll('body > div');
         targetElements.forEach(element => {
             if (element) {
