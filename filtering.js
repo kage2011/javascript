@@ -58,7 +58,7 @@ window.addEventListener('load', function () {
                                     console.log("取得した row-idx 値:", rowIdx);
                                     // 必要に応じて他の処理を追加
                                 } else {
-                                    console.log("row-idx 属性が見つかりませんでした");
+                                    console.log("row-idx 属性が見つかりませんでした。");
                                 }
                             });
                         }
