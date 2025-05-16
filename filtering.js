@@ -14,7 +14,7 @@ window.addEventListener('load', function () {
         added = false;
         mutationsList.forEach(mutation => {
             mutation.addedNodes.forEach(node => {
-                if (node.nodeType === Node.ELEMENT_NODE && node.innerText.includes("種類")) {
+                if (node.nodeType === Node.ELEMENT_NODE && node.querySelector('[field-id="作業服"]')) {
                     if (!isinit){
                         startObservingTargetElement();
                     };
