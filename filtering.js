@@ -74,15 +74,15 @@ window.addEventListener('load', function () {
                 const styleObserver = new MutationObserver((mutationsList) => {
                     mutationsList.forEach(mutation => {
                         if (mutation.type === 'attributes' && mutation.attributeName === 'style') {
-                            const displayStyle = window.getComputedStyle(element).display;
+                            const displayStyle = window.getComputedStyle(mutation.target).display; // mutation.target を使用
                             if (displayStyle === 'flex') {
-                                console.log("displayがflexになった要素:", mutation);
-
+                                console.log("displayがflexになった要素:", mutation.target);
+                
                                 // 子要素に"品名"が含まれるか確認
-                                const has品名 = [...mutation.querySelectorAll("*")].some(el => el.textContent.includes("品名"));
+                                const has品名 = [...mutation.target.querySelectorAll("*")].some(el => el.textContent.includes("品名"));
                                 if (has品名) {
-                                    console.log("品名が含まれる要素が見つかりました:", mutation);
-
+                                    console.log("品名が含まれる要素が見つかりました:", mutation.target);
+                
                                     // row-idxと一致する値を検索
                                     const rows = document.querySelectorAll("body > div.kb-injector > div > main > table:nth-child(3) > tbody > tr");
                                     rows.forEach((row) => {
@@ -99,7 +99,7 @@ window.addEventListener('load', function () {
                         }
                     });
                 });
-    
+                    
                 // オプション設定：style属性の変更を監視
                 const styleConfig = { attributes: true, attributeFilter: ['style'] };
                 styleObserver.observe(element, styleConfig);
