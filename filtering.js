@@ -6,6 +6,36 @@ window.addEventListener('load', function () {
     // オプション設定
     const config = { childList: true, subtree: true };
 
+    function addevent(mutationsList){
+        mutationsList.forEach(mutation => {
+            mutation.addedNodes.forEach(node => {
+                if (node.nodeType === Node.ELEMENT_NODE && node.innerText.includes("種類")) {
+                    console.log("種類が含まれる要素:", node);
+
+                    // 目的のボタン要素を取得
+                    const targetElement = node.querySelector('.kb-icon.kb-icon-lookup.kb-search');
+                    if (targetElement) {
+                        targetElement.addEventListener('click', () => {
+                            // 親要素をたどり、`row-idx`を取得
+                            let current = targetElement;
+                            while (current && !current.hasAttribute('row-idx')) {
+                                current = current.parentElement;
+                            }
+                            if (current && current.hasAttribute('row-idx')) {
+                                const rowIdx = current.getAttribute('row-idx');
+                                console.log("取得した row-idx 値:", rowIdx);
+                                // 必要に応じて他の処理を追加
+                            } else {
+                                console.log("row-idx 属性が見つかりませんでした。");
+                            }
+                        });
+                    }
+                }
+            });
+        });
+    }
+
+
     // コールバック関数
     const callback = function(mutationsList, observer) {
         for (let mutation of mutationsList) {
@@ -38,33 +68,33 @@ window.addEventListener('load', function () {
         const config = { childList: true, subtree: true };
         // MutationObserverを設定
         const Observer = new MutationObserver((mutationsList) => {
-            console.log(mutationsList);
-            mutationsList.forEach(mutation => {
-                mutation.addedNodes.forEach(node => {
-                    if (node.nodeType === Node.ELEMENT_NODE && node.innerText.includes("種類")) {
-                        console.log("種類が含まれる要素:", node);
+            addevent(mutationsList);
+            // mutationsList.forEach(mutation => {
+            //     mutation.addedNodes.forEach(node => {
+            //         if (node.nodeType === Node.ELEMENT_NODE && node.innerText.includes("種類")) {
+            //             console.log("種類が含まれる要素:", node);
 
-                        // 目的のボタン要素を取得
-                        const targetElement = node.querySelector('.kb-icon.kb-icon-lookup.kb-search');
-                        if (targetElement) {
-                            targetElement.addEventListener('click', () => {
-                                // 親要素をたどり、`row-idx`を取得
-                                let current = targetElement;
-                                while (current && !current.hasAttribute('row-idx')) {
-                                    current = current.parentElement;
-                                }
-                                if (current && current.hasAttribute('row-idx')) {
-                                    const rowIdx = current.getAttribute('row-idx');
-                                    console.log("取得した row-idx 値:", rowIdx);
-                                    // 必要に応じて他の処理を追加
-                                } else {
-                                    console.log("row-idx 属性が見つかりませんでした。");
-                                }
-                            });
-                        }
-                    }
-                });
-            });
+            //             // 目的のボタン要素を取得
+            //             const targetElement = node.querySelector('.kb-icon.kb-icon-lookup.kb-search');
+            //             if (targetElement) {
+            //                 targetElement.addEventListener('click', () => {
+            //                     // 親要素をたどり、`row-idx`を取得
+            //                     let current = targetElement;
+            //                     while (current && !current.hasAttribute('row-idx')) {
+            //                         current = current.parentElement;
+            //                     }
+            //                     if (current && current.hasAttribute('row-idx')) {
+            //                         const rowIdx = current.getAttribute('row-idx');
+            //                         console.log("取得した row-idx 値:", rowIdx);
+            //                         // 必要に応じて他の処理を追加
+            //                     } else {
+            //                         console.log("row-idx 属性が見つかりませんでした。");
+            //                     }
+            //                 });
+            //             }
+            //         }
+            //     });
+            // });
         });
 
         // Observerを開始
