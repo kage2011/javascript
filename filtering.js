@@ -25,7 +25,8 @@ window.addEventListener('load', function () {
                     const targetElement = node.querySelector('.kb-icon.kb-icon-lookup.kb-search');
                     const delbtn = node.querySelector('.kb-icon.kb-icon-del.kb-table-row-del');//kb-icon kb-icon-del kb-table-row-del
                     const dlgbtns = document.querySelectorAll('.kb-dialog-button');//kb-icon kb-icon-del kb-table-row-del
-                    if (targetElement && delbtn && okbtn && isinit && !added) {
+                    console.log(dlgbtns);
+                    if (targetElement && delbtn && dlgbtns && isinit && !added) {
                         targetElement.addEventListener('click', () => {
                             // 親要素をたどり、`row-idx`を取得
                             let current = targetElement;
