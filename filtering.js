@@ -158,7 +158,7 @@ window.addEventListener('load', function () {
                 selectedType = "帽子";
             }
             console.log(sizeTable);
-            const rows = sizeTable.querySelector('tr:nth-child(2)');
+            const rows = sizeTable.querySelectorAll('tbody:nth-of-type(2) > tr');
             rows.forEach(row => {
                 const spanElement = row.querySelector('td > div > div > span');
                 const spanText = spanElement ? spanElement.textContent : '';
