@@ -1,7 +1,5 @@
 
 window.addEventListener('load', function () {
-    let showidx = 0;
-    let selectedValue;
     // 監視対象の親要素を取得
     const parentNode = document.body; // 親要素を監視
 
@@ -38,10 +36,6 @@ window.addEventListener('load', function () {
     observer.observe(parentNode, config);
 
     function startObservingTargetElement() {
-        // 監視対象の親要素を取得
-        const parentNode = document.body; // 親要素を監視
-        // オプション設定
-        const config = { childList: true, subtree: true };
         // MutationObserverを設定
         const Observer = new MutationObserver((mutationsList) => {
             mutationsList.forEach(mutation => {
