@@ -144,7 +144,7 @@ window.addEventListener('load', function () {
                                         }
                                     });
                                 }
-                                runAdditionalProcess(); // フィルタリング処理を実行
+                                runAdditionalProcess(mutation); // フィルタリング処理を実行
                             }
                         }
                     });
@@ -194,7 +194,8 @@ window.addEventListener('load', function () {
 
 
 
-    function runAdditionalProcess() {
+    function runAdditionalProcess(mutation) {
+        console.log(mutation.querySelectorAll('div > div > div > table > tbody > tr'));
         const sizeTable = document.querySelectorAll('body > div > div > div > table > tbody');
         
         if (selectedValue && sizeTable) {
