@@ -35,7 +35,7 @@ window.addEventListener('load', function () {
         // 監視対象の親要素を取得
         const parentNode = document.body; // 親要素を監視
         // オプション設定
-        const config = { childList: true, subtree: false };
+        const config = { childList: true, subtree: true };
         // MutationObserverを設定
         const Observer = new MutationObserver((mutationsList) => {
             console.log(mutationsList);
