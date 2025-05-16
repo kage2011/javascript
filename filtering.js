@@ -5,16 +5,20 @@ window.addEventListener('load', function () {
     // オプション設定
     const config = { childList: true, subtree: true };
 
-    function addevent(node){
+    function addevent(node) {
         var dropdown = node.querySelector('select');
         dropdown.addEventListener('change', () => {
             var selectedValue = node.querySelector('tbody > tr > td > div > div > span').textContent;
             selectedValue = selectedValue.split('（')[0].trim(); // '('の前を取得してトリム
-            if (selectedValue === "兼用帽子"){
+            if (selectedValue === "兼用帽子") {
                 selectedValue = "帽子";
             }
             var targetElement = node.querySelector('[field-id="サイズ"] > div > input');
             targetElement.value = selectedValue;
+
+            // changeイベントを作成して発火
+            var changeEvent = new Event('change');
+            dropdown.dispatchEvent(changeEvent);
         });
     }
 
