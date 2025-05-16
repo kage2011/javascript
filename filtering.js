@@ -2,6 +2,7 @@
 window.addEventListener('load', function () {
     let isinit = false;
     let showidx = 0;
+    let added = false;
     // 監視対象の親要素を取得
     const parentNode = document.body; // 親要素を監視
 
@@ -10,6 +11,7 @@ window.addEventListener('load', function () {
 
     function addevent(mutationsList){
         mutationsList.forEach(mutation => {
+            added = false;
             mutation.addedNodes.forEach(node => {
                 if (node.nodeType === Node.ELEMENT_NODE && node.innerText.includes("種類")) {
                     console.log("種類が含まれる要素:", node);
@@ -19,7 +21,8 @@ window.addEventListener('load', function () {
                     };
                     // 目的のボタン要素を取得
                     const targetElement = node.querySelector('.kb-icon.kb-icon-lookup.kb-search');
-                    if (targetElement) {
+                    if (targetElement && !added) {
+                        added = true;
                         targetElement.addEventListener('click', () => {
                             // 親要素をたどり、`row-idx`を取得
                             let current = targetElement;
@@ -98,7 +101,7 @@ window.addEventListener('load', function () {
     }
 
     function startObservingDispleychange() {
-        const allDivs = document.querySelectorAll('[品名]');
+        const allDivs = document.body; // 親要素を監視
         // オプション設定：style属性の変更を監視
         const styleConfig = { attributes: true, attributeFilter: ['style'] };
         // displayの変更を監視
