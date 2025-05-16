@@ -76,12 +76,12 @@ window.addEventListener('load', function () {
                         if (mutation.type === 'attributes' && mutation.attributeName === 'style') {
                             const displayStyle = window.getComputedStyle(element).display;
                             if (displayStyle === 'flex') {
-                                console.log("displayがflexになった要素:", node);
+                                console.log("displayがflexになった要素:", mutation);
 
                                 // 子要素に"品名"が含まれるか確認
-                                const has品名 = [...node.querySelectorAll("*")].some(el => el.textContent.includes("品名"));
+                                const has品名 = [...mutation.querySelectorAll("*")].some(el => el.textContent.includes("品名"));
                                 if (has品名) {
-                                    console.log("品名が含まれる要素が見つかりました:", node);
+                                    console.log("品名が含まれる要素が見つかりました:", mutation);
 
                                     // row-idxと一致する値を検索
                                     const rows = document.querySelectorAll("body > div.kb-injector > div > main > table:nth-child(3) > tbody > tr");
