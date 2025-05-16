@@ -157,45 +157,21 @@ window.addEventListener('load', function () {
                 console.error('対象の要素が見つかりませんでした！');
             }
         });
-        // // displayが"flex"になることを監視
-        // const observer = new MutationObserver((mutationsList) => {
-        //     mutationsList.forEach((mutation) => {
-        //         mutation.addedNodes.forEach((node) => {
-        //             if (node.nodeType === Node.ELEMENT_NODE) {
-        //                 const computedStyle = getComputedStyle(node);
-        //                 if (computedStyle.display === "flex") {
-        //                     console.log("displayがflexになった要素:", node);
-
-        //                     // 子要素に"品名"が含まれるか確認
-        //                     const has品名 = [...node.querySelectorAll("*")].some(el => el.textContent.includes("品名"));
-        //                     if (has品名) {
-        //                         console.log("品名が含まれる要素が見つかりました:", node);
-
-        //                         // row-idxと一致する値を検索
-        //                         const rows = document.querySelectorAll("body > div.kb-injector > div > main > table:nth-child(3) > tbody > tr");
-        //                         rows.forEach((row) => {
-        //                             if (row.getAttribute("row-idx") === showidx) {
-        //                                 const targetValue = row.querySelector("td:nth-child(1) > div > div.kb-field-value.kb-dropdown > span")?.textContent;
-        //                                 if (targetValue) {
-        //                                     console.log("取得した値:", targetValue);
-        //                                 }
-        //                             }
-        //                         });
-        //                     }
-        //                 }
-        //             }
-        //         });
-        //     });
-        // });
-
-        // // 監視を開始
-        // observer.observe(document.body, { childList: true, subtree: true });    
 }
 
 
 
     function runAdditionalProcess(mutation) {
-        console.log(mutation.querySelectorAll('div > div > div > table > tbody > tr'));
+        // 変更が起きた要素を取得
+        const target = mutation.target;
+
+        if (target instanceof HTMLElement) { // targetがHTML要素であることを確認
+            // querySelectorAllを実行
+            const rows = target.querySelectorAll('div > div > div > table > tbody > tr');
+            console.log(rows);
+        } else {
+            console.log("mutation.targetが有効なHTMLElementではありません:", target);
+        }
         const sizeTable = document.querySelectorAll('body > div > div > div > table > tbody');
         
         if (selectedValue && sizeTable) {
