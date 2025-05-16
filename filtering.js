@@ -3,6 +3,7 @@ window.addEventListener('load', function () {
     let isinit = false;
     let showidx = 0;
     let added = false;
+    let selectedValue;
     // 監視対象の親要素を取得
     const parentNode = document.body; // 親要素を監視
 
@@ -87,12 +88,12 @@ window.addEventListener('load', function () {
                                     const rows = document.querySelectorAll("body > div.kb-injector > div > main > table:nth-child(3) > tbody > tr");
                                     rows.forEach((row) => {
                                         if (parseInt(row.getAttribute("row-idx")) === showidx) {
-                                            const targetValue2 = row.querySelector("td:nth-child(1) > div > div.kb-field-value.kb-dropdown > span");
-                                            console.log(targetValue2);
-                                            console.log(targetValue2.value);
                                             const targetValue = row.querySelector("td:nth-child(1) > div > div.kb-field-value.kb-dropdown > span")?.textContent;
                                             if (targetValue) {
                                                 console.log("取得した値:", targetValue);
+                                                selectedValue = targetValue; 
+                                            } else {
+                                                selectedValue = "";
                                             }
                                         }
                                     });
@@ -148,11 +149,10 @@ window.addEventListener('load', function () {
 
 
     function runAdditionalProcess() {
-        const typeDropdown = document.querySelector('[field-id="種類"] .kb-field-value.kb-dropdown > span');
         const sizeTable = document.querySelectorAll('body > div > div > div > table > tbody');
         
-        if (typeDropdown && sizeTable) {
-            let selectedType = typeDropdown.textContent;
+        if (selectedValue && sizeTable) {
+            let selectedType = selectedValue;
             selectedType = selectedType.split('（')[0].trim(); // '('の前を取得してトリム
             if (selectedType === "兼用帽子"){
                 selectedType = "帽子";
