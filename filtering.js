@@ -5,6 +5,7 @@ window.addEventListener('load', function () {
     let delidx = 0;
     let added = false;
     let selectedValue;
+    let rowdltbtn = false;
     // 監視対象の親要素を取得
     const parentNode = document.body; // 親要素を監視
 
@@ -23,7 +24,8 @@ window.addEventListener('load', function () {
                     // 目的のボタン要素を取得
                     const targetElement = node.querySelector('.kb-icon.kb-icon-lookup.kb-search');
                     const delbtn = node.querySelector('.kb-icon.kb-icon-del.kb-table-row-del');//kb-icon kb-icon-del kb-table-row-del
-                    if (targetElement && delbtn && isinit && !added) {
+                    const okbtn = node.querySelector('.kb-dialog-button');//kb-icon kb-icon-del kb-table-row-del
+                    if (targetElement && delbtn && okbtn && isinit && !added) {
                         targetElement.addEventListener('click', () => {
                             // 親要素をたどり、`row-idx`を取得
                             let current = targetElement;
@@ -49,18 +51,26 @@ window.addEventListener('load', function () {
                                 const rowIdx = current.getAttribute('row-idx');
                                 console.log("取得したdelete row-idx 値:", rowIdx);
                                 delidx = parseInt(rowIdx);
-                                const sizeTable = document.querySelectorAll('body > div > div > div > table > tbody');
-
-                                if (sizeTable.length > 0) {
-                                    const firstTbody = sizeTable[1 + delidx]; // 1番目の要素を取得
-                                    firstTbody.parentNode.removeChild(firstTbody); // 要素を削除
-                                    console.log('1番目のtbodyを削除しました:', firstTbody);
-                                } else {
-                                    console.log('tbody要素が見つかりませんでした。');
-                                }                                
+                                rowdltbtn = true;
                             } else {
                                 console.log("row-idx 属性が見つかりませんでした。");
                             }
+                        });
+                        okbtn.addEventListener('click', () => {
+                            if (okbtn.trim().textContent = "OK"){
+                                if (rowdltbtn){
+                                    const sizeTable = document.querySelectorAll('body > div > div > div > table > tbody');
+    
+                                    if (sizeTable.length > 0) {
+                                        const firstTbody = sizeTable[1 + delidx]; // 1番目の要素を取得
+                                        firstTbody.parentNode.removeChild(firstTbody); // 要素を削除
+                                        console.log('1番目のtbodyを削除しました:', firstTbody);
+                                    } else {
+                                        console.log('tbody要素が見つかりませんでした。');
+                                    }                                
+                                }    
+                            }
+                            rowdltbtn = false;
                         });
                         added = true;
                     }
