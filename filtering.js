@@ -24,9 +24,7 @@ window.addEventListener('load', function () {
                     };
                     // 目的のボタン要素を取得
                     const targetElement = node.querySelector('.kb-icon.kb-icon-lookup.kb-search');
-                    const delbtn = node.querySelector('.kb-icon.kb-icon-del.kb-table-row-del');//kb-icon kb-icon-del kb-table-row-del
-                    const dlgbtns = document.querySelectorAll('.kb-dialog-button');//kb-icon kb-icon-del kb-table-row-del
-                    if (targetElement && delbtn && dlgbtns && isinit && !added) {
+                    if (targetElement && isinit && !added) {
                         targetElement.addEventListener('click', () => {
                             // 親要素をたどり、`row-idx`を取得
                             let current = targetElement;
@@ -44,44 +42,6 @@ window.addEventListener('load', function () {
                                 console.log("row-idx 属性が見つかりませんでした。");
                             }
                         });
-                        delbtn.addEventListener('click', () => {
-                            // 親要素をたどり、`row-idx`を取得
-                            let current = targetElement;
-                            while (current && !current.hasAttribute('row-idx')) {
-                                current = current.parentElement;
-                            }
-                            if (current && current.hasAttribute('row-idx')) {
-                                const rowIdx = current.getAttribute('row-idx');
-                                console.log("取得したdelete row-idx 値:", rowIdx);
-                                delidx = parseInt(rowIdx);
-                                rowdltbtn = true;
-                            } else {
-                                console.log("row-idx 属性が見つかりませんでした。");
-                            }
-                        });
-                        dlgbtns.forEach( dlgbtn=> {
-                            console.log(dlgbtn.textContent.trim());
-                            if (dlgbtn.textContent.trim() === "OK"){
-                                dlgbtn.addEventListener('click', () => {
-                                    if (rowdltbtn){
-                                        const sizeTable = document.querySelectorAll('body > div > div > div > table > tbody');
-        
-                                        if (sizeTable.length > 0) {
-                                            const firstTbody = sizeTable[1 + delidx]; // 1番目の要素を取得
-                                            firstTbody.parentNode.removeChild(firstTbody); // 要素を削除
-                                            console.log('1番目のtbodyを削除しました:', firstTbody);
-                                        } else {
-                                            console.log('tbody要素が見つかりませんでした。');
-                                        }                                
-                                    }    
-                                    rowdltbtn = false;
-                                });
-                            }else{
-                                dlgbtn.addEventListener('click', () => {
-                                    rowdltbtn = false;
-                                });
-                            }
-                            });    
                         added = true;
                     }
                     isinit = true;
@@ -157,9 +117,7 @@ window.addEventListener('load', function () {
                 console.error('対象の要素が見つかりませんでした！');
             }
         });
-}
-
-
+    }
 
     function runAdditionalProcess(mutation) {
         // 変更が起きた要素を取得
@@ -169,30 +127,26 @@ window.addEventListener('load', function () {
             // querySelectorAllを実行
             const rows = target.querySelectorAll('div > div > div > table > tbody > tr');
             console.log(rows);
-        } else {
-            console.log("mutation.targetが有効なHTMLElementではありません:", target);
-        }
-        const sizeTable = document.querySelectorAll('body > div > div > div > table > tbody');
-        
-        if (selectedValue && sizeTable) {
-            let selectedType = selectedValue;
-            selectedType = selectedType.split('（')[0].trim(); // '('の前を取得してトリム
-            if (selectedType === "兼用帽子"){
-                selectedType = "帽子";
-            }
-            console.log(sizeTable);
-            const rows = sizeTable[showidx + 1].querySelectorAll('tr'); // NodeListから特定の要素を選択
-            rows.forEach(row => {
-                const spanElement = row.querySelector('td > div > div > span');
-                const spanText = spanElement ? spanElement.textContent : '';
-                if (spanText.includes(selectedType)) {
-                    row.style.display = ''; // 表示
-                } else {
-                    row.style.display = 'none'; // 非表示
+            if (selectedValue) {
+                let selectedType = selectedValue;
+                selectedType = selectedType.split('（')[0].trim(); // '('の前を取得してトリム
+                if (selectedType === "兼用帽子"){
+                    selectedType = "帽子";
                 }
-            });
-        } else {
-            console.error('「種類」のドロップダウンまたはテーブルが見つかりませんでした！');
-        }
+                rows.forEach(row => {
+                    const spanElement = row.querySelector('td > div > div > span');
+                    const spanText = spanElement ? spanElement.textContent : '';
+                    if (spanText.includes(selectedType)) {
+                        row.style.display = ''; // 表示
+                    } else {
+                        row.style.display = 'none'; // 非表示
+                    }
+                });
+            } else {
+                console.error('「種類」のドロップダウンまたはテーブルが見つかりませんでした！');
+            }
+            } else {
+            console.log("mutation.targetが有効なHTMLElementではありません:", target);
+        }        
     }
 });
