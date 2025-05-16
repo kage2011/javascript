@@ -86,6 +86,7 @@ window.addEventListener('load', function () {
                                     // row-idxと一致する値を検索
                                     const rows = document.querySelectorAll("body > div.kb-injector > div > main > table:nth-child(3) > tbody > tr");
                                     rows.forEach((row) => {
+                                        console.log(row.getAttribute("rowIndex"));
                                         if (row.getAttribute("rowIndex") === showidx) {
                                             const targetValue = row.querySelector("td:nth-child(1) > div > div.kb-field-value.kb-dropdown > span")?.textContent;
                                             if (targetValue) {
