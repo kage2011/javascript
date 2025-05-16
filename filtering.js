@@ -24,7 +24,7 @@ window.addEventListener('load', function () {
                     // 目的のボタン要素を取得
                     const targetElement = node.querySelector('.kb-icon.kb-icon-lookup.kb-search');
                     const delbtn = node.querySelector('.kb-icon.kb-icon-del.kb-table-row-del');//kb-icon kb-icon-del kb-table-row-del
-                    const dlgbtns = documant.querySelectorAll('.kb-dialog-button');//kb-icon kb-icon-del kb-table-row-del
+                    const dlgbtns = document.querySelectorAll('.kb-dialog-button');//kb-icon kb-icon-del kb-table-row-del
                     if (targetElement && delbtn && okbtn && isinit && !added) {
                         targetElement.addEventListener('click', () => {
                             // 親要素をたどり、`row-idx`を取得
