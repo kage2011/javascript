@@ -86,11 +86,9 @@ window.addEventListener('load', function () {
                                     // row-idxと一致する値を検索
                                     const rows = document.querySelectorAll("body > div.kb-injector > div > main > table:nth-child(3) > tbody > tr");
                                     rows.forEach((row) => {
-                                        console.log(row.getAttribute("row-idx"));
                                         if (parseInt(row.getAttribute("row-idx")) === showidx) {
-                                            console.log(row);
                                             const targetValue2 = row.querySelector("td:nth-child(1) > div > div.kb-field-value.kb-dropdown > span");
-                                            console.log(targetValue2)
+                                            console.log(targetValue2.textContent);
                                             const targetValue = row.querySelector("td:nth-child(1) > div > div.kb-field-value.kb-dropdown > span")?.textContent;
                                             if (targetValue) {
                                                 console.log("取得した値:", targetValue);
