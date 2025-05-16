@@ -40,7 +40,6 @@ window.addEventListener('load', function () {
                                 console.log("row-idx 属性が見つかりませんでした。");
                             }
                         });
-                        added = true;
                     }
                     isinit = true;
                 }
@@ -81,7 +80,7 @@ window.addEventListener('load', function () {
                             const displayStyle = window.getComputedStyle(mutation.target).display; // mutation.target を使用
                             if (displayStyle === 'flex') {
                                 console.log("displayがflexになった要素:", mutation.target);
-                
+                                
                                 // 子要素に"品名"が含まれるか確認
                                 const has品名 = [...mutation.target.querySelectorAll("*")].some(el => el.textContent.includes("品名"));
                                 if (has品名) {
@@ -101,6 +100,7 @@ window.addEventListener('load', function () {
                                         }
                                     });
                                 }
+                                styleObserver.disconnect();
                                 runAdditionalProcess(mutation); // フィルタリング処理を実行
                             }
                         }
