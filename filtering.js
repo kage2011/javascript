@@ -1,7 +1,6 @@
 
 window.addEventListener('load', function () {
     let showidx = 0;
-    let added = false;
     let selectedValue;
     // 監視対象の親要素を取得
     const parentNode = document.body; // 親要素を監視
@@ -18,13 +17,14 @@ window.addEventListener('load', function () {
                     var dropdown = elem.querySelector('select');
                     dropdown.addEventListener('change', () => {
                         var selectedValue = elem.querySelector('tbody > tr > td > div > div > span').textContent;
+                        console.log(elem);
                         var targetElement = elem.querySelector('[field-id="サイズ"] > input');
                         targetElement.textContent = selectedValue;
                     });
                     startObservingTargetElement();
                     // 目的のボタン要素を取得
                     const targetElement = node.querySelector('.kb-icon.kb-icon-lookup.kb-search');
-                    if (targetElement && isinit && !added) {
+                    if (targetElement ) {
                         targetElement.addEventListener('click', () => {
                             // 親要素をたどり、`row-idx`を取得
                             let current = targetElement;
@@ -37,7 +37,6 @@ window.addEventListener('load', function () {
                                 startObservingDispleychange();
                             }
                         });
-                        added = true;
                     }
                 }
             });
