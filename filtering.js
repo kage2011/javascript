@@ -19,7 +19,7 @@ window.addEventListener('load', function () {
                         var selectedValue = elem.querySelector('tbody > tr > td > div > div > span').textContent;
                         console.log(elem);
                         var targetElement = elem.querySelector('[field-id="サイズ"] > div > input');
-                        targetElement.textContent = selectedValue;
+                        targetElement.value = selectedValue;
                     });
                     startObservingTargetElement();
                     // 目的のボタン要素を取得
