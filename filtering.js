@@ -64,40 +64,6 @@ window.addEventListener('load', function () {
 
         // Observerを開始
         Observer.observe(parentNode, config);
-        const targetElements = document.querySelectorAll('body > div');
-        // すべてのbody > div要素を取得
-        // const allDivs = document.querySelectorAll('body > div');
-        const allDivs = document.querySelectorAll('[品名]');
-        
-        // 条件を満たすdiv要素をフィルタリング
-        const matchingDivs = Array.from(allDivs).filter(div => {
-            // 指定された構造のtable > thead > tr > th > divを探す
-            const targetDiv = div.querySelector('div > div > table > thead > tr > th > div');
-            return targetDiv && targetDiv.textContent === '品名'; // textが「品名」か確認
-        });
-                
-        targetElements.forEach(element => {
-            if (element) {
-                // displayの変更を監視
-                const styleObserver = new MutationObserver((mutationsList) => {
-                    mutationsList.forEach(mutation => {
-                        if (mutation.type === 'attributes' && mutation.attributeName === 'style') {
-                            const displayStyle = window.getComputedStyle(targetElement).display;
-                            if (displayStyle === 'flex') {
-                                console.log('displayがflexに変更されました！');
-                                runAdditionalProcess(); // フィルタリング処理を実行
-                            }
-                        }
-                    });
-                });
-    
-                // オプション設定：style属性の変更を監視
-                const styleConfig = { attributes: true, attributeFilter: ['style'] };
-                styleObserver.observe(element, styleConfig);
-            } else {
-                console.error('対象の要素が見つかりませんでした！');
-            }
-        });
     }
 
     function startObservingDispleychange() {
@@ -110,7 +76,24 @@ window.addEventListener('load', function () {
                         if (mutation.type === 'attributes' && mutation.attributeName === 'style') {
                             const displayStyle = window.getComputedStyle(element).display;
                             if (displayStyle === 'flex') {
-                                console.log('displayがflexに変更されました！');
+                                console.log("displayがflexになった要素:", node);
+
+                                // 子要素に"品名"が含まれるか確認
+                                const has品名 = [...node.querySelectorAll("*")].some(el => el.textContent.includes("品名"));
+                                if (has品名) {
+                                    console.log("品名が含まれる要素が見つかりました:", node);
+
+                                    // row-idxと一致する値を検索
+                                    const rows = document.querySelectorAll("body > div.kb-injector > div > main > table:nth-child(3) > tbody > tr");
+                                    rows.forEach((row) => {
+                                        if (row.getAttribute("row-idx") === showidx) {
+                                            const targetValue = row.querySelector("td:nth-child(1) > div > div.kb-field-value.kb-dropdown > span")?.textContent;
+                                            if (targetValue) {
+                                                console.log("取得した値:", targetValue);
+                                            }
+                                        }
+                                    });
+                                }
                                 runAdditionalProcess(); // フィルタリング処理を実行
                             }
                         }
