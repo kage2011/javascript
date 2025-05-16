@@ -18,7 +18,7 @@ window.addEventListener('load', function () {
                     dropdown.addEventListener('change', () => {
                         var selectedValue = elem.querySelector('tbody > tr > td > div > div > span').textContent;
                         console.log(elem);
-                        var targetElement = elem.querySelector('[field-id="サイズ"] > input');
+                        var targetElement = elem.querySelector('[field-id="サイズ"] > div > input');
                         targetElement.textContent = selectedValue;
                     });
                     startObservingTargetElement();
