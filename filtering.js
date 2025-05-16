@@ -18,8 +18,9 @@ window.addEventListener('load', function () {
 
         });
         // changeイベントを作成して発火
-        var changeEvent = new Event('change');
-        dropdown.dispatchEvent(changeEvent);
+        var changeEvent = new Event('click');
+        var searchbutton = node.querySelector('.kb-icon.kb-icon-lookup.kb-search')
+        searchbutton.dispatchEvent(changeEvent);
     }
 
     // オブザーバーインスタンスを生成
