@@ -40,6 +40,7 @@ window.addEventListener('load', function () {
                                 console.log("row-idx 属性が見つかりませんでした。");
                             }
                         });
+                        added = true;
                     }
                     isinit = true;
                 }
