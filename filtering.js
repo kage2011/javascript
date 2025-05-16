@@ -108,7 +108,7 @@ window.addEventListener('load', function () {
                 const styleObserver = new MutationObserver((mutationsList) => {
                     mutationsList.forEach(mutation => {
                         if (mutation.type === 'attributes' && mutation.attributeName === 'style') {
-                            const displayStyle = window.getComputedStyle(targetElement).display;
+                            const displayStyle = window.getComputedStyle(element).display;
                             if (displayStyle === 'flex') {
                                 console.log('displayがflexに変更されました！');
                                 runAdditionalProcess(); // フィルタリング処理を実行
