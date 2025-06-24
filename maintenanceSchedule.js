@@ -212,7 +212,7 @@ window.addEventListener('load', function () {
             mutation.addedNodes.forEach(elem => {
                 if (elem.nodeType === Node.ELEMENT_NODE && elem.querySelector('[field-id="参加メンバー"]')) {
                     var node = elem.querySelector('[field-id="参加メンバー"]');
-                    node.disabled = true; // 参加メンバーのフィールドを無効化
+                    node.querySelector('input').disabled = true; // 参加メンバーのフィールドを無効化
                     addbutton(node);
                 }
             });
