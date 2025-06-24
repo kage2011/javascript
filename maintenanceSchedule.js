@@ -60,7 +60,7 @@ window.addEventListener('load', function () {
             title.style.cssText = 'margin-top: 0; margin-bottom: 20px; color: #333;';
             dialog.appendChild(title);
             // 参加メンバーの要素を取得
-            var membersValue = node.value;
+            var membersValue = node.querySelector('input').value || '' ;
             const currentSelectedMembers = membersValue.split(',').map(member => member.trim());
             // 選択されたメンバーを保存する配列（既存の選択状態で初期化）
             const selectedMembers = [...currentSelectedMembers];
