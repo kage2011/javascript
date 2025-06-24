@@ -1,11 +1,8 @@
 // windowのloadイベントを使用して、ページの読み込みが完了した後にスクリプトを実行
 window.addEventListener('load', function () {
 
-    const apiToken = 'zYzPURN2dTGfQiM0lnB5M30O6RtOhiWQiB7SvkdQ';
-    const appId = 50;
-    const query = encodeURIComponent('所属 in ("工機")');
-
     let records = [];
+    let members = [];
 
     fetch(`https://d37ksuq96l.execute-api.us-east-1.amazonaws.com/product/kintoneWebform/`, {
     method: 'GET'
@@ -14,6 +11,10 @@ window.addEventListener('load', function () {
     .then(data => {
         console.log('取得したレコード:', data.body.body.records);
         records = data.body.body.records; // 取得したレコードを保存
+        // ふりがなであいうえお順にソート
+        membersrecords.sort((a, b) => 
+          a.ふりがな.value.localeCompare(b.ふりがな.value, 'ja')
+        );
     })
     .catch(error => {
         console.error('取得失敗:', error);
