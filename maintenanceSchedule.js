@@ -72,7 +72,7 @@ window.addEventListener('load', function () {
 
             // 各メンバーのボタンを作成
             members.forEach(function(member) {
-                const memberName = member[CONFIG.EMPLOYEE_NAME_FIELD].value;
+                const memberName = member['氏名'].value;
                 
                 const memberButton = document.createElement('button');
                 memberButton.textContent = memberName;
