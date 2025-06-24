@@ -8,11 +8,7 @@ window.addEventListener('load', function () {
     let records = [];
 
     fetch(`https://d37ksuq96l.execute-api.us-east-1.amazonaws.com/product/kintoneWebform/`, {
-    method: 'GET',
-    headers: {
-        'X-Cybozu-API-Token': apiToken,
-        'Content-Type': 'application/json'
-    }
+    method: 'GET'
     })
     .then(response => response.json())
     .then(data => {
