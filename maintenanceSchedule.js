@@ -12,7 +12,7 @@ window.addEventListener('load', function () {
         console.log('取得したレコード:', data.body.body.records);
         records = data.body.body.records; // 取得したレコードを保存
         // ふりがなであいうえお順にソート
-        membersrecords.sort((a, b) => 
+        members = records.sort((a, b) => 
           a.ふりがな.value.localeCompare(b.ふりがな.value, 'ja')
         );
     })
