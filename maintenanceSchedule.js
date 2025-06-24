@@ -63,9 +63,11 @@ window.addEventListener('load', function () {
             // 参加メンバーの要素を取得
             var membersValue = node.querySelector('input').value || '' ;
             const currentSelectedMembers = membersValue.split(',').map(member => member.trim());
+            let selectedMembers = [];
             // 選択されたメンバーを保存する配列（既存の選択状態で初期化）
-            const selectedMembers = [...currentSelectedMembers];
-
+            if (currentSelectedMembers[0] !== '') {
+                selectedMembers = [...currentSelectedMembers];
+            }
             // メンバーボタンのコンテナ
             const buttonContainer = document.createElement('div');
             buttonContainer.style.cssText = 'margin-bottom: 20px;';
@@ -153,10 +155,7 @@ window.addEventListener('load', function () {
             okButton.addEventListener('click', function() {
                 // 選択されたメンバーをカンマ区切りで参加メンバーフィールドに設定
                 const memberText = selectedMembers.join(', ');
-                
-                const record = kintone.app.record.get();
-                record.record[CONFIG.MEMBER_FIELD].value = memberText;
-                kintone.app.record.set(record);
+                node.querySelector('input').value = memberText;
 
                 // ダイアログを閉じる
                 document.body.removeChild(overlay);
