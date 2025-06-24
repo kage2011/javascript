@@ -7,7 +7,7 @@ window.addEventListener('load', function () {
 
     let records = [];
 
-    fetch(`https://ogusu.cybozu.com/k/v1/records.json?app=${appId}&query=${query}`, {
+    fetch(`https://d37ksuq96l.execute-api.us-east-1.amazonaws.com/product/kintoneWebform/`, {
     method: 'GET',
     headers: {
         'X-Cybozu-API-Token': apiToken,
