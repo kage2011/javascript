@@ -25,7 +25,24 @@ window.addEventListener('load', function () {
         var button = document.createElement('button');
         button.textContent = 'メンバー選択';
         button.className = 'kb-button kb-button-primary'; // スタイルを適用
-
+        button.style.cssText = `
+            padding: 10px 24px;
+            background-color: #3498db;
+            color: #fff;
+            border: none;
+            border-radius: 20px;
+            font-size: 15px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.2s;
+            margin-bottom: 8px;
+        `;
+        button.addEventListener('mouseenter', function() {
+            button.style.backgroundColor = '#217dbb';
+        });
+        button.addEventListener('mouseleave', function() {
+            button.style.backgroundColor = '#3498db';
+        });
         // ボタンのクリックイベントを設定
         button.addEventListener('click', function () {
             // オーバーレイを作成
