@@ -177,7 +177,7 @@ window.addEventListener('load', function () {
                 }
             });
         });
-
+        const memberElement = node.querySelector('[field-id="参加メンバー"]');
         // ボタンを要素に追加
         memberElement.appendChild(button);
     }
