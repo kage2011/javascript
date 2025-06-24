@@ -12,8 +12,8 @@ window.addEventListener('load', function () {
     })
     .then(response => response.json())
     .then(data => {
-        console.log('取得したレコード:', data.records);
-        records = data.records; // 取得したレコードを保存
+        console.log('取得したレコード:', data.body.body.records);
+        records = data.body.body.records; // 取得したレコードを保存
     })
     .catch(error => {
         console.error('取得失敗:', error);
