@@ -57,7 +57,7 @@ window.addEventListener('load', function () {
         // レコード取得
         let records = [];
         try {
-            const resp = await fetch(`https://d37ksuq96l.execute-api.us-east-1.amazonaws.com/product/kintoneWebform/`, { method: 'GET' });
+            const resp = await fetch(`https://d37ksuq96l.execute-api.us-east-1.amazonaws.com/product/kintoneWebform/schedule`, { method: 'GET' });
             const data = await resp.json();
             records = data.body.body.records;
         } catch (e) {
