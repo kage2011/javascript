@@ -68,35 +68,35 @@ window.addEventListener('load', function () {
         if (exist) exist.remove();
 
         // メンバー抽出
-        const menberList = new Set();
+        const memberList = new Set();
         const rebuildedTasks = [];
         tasks.forEach(task => {
-            const menbers = task['参加メンバー'].value.split(',');
-            menbers.forEach(m => {
+            const members = task['参加メンバー']?.split(',').map(m => m.trim()) || [];
+            members.forEach(m => {
                 const name = m;
-                const start = task['開始日時']?.value || '';
-                const end = task['終了日時']?.value || '';
-                const content = task['内容']?.value || '';
-                const place = task['場所']?.value || '';
-                const note = task['備考']?.value || '';
-                const taskName = task['タスク']?.value || '';
-                const register = task['記入者']?.value || '';
-                const no = task['レコード番号']?.value || '';
+                const start = task['開始日時'] || '';
+                const end = task['終了日時'] || '';
+                const content = task['内容'] || '';
+                const place = task['場所'] || '';
+                const note = task['備考'] || '';
+                const taskName = task['タスク'] || '';
+                const register = task['記入者'] || '';
+                const no = task['レコード番号'] || '';
                 rebuildedTasks.push({
-                    '氏名': { value: name },
-                    '開始日時': { value: start },
-                    '終了日時': { value: end },
-                    '内容': { value: content },
-                    '場所': { value: place },
-                    '備考': { value: note },
-                    'タスク': { value: taskName },
-                    '記入者': { value: register },
-                    'レコード番号': { value: no }
+                    '氏名':  name ,
+                    '開始日時': start ,
+                    '終了日時': end ,
+                    '内容': content ,
+                    '場所': place ,
+                    '備考': note ,
+                    'タスク': taskName ,
+                    '記入者': register ,
+                    'レコード番号':  no 
                 });
-                menberList.add(name);
+                memberList.add(name);
             });
         })
-        const members = Array.from(menberList);
+        const members = Array.from(memberList);
         // オーバーレイ
         const overlay = document.createElement('div');
         overlay.id = 'schedule-dialog-overlay';
@@ -165,7 +165,7 @@ window.addEventListener('load', function () {
             const period = periodSelect.value;
             const member = memberSelect.value;
             let filtered = rebuildedTasks;
-            if (member) filtered = filtered.filter(r => (r['氏名'].value === member));
+            if (member) filtered = filtered.filter(r => (r['氏名'] === member));
             // 日付範囲
             let start, end;
             const today = new Date();
@@ -182,8 +182,8 @@ window.addEventListener('load', function () {
             }
             // 期間内のみ
             filtered = filtered.filter(r => {
-                const s = new Date(r['開始日時'].value);
-                const e = new Date(r['終了日時'].value);
+                const s = new Date(r['開始日時']);
+                const e = new Date(r['終了日時']);
                 return e >= start && s <= end;
             });
 
@@ -243,9 +243,9 @@ window.addEventListener('load', function () {
                     cell.style.cssText = 'padding:0; min-width:30px; height:30px; position:relative;';
                     // タスクバー
                     filtered.forEach(r => {
-                        if (r['氏名'].value !== m) return;
-                        let s = new Date(r['開始日時'].value);
-                        let e = new Date(r['終了日時'].value);
+                        if (r['氏名'] !== m) return;
+                        let s = new Date(r['開始日時']);
+                        let e = new Date(r['終了日時']);
                         let show = false;
                         if (period === 'day') {
                             const base = new Date(start);
@@ -267,7 +267,7 @@ window.addEventListener('load', function () {
                         }
                         if (show) {
                             const bar = document.createElement('div');
-                            bar.textContent = r['タスク'].value;
+                            bar.textContent = r['タスク'];
                             bar.style.cssText = `
                                 position:absolute; left:2px; right:2px; top:2px; height:22px;
                                 background:#27ae60; color:white; border-radius:3px; font-size:11px; display:flex; align-items:center; justify-content:center; cursor:pointer;
