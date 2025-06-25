@@ -27,9 +27,7 @@ window.addEventListener('load', function () {
     .then(response => response.json())
     .then(data => {
         console.log('取得したレコード:', data.body.body.records);
-        records = data.body.body.records; // 取得したレコードを保存
-        // ふりがなであいうえお順にソート
-        tasks = records;
+        tasks = data.body.body; // 取得したレコードを保存
     })
     .catch(error => {
         console.error('取得失敗:', error);
@@ -69,23 +67,33 @@ window.addEventListener('load', function () {
         const exist = document.getElementById('schedule-dialog-overlay');
         if (exist) exist.remove();
 
-        // レコード取得
-        let records = [];
-        try {
-            const resp = await fetch(`https://d37ksuq96l.execute-api.us-east-1.amazonaws.com/product/kintoneWebform/schedule`, { method: 'GET' });
-            const data = await resp.json();
-            records = data.body.body.records;
-        } catch (e) {
-            alert('レコード取得に失敗しました');
-            return;
-        }
-
         // メンバー抽出
         const menberList = new Set();
-        records.forEach(record => {
-            const menbers = record['参加メンバー']?.value.split(',').map(m => m.trim()) || [];
+        const rebuildedTasks = [];
+        tasks.forEach(task => {
+            const menbers = task['参加メンバー']?.value.split(',').map(m => m.trim()) || [];
             menbers.forEach(m => {
-                if (m) menberList.add(m);
+                const name = m;
+                const start = task['開始日時']?.value || '';
+                const end = task['終了日時']?.value || '';
+                const content = task['内容']?.value || '';
+                const place = task['場所']?.value || '';
+                const note = task['備考']?.value || '';
+                const taskName = task['タスク']?.value || '';
+                const register = task['記入者']?.value || '';
+                const no = task['レコード番号']?.value || '';
+                rebuildedTasks.push({
+                    '氏名': { value: name },
+                    '開始日時': { value: start },
+                    '終了日時': { value: end },
+                    '内容': { value: content },
+                    '場所': { value: place },
+                    '備考': { value: note },
+                    'タスク': { value: taskName },
+                    '記入者': { value: register },
+                    'レコード番号': { value: no }
+                });
+                menberList.add(name);
             });
         })
         const members = Array.from(menberList);
@@ -156,7 +164,7 @@ window.addEventListener('load', function () {
             // 期間・メンバーでフィルタ
             const period = periodSelect.value;
             const member = memberSelect.value;
-            let filtered = records;
+            let filtered = rebuildedTasks;
             if (member) filtered = filtered.filter(r => (r['氏名'].value === member));
             // 日付範囲
             let start, end;
