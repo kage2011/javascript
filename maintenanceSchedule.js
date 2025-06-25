@@ -71,7 +71,7 @@ window.addEventListener('load', function () {
         const menberList = new Set();
         const rebuildedTasks = [];
         tasks.forEach(task => {
-            const menbers = task['参加メンバー']?.value.split(',').map(m => m.trim()) || [];
+            const menbers = task['参加メンバー'].value.split(',').map(m => m.trim()) || [];
             menbers.forEach(m => {
                 const name = m;
                 const start = task['開始日時']?.value || '';
