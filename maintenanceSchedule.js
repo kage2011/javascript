@@ -66,8 +66,14 @@ window.addEventListener('load', function () {
         }
 
         // メンバー抽出
-        const members = Array.from(new Set(records.map(r => r['氏名'].value))).sort();
-
+        const menberList = new Set();
+        records.forEach(record => {
+            const menbers = record['参加メンバー']?.value.split(',').map(m => m.trim()) || [];
+            menbers.forEach(m => {
+                if (m) menberList.add(m);
+            });
+        })
+        const members = Array.from(menberList);
         // オーバーレイ
         const overlay = document.createElement('div');
         overlay.id = 'schedule-dialog-overlay';
