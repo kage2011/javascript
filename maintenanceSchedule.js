@@ -364,7 +364,6 @@ window.addEventListener('load', function () {
                         justify-content:center;
                         cursor:pointer;
                         z-index:2;
-                        width:calc(${endIdx - startIdx + 1}00% - 4px);
                         box-shadow:0 1px 3px rgba(0,0,0,0.15);
                     `;
                     // 横幅をセル数分に調整
