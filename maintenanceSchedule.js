@@ -15,34 +15,41 @@ const colors = {
     'その他': '#7f8c8d',
 };
 
-fetch(`https://d37ksuq96l.execute-api.us-east-1.amazonaws.com/product/kintoneWebform/`, {
-method: 'GET'
-})
-.then(response => response.json())
-.then(data => {
-    console.log('取得したレコード:', data.body.body.records);
-    records = data.body.body.records; // 取得したレコードを保存
-    // ふりがなであいうえお順にソート
-    members = records.sort((a, b) => 
-        a.ふりがな.value.localeCompare(b.ふりがな.value, 'ja')
-    );
-})
-.catch(error => {
-    console.error('取得失敗:', error);
-});
+function member_load(){
+    fetch(`https://d37ksuq96l.execute-api.us-east-1.amazonaws.com/product/kintoneWebform/`, {
+    method: 'GET'
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log('取得したレコード:', data.body.body.records);
+        records = data.body.body.records; // 取得したレコードを保存
+        // ふりがなであいうえお順にソート
+        members = records.sort((a, b) => 
+            a.ふりがな.value.localeCompare(b.ふりがな.value, 'ja')
+        );
+    })
+    .catch(error => {
+        console.error('取得失敗:', error);
+    });
+}
 
-fetch(`https://d37ksuq96l.execute-api.us-east-1.amazonaws.com/product/kintoneWebform/schedule`, {
-method: 'GET'
-})
-.then(response => response.json())
-.then(data => {
-    console.log('取得したレコード:', data.body.body.records);
-    tasks = data.body.body; // 取得したレコードを保存
-    schedule_readed = true;
-})
-.catch(error => {
-    console.error('取得失敗:', error);
-});
+function schedule_load(){
+    fetch(`https://d37ksuq96l.execute-api.us-east-1.amazonaws.com/product/kintoneWebform/schedule`, {
+    method: 'GET'
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log('取得したレコード:', data.body.body.records);
+        tasks = data.body.body; // 取得したレコードを保存
+        schedule_readed = true;
+    })
+    .catch(error => {
+        console.error('取得失敗:', error);
+    });
+}
+
+member_load();
+schedule_load();
 
 // windowのloadイベントを使用して、ページの読み込みが完了した後にスクリプトを実行
 window.addEventListener('load', function () {
@@ -627,6 +634,8 @@ window.addEventListener('load', function () {
                         alert('変更しました');
                         overlay.remove();
                         parentOverlay.remove();
+                        schedule_load();
+                        showScheduleDialog();
                     } catch (e) {
                         alert('変更に失敗しました');
                     }
