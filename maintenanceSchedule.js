@@ -2,6 +2,19 @@ let records = [];
 let members = [];
 let tasks = [];
 let schedule_readed = false;
+// ★ 1. グローバルに色定義
+const colors = {
+    '計画': '#27ae60',
+    'ロス取り': '#3498db',
+    '改造': '#95a5a6',
+    'OCS': '#f39c12',
+    '保全カレンダー': '#e74c3c',
+    '休み': '#f1c40f',
+    '出張': '#8e44ad',
+    '研修': '#2c3e50',
+    'その他': '#7f8c8d',
+};
+
 fetch(`https://d37ksuq96l.execute-api.us-east-1.amazonaws.com/product/kintoneWebform/`, {
 method: 'GET'
 })
@@ -121,6 +134,7 @@ window.addEventListener('load', function () {
                 const taskName = task['タスク'] || '';
                 const register = task['記入者'] || '';
                 const no = task['レコード番号'] || '';
+                if (!name) return; // 名前がない場合はスキップ
                 rebuildedTasks.push({
                     '氏名':  name ,
                     '開始日時': start ,
@@ -286,42 +300,76 @@ window.addEventListener('load', function () {
                     tr.appendChild(cell);
                 }
 
-                // タスクバーを横断で描画
-                filtered.filter(r => r['氏名'] === m).forEach(r => {
+                // --- タスクバーのレイヤー計算 ---
+                // 1. 各タスクの開始・終了インデックスを計算
+                const bars = filtered.filter(r => r['氏名'] === m).map(r => {
                     let s = new Date(r['開始日時']);
                     let e = new Date(r['終了日時']);
-
                     let startIdx = 0, endIdx = 0;
                     if (period === 'day') {
-                        // 時間単位
                         startIdx = Math.max(0, s.getHours());
                         endIdx = Math.min(23, e.getHours());
                     } else if (period === 'week') {
-                        // 曜日単位
                         const base = new Date(start);
                         base.setHours(0,0,0,0);
                         startIdx = Math.max(0, Math.floor((s - base) / (1000*60*60*24)));
                         endIdx = Math.min(6, Math.floor((e - base) / (1000*60*60*24)));
                     } else {
-                        // 月単位
                         startIdx = Math.max(0, s.getDate() - 1);
                         endIdx = Math.min(colCount - 1, e.getDate() - 1);
                     }
-                    // バーを1つだけ作成し、最初のセルにappend
-                    const bar = document.createElement('div');
-                    bar.textContent = r['タスク'];
-                    bar.style.cssText = `
-                        position:absolute; left:2px; top:2px; height:22px;
-                        background:#27ae60; color:white; border-radius:3px; font-size:11px; display:flex; align-items:center; justify-content:center; cursor:pointer;
+                    return {
+                        record: r,
+                        startIdx,
+                        endIdx,
+                        color: colors[r['タスク']] || '#7f8c8d'
+                    };
+                });
+
+                // 2. レイヤー割り当て（重なりをずらす）
+                const layers = [];
+                bars.forEach(bar => {
+                    let layer = 0;
+                    while (true) {
+                        if (!layers[layer]) layers[layer] = [];
+                        // このレイヤーに重なりがないか
+                        const overlap = layers[layer].some(b =>
+                            !(bar.endIdx < b.startIdx || bar.startIdx > b.endIdx)
+                        );
+                        if (!overlap) {
+                            layers[layer].push(bar);
+                            bar.layer = layer;
+                            break;
+                        }
+                        layer++;
+                    }
+                });
+
+                // 3. バーを描画
+                bars.forEach(bar => {
+                    const barDiv = document.createElement('div');
+                    barDiv.textContent = bar.record['タスク'];
+                    barDiv.style.cssText = `
+                        position:absolute;
+                        left:2px;
+                        top:${2 + bar.layer * 24}px;
+                        height:22px;
+                        background:${bar.color};
+                        color:white;
+                        border-radius:3px;
+                        font-size:11px;
+                        display:flex;
+                        align-items:center;
+                        justify-content:center;
+                        cursor:pointer;
                         z-index:2;
-                        width:calc(${(endIdx - startIdx + 1)} * 100% + ${(endIdx - startIdx) * 4}px - 4px);
-                        right:auto;
+                        width:calc(${endIdx - startIdx + 1}00% - 4px);
+                        box-shadow:0 1px 3px rgba(0,0,0,0.15);
                     `;
                     // 横幅をセル数分に調整
-                    bar.style.width = `calc(${endIdx - startIdx + 1}00% - 4px)`;
-                    bar.onclick = () => showDetailDialog(r);
-                    cells[startIdx].appendChild(bar);
-                    // 他のセルは背景色だけでOK（バーは1つだけ）
+                    barDiv.style.width = `calc(${bar.endIdx - bar.startIdx + 1}00% - 4px)`;
+                    barDiv.onclick = () => showDetailDialog(bar.record);
+                    cells[bar.startIdx].appendChild(barDiv);
                 });
 
                 table.appendChild(tr);
