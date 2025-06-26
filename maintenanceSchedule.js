@@ -265,11 +265,29 @@ function addbutton(node) {
 // スケジュール確認ボタン追加
 function addScheduleButton() {
     if (document.getElementById('schedule-check-btn')) return;
+
+    // 固定用ラッパーを作成
+    let wrapper = document.getElementById('schedule-check-btn-wrapper');
+    if (!wrapper) {
+        wrapper = document.createElement('div');
+        wrapper.id = 'schedule-check-btn-wrapper';
+        wrapper.style.cssText = `
+            position: fixed;
+            bottom: 32px;
+            left: 0;
+            width: 100vw;
+            display: flex;
+            justify-content: center;
+            z-index: 2147483646; /* ベース(2147483647)より一つ下 */
+            pointer-events: none; /* ボタン以外はクリックを通す */
+        `;
+        document.body.appendChild(wrapper);
+    }
+
     const btn = document.createElement('button');
     btn.id = 'schedule-check-btn';
     btn.textContent = 'スケジュール確認';
     btn.style.cssText = `
-        margin: 16px 0 8px 0;
         padding: 10px 24px;
         background-color: #27ae60;
         color: #fff;
@@ -279,11 +297,17 @@ function addScheduleButton() {
         font-weight: bold;
         cursor: pointer;
         transition: background 0.2s;
-        display: block;
+        margin-bottom: 0;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+        pointer-events: auto; /* ボタンはクリック可能 */
     `;
     btn.onclick = showScheduleDialog;
-    const form = document.querySelector('form') || document.body;
-    form.insertBefore(btn, form.firstChild);
+
+    // 既存ボタンがあれば削除
+    const oldBtn = document.getElementById('schedule-check-btn');
+    if (oldBtn) oldBtn.remove();
+
+    wrapper.appendChild(btn);
 }
 
 // スケジュールダイアログ
