@@ -640,6 +640,71 @@ function showDetailDialog(record) {
     `;
     editBtn.onclick = () => showEditDialog(record, overlay);
     dialog.appendChild(editBtn);
+    
+    // 削除ボタン
+    const deleteBtn = document.createElement('button');
+    deleteBtn.textContent = '削除';
+    deleteBtn.style.cssText = `
+        margin-top:20px; margin-right:10px; padding:8px 24px; background:#e74c3c; color:#fff; border:none; border-radius:4px; cursor:pointer; float:right;
+    `;
+    deleteBtn.onclick = async () => {
+        // 確認ダイアログ
+        if (!window.confirm('本当にこのスケジュールを削除しますか？')) return;
+
+        // ローディング表示
+        const loadingOverlay = document.createElement('div');
+        loadingOverlay.id = 'schedule-loading-overlay';
+        loadingOverlay.style.cssText = `
+            position: fixed; top:0; left:0; width:100vw; height:100vh;
+            background:rgba(0,0,0,0.5); z-index:99999; display:flex; justify-content:center; align-items:center;
+        `;
+        loadingOverlay.innerHTML = `
+            <div style="display:flex; flex-direction:column; align-items:center;">
+                <div style="
+                    border: 6px solid #f3f3f3;
+                    border-top: 6px solid #e74c3c;
+                    border-radius: 50%;
+                    width: 48px;
+                    height: 48px;
+                    animation: spin 1s linear infinite;
+                    margin-bottom: 16px;
+                "></div>
+                <div style="color:white; font-size:18px; font-weight:bold;">削除中...<br>しばらくお待ちください</div>
+            </div>
+            <style>
+                @keyframes spin {
+                    0% { transform: rotate(0deg);}
+                    100% { transform: rotate(360deg);}
+                }
+            </style>
+        `;
+        document.body.appendChild(loadingOverlay);
+
+        try {
+            await fetch('https://d37ksuq96l.execute-api.us-east-1.amazonaws.com/product/kintoneWebform/schedule', {
+                method: 'DELETE',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ 'レコード番号': record['レコード番号'] })
+            });
+
+            overlay.remove();
+            loadingOverlay.querySelector('div:last-child').innerHTML = 'スケジュール更新中...<br>しばらくお待ちください';
+
+            schedule_readed = false;
+            await schedule_load_promise();
+
+            loadingOverlay.remove();
+
+            alert('削除しました');
+            showScheduleDialog();
+
+        } catch (e) {
+            console.error('Error:', e);
+            alert('削除に失敗しました');
+            loadingOverlay.remove();
+        }
+    };
+    dialog.appendChild(deleteBtn);
 
     // 閉じるボタン
     const closeBtn = document.createElement('button');
