@@ -608,7 +608,7 @@ window.addEventListener('load', function () {
         saveBtn.style.cssText = 'padding:8px 24px; background:#27ae60; color:#fff; border:none; border-radius:4px; cursor:pointer;';
         saveBtn.onclick = async () => {
             // 記入者選択ダイアログを出す
-            showWriterSelectDialog(inputWriter, async function(writerName) {
+            showWriterSelectDialog('', async function(writerName) {
                 if (writerName) {
                     inputWriter.value = writerName;
                     // 通常の保存処理
