@@ -486,7 +486,7 @@ window.addEventListener('load', function () {
             // 参加メンバー
             newRecord['参加メンバー'].value = form['参加メンバー'].value;
             // その他
-            ['開始日時','終了日時','内容','場所','備考','記入者'].forEach(key => {
+            ['開始日時','終了日時','内容','場所','備考'].forEach(key => {
                 if (form[key]) newRecord[key].value = form[key].value;
             });
             // 保存API呼び出し（ここはAPI仕様に合わせて修正してください）
@@ -570,7 +570,7 @@ window.addEventListener('load', function () {
             { label: '内容', key: '内容', type: 'textarea' },
             { label: '場所', key: '場所', type: 'text' },
             { label: '備考', key: '備考', type: 'textarea' },
-            { label: '記入者', key: '記入者', type: 'text' }
+            { label: '記入者', key: '', type: 'text' }
         ];
         fields.forEach(f => {
             const div = document.createElement('div');
@@ -587,7 +587,25 @@ window.addEventListener('load', function () {
                 input.type = f.type;
             }
             input.name = f.key;
-            input.value = record[f.key] || '';
+
+            // ★ 開始日時・終了日時はdatetime-local用に変換
+            if ((f.key === '開始日時' || f.key === '終了日時') && record[f.key]) {
+                const date = new Date(record[f.key]);
+                // 日付が有効なら "YYYY-MM-DDTHH:MM" 形式に
+                if (!isNaN(date)) {
+                    const yyyy = date.getFullYear();
+                    const mm = String(date.getMonth() + 1).padStart(2, '0');
+                    const dd = String(date.getDate()).padStart(2, '0');
+                    const hh = String(date.getHours()).padStart(2, '0');
+                    const mi = String(date.getMinutes()).padStart(2, '0');
+                    input.value = `${yyyy}-${mm}-${dd}T${hh}:${mi}`;
+                } else {
+                    input.value = '';
+                }
+            } else {
+                input.value = record[f.key] || '';
+            }
+            
             input.style.cssText = 'width:100%; padding:6px; border-radius:4px; border:1px solid #ccc;';
             div.appendChild(label); div.appendChild(input);
             form.appendChild(div);
@@ -624,7 +642,7 @@ window.addEventListener('load', function () {
             width: 100%;
             height: 100%;
             background-color: rgba(0, 0, 0, 0.5);
-            z-index: 10000;
+            z-index: 2147480000;
             display: flex;
             justify-content: center;
             align-items: center;
