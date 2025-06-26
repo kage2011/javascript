@@ -634,7 +634,40 @@ window.addEventListener('load', function () {
                         alert('変更しました');
                         overlay.remove();
                         parentOverlay.remove();
-                        schedule_load();
+                        // ローディングオーバーレイを表示
+                        const loadingOverlay = document.createElement('div');
+                        loadingOverlay.id = 'schedule-loading-overlay';
+                        loadingOverlay.style.cssText = `
+                            position: fixed; top:0; left:0; width:100vw; height:100vh;
+                            background:rgba(0,0,0,0.5); z-index:9999; display:flex; justify-content:center; align-items:center;
+                        `;
+                        // スピナーとテキスト
+                        loadingOverlay.innerHTML = `
+                            <div style="display:flex; flex-direction:column; align-items:center;">
+                                <div style="
+                                    border: 6px solid #f3f3f3;
+                                    border-top: 6px solid #3498db;
+                                    border-radius: 50%;
+                                    width: 48px;
+                                    height: 48px;
+                                    animation: spin 1s linear infinite;
+                                    margin-bottom: 16px;
+                                "></div>
+                                <div style="color:white; font-size:18px; font-weight:bold;">スケジュール読込中...<br>しばらくお待ちください</div>
+                            </div>
+                            <style>
+                                @keyframes spin {
+                                    0% { transform: rotate(0deg);}
+                                    100% { transform: rotate(360deg);}
+                                }
+                            </style>
+                        `;
+                        document.body.appendChild(loadingOverlay);
+
+                        while (!schedule_readed) {
+                            await new Promise(resolve => setTimeout(resolve, 1000)); // 100ms待機
+                        }
+                        schedule_load();                        
                         showScheduleDialog();
                     } catch (e) {
                         alert('変更に失敗しました');
