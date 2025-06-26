@@ -277,46 +277,53 @@ window.addEventListener('load', function () {
                 td.style.cssText = 'background:#f8f9fa; padding:12px; font-weight:bold;';
                 tr.appendChild(td);
 
+                // 空セルを先に作成
+                const cells = [];
                 for (let c = 0; c < colCount; c++) {
                     const cell = document.createElement('td');
                     cell.style.cssText = 'padding:0; min-width:30px; height:30px; position:relative;';
-                    // タスクバー
-                    filtered.forEach(r => {
-                        if (r['氏名'] !== m) return;
-                        let s = new Date(r['開始日時']);
-                        let e = new Date(r['終了日時']);
-                        let show = false;
-                        if (period === 'day') {
-                            const base = new Date(start);
-                            base.setHours(c,0,0,0);
-                            const next = new Date(base); next.setHours(base.getHours() + 1);
-                            if (e >= base && s < next) show = true;
-                        } else if (period === 'week') {
-                            const base = new Date(start);
-                            base.setDate(base.getDate() + c);
-                            base.setHours(0,0,0,0);
-                            const next = new Date(base); next.setDate(base.getDate() + 1);
-                            if (e >= base && s < next) show = true;
-                        } else {
-                            const base = new Date(start);
-                            base.setDate(c + 1);
-                            base.setHours(0,0,0,0);
-                            const next = new Date(base); next.setDate(base.getDate() + 1);
-                            if (e >= base && s < next) show = true;
-                        }
-                        if (show) {
-                            const bar = document.createElement('div');
-                            bar.textContent = r['タスク'];
-                            bar.style.cssText = `
-                                position:absolute; left:2px; right:2px; top:2px; height:22px;
-                                background:#27ae60; color:white; border-radius:3px; font-size:11px; display:flex; align-items:center; justify-content:center; cursor:pointer;
-                            `;
-                            bar.onclick = () => showDetailDialog(r);
-                            cell.appendChild(bar);
-                        }
-                    });
+                    cells.push(cell);
                     tr.appendChild(cell);
                 }
+
+                // タスクバーを横断で描画
+                filtered.filter(r => r['氏名'] === m).forEach(r => {
+                    let s = new Date(r['開始日時']);
+                    let e = new Date(r['終了日時']);
+
+                    let startIdx = 0, endIdx = 0;
+                    if (period === 'day') {
+                        // 時間単位
+                        startIdx = Math.max(0, s.getHours());
+                        endIdx = Math.min(23, e.getHours());
+                    } else if (period === 'week') {
+                        // 曜日単位
+                        const base = new Date(start);
+                        base.setHours(0,0,0,0);
+                        startIdx = Math.max(0, Math.floor((s - base) / (1000*60*60*24)));
+                        endIdx = Math.min(6, Math.floor((e - base) / (1000*60*60*24)));
+                    } else {
+                        // 月単位
+                        startIdx = Math.max(0, s.getDate() - 1);
+                        endIdx = Math.min(colCount - 1, e.getDate() - 1);
+                    }
+                    // バーを1つだけ作成し、最初のセルにappend
+                    const bar = document.createElement('div');
+                    bar.textContent = r['タスク'];
+                    bar.style.cssText = `
+                        position:absolute; left:2px; top:2px; height:22px;
+                        background:#27ae60; color:white; border-radius:3px; font-size:11px; display:flex; align-items:center; justify-content:center; cursor:pointer;
+                        z-index:2;
+                        width:calc(${(endIdx - startIdx + 1)} * 100% + ${(endIdx - startIdx) * 4}px - 4px);
+                        right:auto;
+                    `;
+                    // 横幅をセル数分に調整
+                    bar.style.width = `calc(${endIdx - startIdx + 1}00% - 4px)`;
+                    bar.onclick = () => showDetailDialog(r);
+                    cells[startIdx].appendChild(bar);
+                    // 他のセルは背景色だけでOK（バーは1つだけ）
+                });
+
                 table.appendChild(tr);
             });
 
