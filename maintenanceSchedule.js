@@ -477,32 +477,6 @@ window.addEventListener('load', function () {
 
         // 編集フォーム
         const form = document.createElement('form');
-        form.onsubmit = async (e) => {
-            e.preventDefault();
-            // 値取得
-            const newRecord = { ...record };
-            // 分類
-            newRecord['タスク'].value = form['タスク'].value;
-            // 参加メンバー
-            newRecord['参加メンバー'].value = form['参加メンバー'].value;
-            // その他
-            ['開始日時','終了日時','内容','場所','備考'].forEach(key => {
-                if (form[key]) newRecord[key].value = form[key].value;
-            });
-            // 保存API呼び出し（ここはAPI仕様に合わせて修正してください）
-            try {
-                await fetch('https://d37ksuq96l.execute-api.us-east-1.amazonaws.com/product/kintoneWebform/', {
-                    method: 'PUT',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ record: newRecord })
-                });
-                alert('変更しました');
-                overlay.remove();
-                parentOverlay.remove();
-            } catch (e) {
-                alert('変更に失敗しました');
-            }
-        };
 
         // 分類（タスク）ドロップダウン
         const divTask = document.createElement('div');
@@ -569,8 +543,7 @@ window.addEventListener('load', function () {
             { label: '終了日時', key: '終了日時', type: 'datetime-local' },
             { label: '内容', key: '内容', type: 'textarea' },
             { label: '場所', key: '場所', type: 'text' },
-            { label: '備考', key: '備考', type: 'textarea' },
-            { label: '記入者', key: '', type: 'text' }
+            { label: '備考', key: '備考', type: 'textarea' }
         ];
         fields.forEach(f => {
             const div = document.createElement('div');
@@ -614,8 +587,36 @@ window.addEventListener('load', function () {
         // 保存ボタン
         const saveBtn = document.createElement('button');
         saveBtn.textContent = '保存';
-        saveBtn.type = 'submit';
+        saveBtn.type = 'button'; // ←submitではなくbuttonに
         saveBtn.style.cssText = 'padding:8px 24px; background:#27ae60; color:#fff; border:none; border-radius:4px; cursor:pointer;';
+        saveBtn.onclick = async () => {
+            // 記入者選択ダイアログを出す
+            showWriterSelectDialog(inputWriter, async function(writerName) {
+                if (writerName) {
+                    inputWriter.value = writerName;
+                    // 通常の保存処理
+                    const newRecord = { ...record };
+                    newRecord['タスク'].value = form['タスク'].value;
+                    newRecord['参加メンバー'].value = form['参加メンバー'].value;
+                    ['開始日時','終了日時','内容','場所','備考'].forEach(key => {
+                        if (form[key]) newRecord[key].value = form[key].value;
+                    });
+                    newRecord['記入者'].value = writerName;
+                    try {
+                        await fetch('https://d37ksuq96l.execute-api.us-east-1.amazonaws.com/product/kintoneWebform/schedule', {
+                            method: 'PUT',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ record: newRecord })
+                        });
+                        alert('変更しました');
+                        overlay.remove();
+                        parentOverlay.remove();
+                    } catch (e) {
+                        alert('変更に失敗しました');
+                    }
+                }
+            });
+        };
         form.appendChild(saveBtn);
 
         // キャンセル
