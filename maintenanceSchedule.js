@@ -612,12 +612,12 @@ window.addEventListener('load', function () {
                 if (writerName) {
                     // 通常の保存処理
                     const newRecord = { ...record };
-                    newRecord['タスク'].value = form['タスク'].value;
-                    newRecord['参加メンバー'].value = form['参加メンバー'].value;
+                    newRecord['タスク'] = form['タスク'].value;
+                    newRecord['参加メンバー'] = form['参加メンバー'].value;
                     ['開始日時','終了日時','内容','場所','備考'].forEach(key => {
-                        if (form[key]) newRecord[key].value = form[key].value;
+                        if (form[key]) newRecord[key] = form[key].value;
                     });
-                    newRecord['記入者'].value = writerName;
+                    newRecord['記入者'] = writerName;
                     try {
                         await fetch('https://d37ksuq96l.execute-api.us-east-1.amazonaws.com/product/kintoneWebform/schedule', {
                             method: 'PUT',
