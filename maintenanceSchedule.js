@@ -126,8 +126,8 @@ window.addEventListener('load', function () {
             const members = task['参加メンバー']?.split(',').map(m => m.trim()) || [];
             members.forEach(m => {
                 const name = m;
-                const start = task['開始日時'] || '';
-                const end = task['終了日時'] || '';
+                const start = task['開始日時'] ? new Date(task['開始日時']) : null;
+                const end = task['終了日時'] ? new Date(task['終了日時']) : null;
                 const content = task['内容'] || '';
                 const place = task['場所'] || '';
                 const note = task['備考'] || '';
@@ -236,8 +236,8 @@ window.addEventListener('load', function () {
             }
             // 期間内のみ
             filtered = filtered.filter(r => {
-                const s = new Date(r['開始日時']);
-                const e = new Date(r['終了日時']);
+                const s = r['開始日時'];
+                const e = r['終了日時'];
                 return e >= start && s <= end;
             });
 
@@ -304,8 +304,8 @@ window.addEventListener('load', function () {
                 // --- タスクバーのレイヤー計算 ---
                 // 1. 各タスクの開始・終了インデックスを計算
                 const bars = filtered.filter(r => r['氏名'] === m).map(r => {
-                    let s = new Date(r['開始日時']);
-                    let e = new Date(r['終了日時']);
+                    let s = r['開始日時'];
+                    let e = r['終了日時'];
                     let startIdx = 0, endIdx = 0;
                     if (period === 'day') {
                         startIdx = Math.max(0, s.getHours());
@@ -411,7 +411,7 @@ window.addEventListener('load', function () {
         const fields = [
             { label: 'レコード番号', key: 'レコード番号' },
             { label: 'タスク名', key: 'タスク' },
-            { label: 'メンバー', key: '氏名' },
+            { label: '参加メンバー', key: '参加メンバー' },
             { label: '開始日時', key: '開始日時' },
             { label: '終了日時', key: '終了日時' },
             { label: '内容', key: '内容' },
@@ -561,23 +561,24 @@ window.addEventListener('load', function () {
             }
             input.name = f.key;
 
-            // ★ 開始日時・終了日時はdatetime-local用に変換
-            if ((f.key === '開始日時' || f.key === '終了日時') && record[f.key]) {
-                const date = new Date(record[f.key]);
-                // 日付が有効なら "YYYY-MM-DDTHH:MM" 形式に
-                if (!isNaN(date)) {
-                    const yyyy = date.getFullYear();
-                    const mm = String(date.getMonth() + 1).padStart(2, '0');
-                    const dd = String(date.getDate()).padStart(2, '0');
-                    const hh = String(date.getHours()).padStart(2, '0');
-                    const mi = String(date.getMinutes()).padStart(2, '0');
-                    input.value = `${yyyy}-${mm}-${dd}T${hh}:${mi}`;
-                } else {
-                    input.value = '';
-                }
-            } else {
-                input.value = record[f.key] || '';
-            }
+            // // ★ 開始日時・終了日時はdatetime-local用に変換
+            // if ((f.key === '開始日時' || f.key === '終了日時') && record[f.key]) {
+            //     const date = new Date(record[f.key]);
+            //     // 日付が有効なら "YYYY-MM-DDTHH:MM" 形式に
+            //     if (!isNaN(date)) {
+            //         const yyyy = date.getFullYear();
+            //         const mm = String(date.getMonth() + 1).padStart(2, '0');
+            //         const dd = String(date.getDate()).padStart(2, '0');
+            //         const hh = String(date.getHours()).padStart(2, '0');
+            //         const mi = String(date.getMinutes()).padStart(2, '0');
+            //         input.value = `${yyyy}-${mm}-${dd}T${hh}:${mi}`;
+            //     } else {
+            //         input.value = '';
+            //     }
+            // } else {
+            //     input.value = record[f.key] || '';
+            // }
+            input.value = record[f.key] || '';
             
             input.style.cssText = 'width:100%; padding:6px; border-radius:4px; border:1px solid #ccc;';
             div.appendChild(label); div.appendChild(input);
@@ -769,7 +770,7 @@ window.addEventListener('load', function () {
             }
         });
     }
-    
+
     // 記入者選択ダイアログ（1人だけ選択可）
     function showWriterSelectDialog(inputElem, onOk) {
         const overlay = document.createElement('div');
