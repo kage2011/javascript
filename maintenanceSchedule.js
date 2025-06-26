@@ -610,7 +610,6 @@ window.addEventListener('load', function () {
             // 記入者選択ダイアログを出す
             showWriterSelectDialog('', async function(writerName) {
                 if (writerName) {
-                    inputWriter.value = writerName;
                     // 通常の保存処理
                     const newRecord = { ...record };
                     newRecord['タスク'].value = form['タスク'].value;
