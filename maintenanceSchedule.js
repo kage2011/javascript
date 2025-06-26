@@ -315,6 +315,10 @@ async function showScheduleDialog() {
     const exist = document.getElementById('schedule-dialog-overlay');
     if (exist) exist.remove();
 
+    // ★ スケジュール確認ボタンを非表示
+    const scheduleBtn = document.getElementById('schedule-check-btn');
+    if (scheduleBtn) scheduleBtn.style.display = 'none';
+
     // メンバー抽出
     const memberList = new Set();
     const rebuildedTasks = [];
@@ -430,7 +434,13 @@ async function showScheduleDialog() {
         margin-top:16px; padding:8px 24px; background:#95a5a6; color:#fff; border:none; border-radius:4px; cursor:pointer;
         float:right;
     `;
-    closeBtn.onclick = () => overlay.remove();
+    
+    closeBtn.onclick = () => {
+        overlay.remove();
+        // ★ スケジュール確認ボタンを再表示
+        if (scheduleBtn) scheduleBtn.style.display = '';
+    }
+
     dialog.appendChild(closeBtn);
 
     overlay.appendChild(dialog);
