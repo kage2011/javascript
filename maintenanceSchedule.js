@@ -273,11 +273,11 @@ function addScheduleButton() {
         wrapper.id = 'schedule-check-btn-wrapper';
         wrapper.style.cssText = `
             position: fixed;
-            top: 32px;
-            right: 10px;
-            width: 100vw;
+            top: 24px;
+            right: 24px;
+            width: auto;
             display: flex;
-            justify-content: center;
+            justify-content: flex-end;
             z-index: 2147483646; /* ベース(2147483647)より一つ下 */
             pointer-events: none; /* ボタン以外はクリックを通す */
         `;
