@@ -653,8 +653,9 @@ window.addEventListener('load', function () {
                             }
                         </style>
                     `;
+                    document.body.appendChild(loadingOverlay);
+
                     try {
-                        document.body.appendChild(loadingOverlay);
                         await fetch('https://d37ksuq96l.execute-api.us-east-1.amazonaws.com/product/kintoneWebform/schedule', {
                             method: 'PUT',
                             headers: { 'Content-Type': 'application/json' },
