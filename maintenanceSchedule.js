@@ -48,6 +48,25 @@ function schedule_load(){
     });
 }
 
+function schedule_load_promise() {
+    return new Promise((resolve, reject) => {
+        fetch(`https://d37ksuq96l.execute-api.us-east-1.amazonaws.com/product/kintoneWebform/schedule`, {
+            method: 'GET'
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log('取得したレコード:', data.body.body.records);
+            tasks = data.body.body; // 取得したレコードを保存
+            schedule_readed = true;
+            resolve(data);
+        })
+        .catch(error => {
+            console.error('取得失敗:', error);
+            reject(error);
+        });
+    });
+}
+
 member_load();
 schedule_load();
 
@@ -613,26 +632,18 @@ window.addEventListener('load', function () {
         saveBtn.textContent = '保存';
         saveBtn.type = 'button'; // ←submitではなくbuttonに
         saveBtn.style.cssText = 'padding:8px 24px; background:#27ae60; color:#fff; border:none; border-radius:4px; cursor:pointer;';
+
         saveBtn.onclick = async () => {
             // 記入者選択ダイアログを出す
             showWriterSelectDialog('', async function(writerName) {
                 if (writerName) {
-                    // 通常の保存処理
-                    const newRecord = { ...record };
-                    newRecord['タスク'] = form['タスク'].value;
-                    newRecord['参加メンバー'] = form['参加メンバー'].value;
-                    ['開始日時','終了日時','内容','場所','備考'].forEach(key => {
-                        if (form[key]) newRecord[key] = form[key].value;
-                    });
-                    newRecord['記入者'] = writerName;
-                    // ローディングオーバーレイを表示
+                    // ローディングオーバーレイを先に表示
                     const loadingOverlay = document.createElement('div');
                     loadingOverlay.id = 'schedule-loading-overlay';
                     loadingOverlay.style.cssText = `
                         position: fixed; top:0; left:0; width:100vw; height:100vh;
-                        background:rgba(0,0,0,0.5); z-index:9999; display:flex; justify-content:center; align-items:center;
+                        background:rgba(0,0,0,0.5); z-index:99999; display:flex; justify-content:center; align-items:center;
                     `;
-                    // スピナーとテキスト
                     loadingOverlay.innerHTML = `
                         <div style="display:flex; flex-direction:column; align-items:center;">
                             <div style="
@@ -644,7 +655,7 @@ window.addEventListener('load', function () {
                                 animation: spin 1s linear infinite;
                                 margin-bottom: 16px;
                             "></div>
-                            <div style="color:white; font-size:18px; font-weight:bold;">スケジュール読込中...<br>しばらくお待ちください</div>
+                            <div style="color:white; font-size:18px; font-weight:bold;">保存中...<br>しばらくお待ちください</div>
                         </div>
                         <style>
                             @keyframes spin {
@@ -656,27 +667,43 @@ window.addEventListener('load', function () {
                     document.body.appendChild(loadingOverlay);
 
                     try {
+                        // 通常の保存処理
+                        const newRecord = { ...record };
+                        newRecord['タスク'] = form['タスク'].value;
+                        newRecord['参加メンバー'] = form['参加メンバー'].value;
+                        ['開始日時','終了日時','内容','場所','備考'].forEach(key => {
+                            if (form[key]) newRecord[key] = form[key].value;
+                        });
+                        newRecord['記入者'] = writerName;
+
+                        // PUTリクエストを送信
                         await fetch('https://d37ksuq96l.execute-api.us-east-1.amazonaws.com/product/kintoneWebform/schedule', {
                             method: 'PUT',
                             headers: { 'Content-Type': 'application/json' },
                             body: JSON.stringify({ record: newRecord })
                         });
-                        // ローディングオーバーレイを削除
-                        loadingOverlay.remove();
+
+                        // PUTが成功したら、ダイアログを閉じる
                         overlay.remove();
                         parentOverlay.remove();
 
+                        // ローディングメッセージを更新
+                        loadingOverlay.querySelector('div:last-child').innerHTML = 'スケジュール更新中...<br>しばらくお待ちください';
+
+                        // スケジュールデータを再読み込み
+                        schedule_readed = false; // フラグをリセット
+                        await schedule_load_promise(); // Promiseベースの関数を呼ぶ
+
+                        // ローディングオーバーレイを削除
+                        loadingOverlay.remove();
+
                         alert('変更しました');
 
-
-
-                        while (!schedule_readed) {
-                            await new Promise(resolve => setTimeout(resolve, 1000)); // 100ms待機
-                        }
-
-                        schedule_load();                        
+                        // スケジュールダイアログを再表示
                         showScheduleDialog();
+
                     } catch (e) {
+                        console.error('Error:', e);
                         alert('変更に失敗しました');
                         // ローディングオーバーレイを削除
                         loadingOverlay.remove();
