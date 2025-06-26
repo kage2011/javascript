@@ -144,7 +144,8 @@ window.addEventListener('load', function () {
                     '備考': note ,
                     'タスク': taskName ,
                     '記入者': register ,
-                    'レコード番号':  no 
+                    'レコード番号':  no ,
+                    '参加メンバー': task['参加メンバー']
                 });
                 memberList.add(name);
             });
@@ -454,7 +455,6 @@ window.addEventListener('load', function () {
         document.body.appendChild(overlay);
     }
 
-    // 4. 編集ダイアログ
     function showEditDialog(record, parentOverlay) {
         // 既存編集ダイアログ削除
         const exist = document.getElementById('task-edit-dialog');
@@ -472,7 +472,7 @@ window.addEventListener('load', function () {
 
         // タイトル
         const title = document.createElement('h3');
-        title.textContent = 'タスク編集';
+        title.textContent = '予定編集';
         title.style.cssText = 'margin:0 0 16px 0; font-size:18px;';
         dialog.appendChild(title);
 
@@ -482,8 +482,13 @@ window.addEventListener('load', function () {
             e.preventDefault();
             // 値取得
             const newRecord = { ...record };
-            fields.forEach(f => {
-                if (form[f.key]) newRecord[f.key].value = form[f.key].value;
+            // 分類
+            newRecord['タスク'].value = form['タスク'].value;
+            // 参加メンバー
+            newRecord['参加メンバー'].value = form['参加メンバー'].value;
+            // その他
+            ['開始日時','終了日時','内容','場所','備考','記入者'].forEach(key => {
+                if (form[key]) newRecord[key].value = form[key].value;
             });
             // 保存API呼び出し（ここはAPI仕様に合わせて修正してください）
             try {
@@ -499,14 +504,74 @@ window.addEventListener('load', function () {
                 alert('変更に失敗しました');
             }
         };
+
+        // 分類（タスク）ドロップダウン
+        const divTask = document.createElement('div');
+        divTask.style.marginBottom = '12px';
+        const labelTask = document.createElement('label');
+        labelTask.textContent = '分類';
+        labelTask.style.display = 'block';
+        labelTask.style.marginBottom = '4px';
+        const selectTask = document.createElement('select');
+        selectTask.name = 'タスク';
+        selectTask.style.cssText = 'width:100%; padding:6px; border-radius:4px; border:1px solid #ccc;';
+        Object.keys(colors).forEach(key => {
+            const opt = document.createElement('option');
+            opt.value = key;
+            opt.textContent = key;
+            if (record['タスク']?.value === key) opt.selected = true;
+            selectTask.appendChild(opt);
+        });
+        divTask.appendChild(labelTask);
+        divTask.appendChild(selectTask);
+        form.appendChild(divTask);
+
+        // 参加メンバー（readonly）＋ボタン
+        const divMember = document.createElement('div');
+        divMember.style.marginBottom = '12px';
+        const labelMember = document.createElement('label');
+        labelMember.textContent = '参加メンバー';
+        labelMember.style.display = 'block';
+        labelMember.style.marginBottom = '4px';
+        const inputMember = document.createElement('input');
+        inputMember.name = '参加メンバー';
+        inputMember.value = record['参加メンバー']?.value || '';
+        inputMember.readOnly = true;
+        inputMember.style.cssText = 'width:calc(100% - 120px); padding:6px; border-radius:4px; border:1px solid #ccc; margin-right:8px;';
+        divMember.appendChild(labelMember);
+        divMember.appendChild(inputMember);
+
+        // メンバー選択ボタン
+        const selectBtn = document.createElement('button');
+        selectBtn.type = 'button';
+        selectBtn.textContent = 'メンバー選択';
+        selectBtn.style.cssText = `
+            padding: 8px 16px;
+            background-color: #3498db;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-left: 4px;
+        `;
+        selectBtn.onclick = function() {
+            // addbuttonの内容を流用
+            // ここでinputMemberを渡すことで、選択後に値をセットできる
+            showMemberSelectDialog(inputMember);
+        };
+        divMember.appendChild(selectBtn);
+        form.appendChild(divMember);
+
+        // その他フィールド
         const fields = [
-            { label: 'タスク名', key: 'タスク' },
-            { label: 'メンバー', key: '氏名' },
             { label: '開始日時', key: '開始日時', type: 'datetime-local' },
             { label: '終了日時', key: '終了日時', type: 'datetime-local' },
-            { label: '内容', key: '内容' },
-            { label: '場所', key: '場所' },
-            { label: '備考', key: '備考' }
+            { label: '内容', key: '内容', type: 'textarea' },
+            { label: '場所', key: '場所', type: 'text' },
+            { label: '備考', key: '備考', type: 'textarea' },
+            { label: '記入者', key: '記入者', type: 'text' }
         ];
         fields.forEach(f => {
             const div = document.createElement('div');
@@ -515,14 +580,20 @@ window.addEventListener('load', function () {
             label.textContent = f.label;
             label.style.display = 'block';
             label.style.marginBottom = '4px';
-            const input = document.createElement(f.type === 'datetime-local' ? 'input' : 'textarea');
+            let input;
+            if (f.type === 'textarea') {
+                input = document.createElement('textarea');
+            } else {
+                input = document.createElement('input');
+                input.type = f.type;
+            }
             input.name = f.key;
             input.value = record[f.key]?.value || '';
-            if (f.type) input.type = f.type;
             input.style.cssText = 'width:100%; padding:6px; border-radius:4px; border:1px solid #ccc;';
             div.appendChild(label); div.appendChild(input);
             form.appendChild(div);
         });
+
         // 保存ボタン
         const saveBtn = document.createElement('button');
         saveBtn.textContent = '保存';
@@ -541,6 +612,144 @@ window.addEventListener('load', function () {
         dialog.appendChild(form);
         overlay.appendChild(dialog);
         document.body.appendChild(overlay);
+    }
+
+    // メンバー選択ダイアログ（addbuttonの内容を流用）
+    function showMemberSelectDialog(inputElem) {
+        // オーバーレイを作成
+        const overlay = document.createElement('div');
+        overlay.style.cssText = `
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 10000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        `;
+
+        // ダイアログを作成
+        const dialog = document.createElement('div');
+        dialog.style.cssText = `
+            background-color: white;
+            border-radius: 8px;
+            padding: 20px;
+            max-width: 500px;
+            max-height: 600px;
+            overflow-y: auto;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        `;
+
+        // タイトル
+        const title = document.createElement('h3');
+        title.textContent = 'メンバーを選択してください';
+        title.style.cssText = 'margin-top: 0; margin-bottom: 20px; color: #333;';
+        dialog.appendChild(title);
+
+        // 参加メンバーの要素を取得
+        var membersValue = inputElem.value || '';
+        const currentSelectedMembers = membersValue.split(',').map(member => member.trim());
+        let selectedMembers = [];
+        if (currentSelectedMembers[0] !== '') {
+            selectedMembers = [...currentSelectedMembers];
+        }
+        // メンバーボタンのコンテナ
+        const buttonContainer = document.createElement('div');
+        buttonContainer.style.cssText = 'margin-bottom: 20px;';
+
+        // 各メンバーのボタンを作成
+        members.forEach(function(member) {
+            const memberName = member['氏名'].value;
+            const memberButton = document.createElement('button');
+            memberButton.textContent = memberName;
+            memberButton.type = 'button';
+            const isSelected = selectedMembers.includes(memberName);
+            memberButton.style.cssText = `
+                margin: 5px;
+                padding: 8px 12px;
+                background-color: ${isSelected ? '#3498db' : '#ecf0f1'};
+                color: ${isSelected ? 'white' : '#2c3e50'};
+                border: 2px solid ${isSelected ? '#2980b9' : '#bdc3c7'};
+                border-radius: 4px;
+                cursor: pointer;
+                font-size: 14px;
+                transition: all 0.2s;
+            `;
+            memberButton.addEventListener('click', function() {
+                const index = selectedMembers.indexOf(memberName);
+                if (index === -1) {
+                    selectedMembers.push(memberName);
+                    memberButton.style.backgroundColor = '#3498db';
+                    memberButton.style.color = 'white';
+                    memberButton.style.borderColor = '#2980b9';
+                } else {
+                    selectedMembers.splice(index, 1);
+                    memberButton.style.backgroundColor = '#ecf0f1';
+                    memberButton.style.color = '#2c3e50';
+                    memberButton.style.borderColor = '#bdc3c7';
+                }
+            });
+            buttonContainer.appendChild(memberButton);
+        });
+
+        dialog.appendChild(buttonContainer);
+
+        // ボタンエリア
+        const buttonArea = document.createElement('div');
+        buttonArea.style.cssText = 'text-align: right; border-top: 1px solid #eee; padding-top: 15px;';
+
+        // キャンセルボタン
+        const cancelButton = document.createElement('button');
+        cancelButton.textContent = 'キャンセル';
+        cancelButton.type = 'button';
+        cancelButton.style.cssText = `
+            margin-right: 10px;
+            padding: 8px 16px;
+            background-color: #95a5a6;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        `;
+        cancelButton.addEventListener('click', function() {
+            document.body.removeChild(overlay);
+        });
+
+        // OKボタン
+        const okButton = document.createElement('button');
+        okButton.textContent = 'OK';
+        okButton.type = 'button';
+        okButton.style.cssText = `
+            padding: 8px 16px;
+            background-color: #27ae60;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        `;
+        okButton.addEventListener('click', function() {
+            // 選択されたメンバーをカンマ区切りで参加メンバーフィールドに設定
+            const memberText = selectedMembers.join(', ');
+            inputElem.value = memberText;
+            document.body.removeChild(overlay);
+        });
+
+        buttonArea.appendChild(cancelButton);
+        buttonArea.appendChild(okButton);
+        dialog.appendChild(buttonArea);
+
+        overlay.appendChild(dialog);
+        document.body.appendChild(overlay);
+
+        // オーバーレイクリックでダイアログを閉じる
+        overlay.addEventListener('click', function(e) {
+            if (e.target === overlay) {
+                document.body.removeChild(overlay);
+            }
+        });
     }
 
     function addbutton(node) {
