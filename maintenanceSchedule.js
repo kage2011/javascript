@@ -21,7 +21,7 @@ function member_load() {
     fetch(`https://d37ksuq96l.execute-api.us-east-1.amazonaws.com/product/kintoneWebform/`, { method: 'GET' })
         .then(response => response.json())
         .then(data => {
-            records = data.body.body.records;
+            records = data.body.records;
             members = records.sort((a, b) =>
                 a.ふりがな.value.localeCompare(b.ふりがな.value, 'ja')
             );
@@ -434,7 +434,7 @@ async function showScheduleDialog() {
         margin-top:16px; padding:8px 24px; background:#95a5a6; color:#fff; border:none; border-radius:4px; cursor:pointer;
         float:right;
     `;
-    
+
     closeBtn.onclick = () => {
         overlay.remove();
         // ★ スケジュール確認ボタンを再表示
