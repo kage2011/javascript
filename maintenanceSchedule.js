@@ -534,7 +534,7 @@ window.addEventListener('load', function () {
         labelMember.style.marginBottom = '4px';
         const inputMember = document.createElement('input');
         inputMember.name = '参加メンバー';
-        inputMember.value = record['参加メンバー']?.value || '';
+        inputMember.value = record['参加メンバー'] || '';
         inputMember.readOnly = true;
         inputMember.style.cssText = 'width:calc(100% - 120px); padding:6px; border-radius:4px; border:1px solid #ccc; margin-right:8px;';
         divMember.appendChild(labelMember);
