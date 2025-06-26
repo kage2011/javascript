@@ -425,7 +425,24 @@ window.addEventListener('load', function () {
             td1.textContent = f.label;
             td1.style.cssText = 'background:#f8f9fa; padding:12px; font-weight:bold; border:1px solid #dee2e6; width:30%;';
             const td2 = document.createElement('td');
-            td2.textContent = record[f.key] || '-';
+
+            // ★ 開始日時・終了日時はdatetime-local用に変換
+            if ((f.key === '開始日時' || f.key === '終了日時') && record[f.key]) {
+                const date = record[f.key];
+                // 日付が有効なら "YYYY-MM-DDTHH:MM" 形式に
+                if (!isNaN(date)) {
+                    const yyyy = date.getFullYear();
+                    const mm = String(date.getMonth() + 1).padStart(2, '0');
+                    const dd = String(date.getDate()).padStart(2, '0');
+                    const hh = String(date.getHours()).padStart(2, '0');
+                    const mi = String(date.getMinutes()).padStart(2, '0');
+                    td2.textContent = `${yyyy}-${mm}-${dd}T${hh}:${mi}`;
+                } else {
+                    td2.textContent = '-';
+                }
+            } else {
+                td2.textContent = record[f.key] || '-';
+            }
             td2.style.cssText = 'padding:12px; border:1px solid #dee2e6;';
             tr.appendChild(td1); tr.appendChild(td2);
             table.appendChild(tr);
@@ -561,24 +578,23 @@ window.addEventListener('load', function () {
             }
             input.name = f.key;
 
-            // // ★ 開始日時・終了日時はdatetime-local用に変換
-            // if ((f.key === '開始日時' || f.key === '終了日時') && record[f.key]) {
-            //     const date = new Date(record[f.key]);
-            //     // 日付が有効なら "YYYY-MM-DDTHH:MM" 形式に
-            //     if (!isNaN(date)) {
-            //         const yyyy = date.getFullYear();
-            //         const mm = String(date.getMonth() + 1).padStart(2, '0');
-            //         const dd = String(date.getDate()).padStart(2, '0');
-            //         const hh = String(date.getHours()).padStart(2, '0');
-            //         const mi = String(date.getMinutes()).padStart(2, '0');
-            //         input.value = `${yyyy}-${mm}-${dd}T${hh}:${mi}`;
-            //     } else {
-            //         input.value = '';
-            //     }
-            // } else {
-            //     input.value = record[f.key] || '';
-            // }
-            input.value = record[f.key] || '';
+            // ★ 開始日時・終了日時はdatetime-local用に変換
+            if ((f.key === '開始日時' || f.key === '終了日時') && record[f.key]) {
+                const date = record[f.key];
+                // 日付が有効なら "YYYY-MM-DDTHH:MM" 形式に
+                if (!isNaN(date)) {
+                    const yyyy = date.getFullYear();
+                    const mm = String(date.getMonth() + 1).padStart(2, '0');
+                    const dd = String(date.getDate()).padStart(2, '0');
+                    const hh = String(date.getHours()).padStart(2, '0');
+                    const mi = String(date.getMinutes()).padStart(2, '0');
+                    input.value = `${yyyy}-${mm}-${dd}T${hh}:${mi}`;
+                } else {
+                    input.value = '';
+                }
+            } else {
+                input.value = record[f.key] || '';
+            }
             
             input.style.cssText = 'width:100%; padding:6px; border-radius:4px; border:1px solid #ccc;';
             div.appendChild(label); div.appendChild(input);
