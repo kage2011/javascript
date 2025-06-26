@@ -653,22 +653,25 @@ window.addEventListener('load', function () {
                             }
                         </style>
                     `;
-                    document.body.appendChild(loadingOverlay);
                     try {
+                        document.body.appendChild(loadingOverlay);
                         await fetch('https://d37ksuq96l.execute-api.us-east-1.amazonaws.com/product/kintoneWebform/schedule', {
                             method: 'PUT',
                             headers: { 'Content-Type': 'application/json' },
                             body: JSON.stringify({ record: newRecord })
                         });
-                        alert('変更しました');
+                        // ローディングオーバーレイを削除
+                        loadingOverlay.remove();
                         overlay.remove();
                         parentOverlay.remove();
+
+                        alert('変更しました');
+
+
 
                         while (!schedule_readed) {
                             await new Promise(resolve => setTimeout(resolve, 1000)); // 100ms待機
                         }
-                        // ローディングオーバーレイを削除
-                        loadingOverlay.remove();
 
                         schedule_load();                        
                         showScheduleDialog();
