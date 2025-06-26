@@ -425,7 +425,7 @@ window.addEventListener('load', function () {
             td1.textContent = f.label;
             td1.style.cssText = 'background:#f8f9fa; padding:12px; font-weight:bold; border:1px solid #dee2e6; width:30%;';
             const td2 = document.createElement('td');
-            td2.textContent = record[f.key]?.value || '-';
+            td2.textContent = record[f.key] || '-';
             td2.style.cssText = 'padding:12px; border:1px solid #dee2e6;';
             tr.appendChild(td1); tr.appendChild(td2);
             table.appendChild(tr);
@@ -587,7 +587,7 @@ window.addEventListener('load', function () {
                 input.type = f.type;
             }
             input.name = f.key;
-            input.value = record[f.key]?.value || '';
+            input.value = record[f.key] || '';
             input.style.cssText = 'width:100%; padding:6px; border-radius:4px; border:1px solid #ccc;';
             div.appendChild(label); div.appendChild(input);
             form.appendChild(div);
