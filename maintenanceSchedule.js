@@ -409,15 +409,15 @@ window.addEventListener('load', function () {
         const table = document.createElement('table');
         table.style.cssText = 'width:100%; border-collapse:collapse; font-size:14px;';
         const fields = [
-            { label: 'レコード番号', key: record['レコード番号'] },
-            { label: 'タスク名', key: record['タスク'] },
-            { label: 'メンバー', key: record['氏名'] },
-            { label: '開始日時', key: record['開始日時'] },
-            { label: '終了日時', key: record['終了日時'] },
-            { label: '内容', key: record['内容'] },
-            { label: '場所', key: record['場所'] },
-            { label: '備考', key: record['備考'] },
-            { label: '記入者', key: record['記入者'] }
+            { label: 'レコード番号', key: 'レコード番号' },
+            { label: 'タスク名', key: 'タスク' },
+            { label: 'メンバー', key: '氏名' },
+            { label: '開始日時', key: '開始日時' },
+            { label: '終了日時', key: '終了日時' },
+            { label: '内容', key: '内容' },
+            { label: '場所', key: '場所' },
+            { label: '備考', key: '備考' },
+            { label: '記入者', key: '記入者' }
         ];
         fields.forEach(f => {
             const tr = document.createElement('tr');
