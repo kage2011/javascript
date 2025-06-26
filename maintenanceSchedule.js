@@ -45,7 +45,7 @@ function schedule_load_promise() {
         fetch(`https://d37ksuq96l.execute-api.us-east-1.amazonaws.com/product/kintoneWebform/schedule`, { method: 'GET' })
             .then(response => response.json())
             .then(data => {
-                tasks = data.body.body;
+                tasks = data.body;
                 schedule_readed = true;
                 resolve(data);
             })
