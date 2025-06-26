@@ -273,8 +273,8 @@ function addScheduleButton() {
         wrapper.id = 'schedule-check-btn-wrapper';
         wrapper.style.cssText = `
             position: fixed;
-            bottom: 32px;
-            left: 0;
+            top: 32px;
+            right: 10px;
             width: 100vw;
             display: flex;
             justify-content: center;
