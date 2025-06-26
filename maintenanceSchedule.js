@@ -769,6 +769,136 @@ window.addEventListener('load', function () {
             }
         });
     }
+    
+    // 記入者選択ダイアログ（1人だけ選択可）
+    function showWriterSelectDialog(inputElem, onOk) {
+        const overlay = document.createElement('div');
+        overlay.style.cssText = `
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 2147483647;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        `;
+
+        const dialog = document.createElement('div');
+        dialog.style.cssText = `
+            background-color: white;
+            border-radius: 8px;
+            padding: 20px;
+            max-width: 500px;
+            max-height: 600px;
+            overflow-y: auto;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        `;
+
+        const title = document.createElement('h3');
+        title.textContent = '記入者を選択してください（1人）';
+        title.style.cssText = 'margin-top: 0; margin-bottom: 20px; color: #333;';
+        dialog.appendChild(title);
+
+        let selectedWriter = inputElem.value || '';
+        const buttonContainer = document.createElement('div');
+        buttonContainer.style.cssText = 'margin-bottom: 20px;';
+
+        members.forEach(function(member) {
+            const memberName = member['氏名'].value;
+            const memberButton = document.createElement('button');
+            memberButton.textContent = memberName;
+            memberButton.type = 'button';
+            const isSelected = selectedWriter === memberName;
+            memberButton.style.cssText = `
+                margin: 5px;
+                padding: 8px 12px;
+                background-color: ${isSelected ? '#3498db' : '#ecf0f1'};
+                color: ${isSelected ? 'white' : '#2c3e50'};
+                border: 2px solid ${isSelected ? '#2980b9' : '#bdc3c7'};
+                border-radius: 4px;
+                cursor: pointer;
+                font-size: 14px;
+                transition: all 0.2s;
+            `;
+            memberButton.addEventListener('click', function() {
+                // すべてのボタンを未選択に
+                Array.from(buttonContainer.children).forEach(btn => {
+                    btn.style.backgroundColor = '#ecf0f1';
+                    btn.style.color = '#2c3e50';
+                    btn.style.borderColor = '#bdc3c7';
+                });
+                // このボタンだけ選択
+                selectedWriter = memberName;
+                memberButton.style.backgroundColor = '#3498db';
+                memberButton.style.color = 'white';
+                memberButton.style.borderColor = '#2980b9';
+            });
+            buttonContainer.appendChild(memberButton);
+        });
+
+        dialog.appendChild(buttonContainer);
+
+        // ボタンエリア
+        const buttonArea = document.createElement('div');
+        buttonArea.style.cssText = 'text-align: right; border-top: 1px solid #eee; padding-top: 15px;';
+
+        // キャンセルボタン
+        const cancelButton = document.createElement('button');
+        cancelButton.textContent = 'キャンセル';
+        cancelButton.type = 'button';
+        cancelButton.style.cssText = `
+            margin-right: 10px;
+            padding: 8px 16px;
+            background-color: #95a5a6;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        `;
+        cancelButton.addEventListener('click', function() {
+            document.body.removeChild(overlay);
+            if (onOk) onOk(null);
+        });
+
+        // OKボタン
+        const okButton = document.createElement('button');
+        okButton.textContent = 'OK';
+        okButton.type = 'button';
+        okButton.style.cssText = `
+            padding: 8px 16px;
+            background-color: #27ae60;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        `;
+        okButton.addEventListener('click', function() {
+            if (!selectedWriter) {
+                alert('記入者を選択してください');
+                return;
+            }
+            inputElem.value = selectedWriter;
+            document.body.removeChild(overlay);
+            if (onOk) onOk(selectedWriter);
+        });
+
+        buttonArea.appendChild(cancelButton);
+        buttonArea.appendChild(okButton);
+        dialog.appendChild(buttonArea);
+
+        overlay.appendChild(dialog);
+        document.body.appendChild(overlay);
+
+        overlay.addEventListener('click', function(e) {
+            if (e.target === overlay) {
+                document.body.removeChild(overlay);
+                if (onOk) onOk(null);
+            }
+        });
+    }
 
     function addbutton(node) {
         // ボタンを作成
