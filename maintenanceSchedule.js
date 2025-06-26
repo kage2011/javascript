@@ -1,37 +1,38 @@
+let records = [];
+let members = [];
+let tasks = [];
+let schedule_readed = false;
+fetch(`https://d37ksuq96l.execute-api.us-east-1.amazonaws.com/product/kintoneWebform/`, {
+method: 'GET'
+})
+.then(response => response.json())
+.then(data => {
+    console.log('取得したレコード:', data.body.body.records);
+    records = data.body.body.records; // 取得したレコードを保存
+    // ふりがなであいうえお順にソート
+    members = records.sort((a, b) => 
+        a.ふりがな.value.localeCompare(b.ふりがな.value, 'ja')
+    );
+})
+.catch(error => {
+    console.error('取得失敗:', error);
+});
+
+fetch(`https://d37ksuq96l.execute-api.us-east-1.amazonaws.com/product/kintoneWebform/schedule`, {
+method: 'GET'
+})
+.then(response => response.json())
+.then(data => {
+    console.log('取得したレコード:', data.body.body.records);
+    tasks = data.body.body; // 取得したレコードを保存
+    schedule_readed = true;
+})
+.catch(error => {
+    console.error('取得失敗:', error);
+});
+
 // windowのloadイベントを使用して、ページの読み込みが完了した後にスクリプトを実行
 window.addEventListener('load', function () {
-
-    let records = [];
-    let members = [];
-    let tasks = [];
-
-    fetch(`https://d37ksuq96l.execute-api.us-east-1.amazonaws.com/product/kintoneWebform/`, {
-    method: 'GET'
-    })
-    .then(response => response.json())
-    .then(data => {
-        console.log('取得したレコード:', data.body.body.records);
-        records = data.body.body.records; // 取得したレコードを保存
-        // ふりがなであいうえお順にソート
-        members = records.sort((a, b) => 
-          a.ふりがな.value.localeCompare(b.ふりがな.value, 'ja')
-        );
-    })
-    .catch(error => {
-        console.error('取得失敗:', error);
-    });
-
-    fetch(`https://d37ksuq96l.execute-api.us-east-1.amazonaws.com/product/kintoneWebform/schedule`, {
-    method: 'GET'
-    })
-    .then(response => response.json())
-    .then(data => {
-        console.log('取得したレコード:', data.body.body.records);
-        tasks = data.body.body; // 取得したレコードを保存
-    })
-    .catch(error => {
-        console.error('取得失敗:', error);
-    });
 
     // 1. スケジュール確認ボタンをフォーム先頭に追加
     function addScheduleButton() {
@@ -70,6 +71,44 @@ window.addEventListener('load', function () {
         // メンバー抽出
         const memberList = new Set();
         const rebuildedTasks = [];
+
+        // ローディングオーバーレイを表示
+        const loadingOverlay = document.createElement('div');
+        loadingOverlay.id = 'schedule-loading-overlay';
+        loadingOverlay.style.cssText = `
+            position: fixed; top:0; left:0; width:100vw; height:100vh;
+            background:rgba(0,0,0,0.5); z-index:9999; display:flex; justify-content:center; align-items:center;
+        `;
+        // スピナーとテキスト
+        loadingOverlay.innerHTML = `
+            <div style="display:flex; flex-direction:column; align-items:center;">
+                <div style="
+                    border: 6px solid #f3f3f3;
+                    border-top: 6px solid #3498db;
+                    border-radius: 50%;
+                    width: 48px;
+                    height: 48px;
+                    animation: spin 1s linear infinite;
+                    margin-bottom: 16px;
+                "></div>
+                <div style="color:white; font-size:18px; font-weight:bold;">スケジュール読込中...<br>しばらくお待ちください</div>
+            </div>
+            <style>
+                @keyframes spin {
+                    0% { transform: rotate(0deg);}
+                    100% { transform: rotate(360deg);}
+                }
+            </style>
+        `;
+        document.body.appendChild(loadingOverlay);
+
+        while (!schedule_readed) {
+            await new Promise(resolve => setTimeout(resolve, 100)); // 100ms待機
+        }
+
+        // ローディングオーバーレイを削除
+        loadingOverlay.remove();
+
         tasks.forEach(task => {
             const members = task['参加メンバー']?.split(',').map(m => m.trim()) || [];
             members.forEach(m => {
@@ -447,9 +486,6 @@ window.addEventListener('load', function () {
         document.body.appendChild(overlay);
     }
 
-    // ページロード時にボタン追加
-    addScheduleButton();
-
     function addbutton(node) {
         // ボタンを作成
         var button = document.createElement('button');
@@ -644,6 +680,8 @@ window.addEventListener('load', function () {
                     var node = elem.querySelector('[field-id="参加メンバー"]');
                     node.querySelector('input').disabled = true; // 参加メンバーのフィールドを無効化
                     addbutton(node);
+                    addScheduleButton();
+
                 }
             });
         });
