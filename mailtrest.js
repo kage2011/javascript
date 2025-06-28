@@ -109,7 +109,9 @@
             try {
                 // ファイルをダウンロード
                 const downloadUrl = `/k/v1/file.json?fileKey=${attachment.fileKey}`;
-                const response = await kintone.api(kintone.api.url(downloadUrl, true), 'GET', {});
+                const response = await kintone.api(kintone.api.url(downloadUrl, true), 'GET', {
+  "X-Cybozu-API-Token": "UWW8P5vkQHWFZrAgJyi6ghhxEJgMaIwW6s74jd8a"
+});
                 
                 // Blobとして取得
                 const blob = new Blob([response], { type: attachment.contentType });
