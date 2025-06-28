@@ -35,20 +35,21 @@
     async function createRecord(record){
         const body = {
             app : kintone.app.getId(),
-            record : {
-                [CONFIG.ATTACH_FILE_FIELD]:{
-                    value:attachFile
-                },
-                [CONFIG.CONTENT_FIELD]:{
-                    value:content
-                },
-                [CONFIG.TITLE_FIELD]:{
-                    value:title
-                },
-                [CONFIG.RECIPIENT_FIELD]:{
-                    value:recipient
-                }
-            }
+            record : record
+            // {
+            //     [CONFIG.ATTACH_FILE_FIELD]:{
+            //         value:attachFile
+            //     },
+            //     [CONFIG.CONTENT_FIELD]:{
+            //         value:content
+            //     },
+            //     [CONFIG.TITLE_FIELD]:{
+            //         value:title
+            //     },
+            //     [CONFIG.RECIPIENT_FIELD]:{
+            //         value:recipient
+            //     }
+            // }
         }
         await kintone.api(kintone.api.url('/k/v1/record.json', true), 'POST', body)
         .then(function(resp){
