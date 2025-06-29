@@ -97,6 +97,45 @@
         return button;
     }
 
+    function fileDownload(filekey){
+        return new Promise(function (resolve,reject){
+            var url = kintone.api.url('/k/1/file',true) + '?filekey=' + filekey;
+            var xhr = new XMLHttpRequest();
+            xhr.open('GET',url);
+            xhr.setRequestHeader('X-Requested-With','XMLHttpRequest');
+            xhr.responseType = 'blob';
+            xhr.onload = function () {
+                if (xhr.status === 200){
+                    resolve(xhr.response);
+                }else{
+                    reject(Error('ファイルダウンロードエラー：' + xhr.statusText));
+                }
+            };
+            xhr.onerror = function () {
+                reject(Error('ネットワークエラー'));
+            };
+        })
+    }
+
+    function fileUpload(fileName,contentType,data){
+        var blob = new Blob([data],{type:contentType});
+
+        var formData = new FormData();
+        formData.append("__REQUEST_TOKEN__",kintone.getRequestToken());
+        formData.append("file",blob,fileName);
+        xmlHttp = new XMLHttpRequest();
+        xmlHttp.open("POST",encodeURI('/k/v1/file.json'),false);
+        xmlHttp.setRequestHeader('X-Requested-With','XMLHttpRequest');
+        xmlHttp.responseType = 'multiport/form-data';
+        xmlHttp.send(formData);
+        var key = JSON.parse(xmlHttp.responseText).fileKey;
+        var PutPara = {
+            "app":999,
+            "updateKey":{ss}
+        }
+    }
+
+
     // 添付ファイルをダウンロードして再アップロード
     async function processAttachments(attachments) {
         if (!attachments || attachments.length === 0) {
@@ -107,39 +146,54 @@
         
         for (const attachment of attachments) {
             try {
+                var url = kintone.api.url('/k/1/file',true) + '?filekey=' + attachment.fileKey;
+                var xhr = new XMLHttpRequest();
+                xhr.open('GET',url);
+                xhr.setRequestHeader('X-Requested-With','XMLHttpRequest');
+                xhr.responseType = 'blob';
+                xhr.onload = function () {
+                    if (xhr.status === 200){
+                        console.log(xhr.response);
+                    }else{
+                        console.log(Error('ファイルダウンロードエラー：' + xhr.statusText));
+                    }
+                };
+                xhr.onerror = function () {
+                    console.log(Error('ネットワークエラー'));
+                };
                 // ファイルをダウンロード
-                const downloadUrl = `/k/v1/file?fileKey=${attachment.fileKey}`;
-                const response = await kintone.api(kintone.api.url(downloadUrl, true), 'GET', {
-  "X-Cybozu-API-Token": "UWW8P5vkQHWFZrAgJyi6ghhxEJgMaIwW6s74jd8a"
-});
+            //     const downloadUrl = `/k/v1/file?fileKey=${attachment.fileKey}`;
+            //     const response = await kintone.api.url(downloadUrl, true), 'GET', {
+            //         "X-Cybozu-API-Token": "UWW8P5vkQHWFZrAgJyi6ghhxEJgMaIwW6s74jd8a"
+            //     });
                 
-                // Blobとして取得
-                const blob = new Blob([response], { type: attachment.contentType });
+            //     // Blobとして取得
+            //     const blob = new Blob([response], { type: attachment.contentType });
                 
-                // FormDataを作成してファイルを再アップロード
-                const formData = new FormData();
-                formData.append('file', blob, attachment.name);
+            //     // FormDataを作成してファイルを再アップロード
+            //     const formData = new FormData();
+            //     formData.append('file', blob, attachment.name);
                 
-                const uploadResponse = await fetch('/k/v1/file.json', {
-                    method: 'POST',
-                    headers: {
-                        'X-Requested-With': 'XMLHttpRequest'
-                    },
-                    body: formData
-                });
+            //     const uploadResponse = await fetch('/k/v1/file.json', {
+            //         method: 'POST',
+            //         headers: {
+            //             'X-Requested-With': 'XMLHttpRequest'
+            //         },
+            //         body: formData
+            //     });
                 
-                if (!uploadResponse.ok) {
-                    throw new Error(`Upload failed: ${uploadResponse.status}`);
-                }
+            //     if (!uploadResponse.ok) {
+            //         throw new Error(`Upload failed: ${uploadResponse.status}`);
+            //     }
                 
-                const uploadResult = await uploadResponse.json();
+            //     const uploadResult = await uploadResponse.json();
                 
-                processedFiles.push({
-                    fileKey: uploadResult.fileKey,
-                    name: attachment.name,
-                    contentType: attachment.contentType,
-                    size: attachment.size
-                });
+            //     processedFiles.push({
+            //         fileKey: uploadResult.fileKey,
+            //         name: attachment.name,
+            //         contentType: attachment.contentType,
+            //         size: attachment.size
+            //     });
                 
             } catch (error) {
                 console.warn(`ファイル処理エラー (${attachment.name}):`, error);
