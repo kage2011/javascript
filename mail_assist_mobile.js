@@ -77,18 +77,22 @@
         button.title = button.textContent;
         button.style.cssText = `
             -webkit-text-size-adjust: 100%;
-            margin: 0;
-            vertical-align: baseline;
             cursor: pointer;
-            -webkit-appearance: button;
             font: 99% sans-serif;
-            outline: 0;
-            text-decoration: none;
             font-family: "メイリオ",Meiryo,"Hiragino Kaku Gothic ProN","ヒラギノ角ゴ ProN W3","ＭＳ Ｐゴシック","Lucida Grande","Lucida Sans Unicode",Arial,Verdana,sans-serif;
-            background-color: inherit;
-            border: 0;
-            padding: 5px;
-            min-width: 80px;
+            color: #fff;
+            background-color: #206694;
+            font-size: 1.4rem;
+            font-weight: 700;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            word-wrap: normal;
+            display: block;
+            border: 2px solid #206694;
+            border-radius: 6px;
+            line-height: 1;
+            padding: 6px 8px;
         `;
         // // ホバー効果
         // button.addEventListener('mouseenter', () => {
