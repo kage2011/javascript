@@ -12,43 +12,28 @@
     
     // レコード詳細画面表示時のイベント
     kintone.events.on('mobile.app.record.detail.show', (event) => {
+        console.log('イベント発火');
+        
+        // 最もシンプルなテスト
+        const observer = new MutationObserver((mutations) => {
+            console.log('MutationObserver動作中！', mutations.length);
+        });
+        
+        // bodyを監視
+        observer.observe(document.body, {
+            childList: true,
+            subtree: true
+        });
+        
+        console.log('Observer設定完了');
+        
+        // 手動でDOMを変更してテスト
         setTimeout(() => {
-            // より広範囲を監視
-            const targetElem = document.querySelector('body');
-            
-            const config = { 
-                childList: true, 
-                subtree: true,
-                attributes: true, // 属性変更も監視
-                attributeFilter: ['field-id'] // field-id属性のみ
-            };
-            
-            const observer = new MutationObserver((mutationsList) => {
-                console.log('DOM変更を検知:', mutationsList.length);
-                
-                mutationsList.forEach(mutation => {
-                    // 追加されたノードをチェック
-                    mutation.addedNodes.forEach(elem => {
-                        if (elem.nodeType === Node.ELEMENT_NODE) {
-                            // 直接チェック
-                            if (elem.getAttribute && elem.getAttribute('field-id') === '作業服') {
-                                console.log('作業服フィールド(直接):', elem);
-                            }
-                            // 子要素をチェック
-                            if (elem.querySelector) {
-                                const fieldElem = elem.querySelector('[field-id="作業服"]');
-                                if (fieldElem) {
-                                    console.log('作業服フィールド(子要素):', fieldElem);
-                                }
-                            }
-                        }
-                    });
-                });
-            });
-            
-            observer.observe(targetElem, config);
-            console.log('MutationObserver開始');
-        }, 500); // 待機時間を増加
+            const testDiv = document.createElement('div');
+            testDiv.textContent = 'テスト要素';
+            document.body.appendChild(testDiv);
+            console.log('テスト要素追加');
+        }, 1000);
 
         const record = event.record;
         const appId = kintone.mobile.app.getId();
