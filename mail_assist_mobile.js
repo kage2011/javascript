@@ -51,30 +51,32 @@
 
     }
 
+    // 監視対象（bodyなど広い範囲が安全）
+    const target = document.body;
+
+    const observer = new MutationObserver(function (mutationsList) {
+    for (const mutation of mutationsList) {
+        for (const node of mutation.addedNodes) {
+        // 必要な要素が追加されたら処理
+        if (
+            node.nodeType === 1 &&
+            node.classList.contains('gaia-mobile-v2-app-record-actionbar-buttons')
+        ) {
+            // すでにボタンが追加されている場合はスキップ
+            if (node.querySelector('.my-custom-button')) return;
+
+            addbuttons();
+        }
+        }
+    }
+    });
+
+    // 監視の開始
+    observer.observe(target, { childList: true, subtree: true });
+
     // レコード詳細画面表示時のイベント
     kintone.events.on('mobile.app.record.detail.show', (event) => {
-        // 監視対象（bodyなど広い範囲が安全）
-        const target = document.body;
-
-        const observer = new MutationObserver(function (mutationsList) {
-        for (const mutation of mutationsList) {
-            for (const node of mutation.addedNodes) {
-            // 必要な要素が追加されたら処理
-            if (
-                node.nodeType === 1 &&
-                node.classList.contains('gaia-mobile-v2-app-record-actionbar-buttons')
-            ) {
-                // すでにボタンが追加されている場合はスキップ
-                if (node.querySelector('.my-custom-button')) return;
-
-                addbuttons();
-            }
-            }
-        }
-        });
-
-        // 監視の開始
-        observer.observe(target, { childList: true, subtree: true });        const record = event.record;
+        const record = event.record;
 
     });
   
