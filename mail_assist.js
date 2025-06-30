@@ -97,45 +97,6 @@
         return button;
     }
 
-    function fileDownload(filekey){
-        return new Promise(function (resolve,reject){
-            var url = kintone.api.url('/k/1/file',true) + '?filekey=' + filekey;
-            var xhr = new XMLHttpRequest();
-            xhr.open('GET',url);
-            xhr.setRequestHeader('X-Requested-With','XMLHttpRequest');
-            xhr.responseType = 'blob';
-            xhr.onload = function () {
-                if (xhr.status === 200){
-                    resolve(xhr.response);
-                }else{
-                    reject(Error('ファイルダウンロードエラー：' + xhr.statusText));
-                }
-            };
-            xhr.onerror = function () {
-                reject(Error('ネットワークエラー'));
-            };
-        })
-    }
-
-    function fileUpload(fileName,contentType,data){
-        var blob = new Blob([data],{type:contentType});
-
-        var formData = new FormData();
-        formData.append("__REQUEST_TOKEN__",kintone.getRequestToken());
-        formData.append("file",blob,fileName);
-        xmlHttp = new XMLHttpRequest();
-        xmlHttp.open("POST",encodeURI('/k/v1/file.json'),false);
-        xmlHttp.setRequestHeader('X-Requested-With','XMLHttpRequest');
-        xmlHttp.responseType = 'multiport/form-data';
-        xmlHttp.send(formData);
-        var key = JSON.parse(xmlHttp.responseText).fileKey;
-        var PutPara = {
-            "app":999,
-            "updateKey":{ss}
-        }
-    }
-
-
     // 添付ファイルをダウンロードして再アップロード
     async function processAttachments(attachments) {
         if (!attachments || attachments.length === 0) {
@@ -170,17 +131,6 @@
             });
             const updata = await upresp.json();
             processedFiles.push(updata.fileKey);
-            // const fileKey = updata.fileKey;
-            // const params = {
-            // app: kintone.app.getId(),
-            // id: kintone.app.record.getId(),
-            // record: {
-            //     file: {
-            //     value: [{fileKey: fileKey}]
-            //     }
-            // }
-            // };
-            // kintone.api(kintone.api.url('/k/v1/record.json', true), 'PUT', params);                
         }
         
         return processedFiles;
@@ -270,50 +220,6 @@
             console.error('返信処理でエラーが発生しました:', error);
             alert('返信処理中にエラーが発生しました: ' + error.message);
         }
-        // try {
-        //     const newRecord = {};
-        //     const loginUser = kintone.getLoginUser();
-            
-        //     // 送信先に元の作成者を設定
-        //     const originalSender = record.作成者?.value || record.creator?.value;
-        //     if (originalSender && newRecord.送信先) {
-        //         newRecord.送信先 = { value: [originalSender] };
-        //     } else if (originalSender && newRecord.to) {
-        //         newRecord.to = { value: [originalSender] };
-        //     }
-            
-        //     // 作成者を現在のユーザーに設定
-        //     if (newRecord.作成者) {
-        //         newRecord.作成者.value = loginUser.name;
-        //     }
-            
-        //     // 件名に「Re:」を追加
-        //     const originalSubject = record.件名?.value || record.subject?.value || '';
-        //     const replySubject = originalSubject.startsWith('Re:') ? originalSubject : 'Re: ' + originalSubject;
-            
-        //     if (newRecord.件名) {
-        //         newRecord.件名.value = replySubject;
-        //     } else if (newRecord.subject) {
-        //         newRecord.subject.value = replySubject;
-        //     }
-            
-        //     // 元のメッセージを引用として追加
-        //     const originalMessage = record.本文?.value || record.message?.value || '';
-        //     const quotedMessage = `\n\n--- 元のメッセージ ---\n${originalMessage}`;
-            
-        //     if (newRecord.本文) {
-        //         newRecord.本文.value = quotedMessage;
-        //     } else if (newRecord.message) {
-        //         newRecord.message.value = quotedMessage;
-        //     }
-            
-        //     // レコード作成画面を開く
-        //     window.open(`/k/${appId}/edit?${buildQueryString(newRecord)}`, '_blank');
-            
-        // } catch (error) {
-        //     console.error('返信処理でエラーが発生しました:', error);
-        //     alert('返信処理中にエラーが発生しました。');
-        // }
     }
   
     // 全員に返信処理（現在は返信と同じ）
@@ -354,31 +260,5 @@
             console.error('返信処理でエラーが発生しました:', error);
             alert('返信処理中にエラーが発生しました: ' + error.message);
         }
-    }
-    
-    // レコードデータをクエリ文字列に変換
-    function buildQueryString(record) {
-        const params = new URLSearchParams();
-        
-        Object.keys(record).forEach(fieldCode => {
-            const field = record[fieldCode];
-            if (field && field.value !== undefined) {
-                if (Array.isArray(field.value)) {
-                    // 配列の場合（ユーザー選択、チェックボックスなど）
-                    field.value.forEach(val => {
-                        params.append(fieldCode, typeof val === 'object' ? val.code || val.name : val);
-                    });
-                } else if (typeof field.value === 'object') {
-                    // オブジェクトの場合
-                    params.append(fieldCode, field.value.code || field.value.name || JSON.stringify(field.value));
-                } else {
-                    // 文字列、数値の場合
-                    params.append(fieldCode, field.value);
-                }
-            }
-        });
-        
-        return params.toString();
-    }
-  
+    }  
 })();
