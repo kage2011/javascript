@@ -203,7 +203,7 @@
                         value: title
                     },
                     [CONFIG.RECIPIENT_FIELD]: {
-                        value: creator
+                        value: [{code:creator.code},{name:creator.name}]
                     }
                 }
             };
