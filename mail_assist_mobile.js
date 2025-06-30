@@ -228,7 +228,7 @@
             
             // レコード作成画面を開く
             const recordID = parseInt(response.id);
-            window.open(`/k/${appId}/show#record=${recordID}&mode=edit`, '_blank');
+            window.open(`/k/m/${appId}/show#record=${recordID}&mode=edit`, '_blank');
             
             console.log('返信レコード作成完了:', response);
             
