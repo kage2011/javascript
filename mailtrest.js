@@ -325,7 +325,7 @@
             const title = '返信: ' + (record[CONFIG.TITLE_FIELD]?.value || '');
             const creator = record[CONFIG.CREATOR_FIELD]?.value || [];
             const recipient = record[CONFIG.RECIPIENT_FIELD]?.value || [];
-            const filteredrecipient = recipient.filter(pair=>pair[0].code != user.code);
+            const filteredrecipient = recipient.filter(pair=>pair.code != user.code);
             filteredrecipient.push(creator);
             const body = {
                 app: kintone.app.getId(),
