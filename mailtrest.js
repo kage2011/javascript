@@ -158,7 +158,7 @@
                 headers,
                 });
                 const blob = await resp.blob();                
-                
+                console.log('ファイルダウンロード成功:', blob);
                 //var url = kintone.api.url('/k/1/file',true) + '?filekey=' + attachment.fileKey;
 
                 // var xhr = new XMLHttpRequest();
