@@ -46,7 +46,7 @@
         buttonContainer.appendChild(replyAllButton);
         
         // kintoneの標準ボタンエリアに挿入
-        const statusbarAction = document.querySelector('.gaia-mobile-v2-app-record-actionbar');
+        const statusbarAction = document.querySelector('gaia-mobile-v2-app-record-actionbar-buttons');
         if (statusbarAction) {
             statusbarAction.appendChild(buttonContainer);
         }
