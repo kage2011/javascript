@@ -169,7 +169,7 @@
                 body: formData,
             });
             const updata = await upresp.json();
-            processedFiles.push(updata['filekey']);
+            processedFiles.push(updata.fileKey);
             // const fileKey = updata.fileKey;
             // const params = {
             // app: kintone.app.getId(),
