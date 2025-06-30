@@ -149,12 +149,12 @@
             const urlForDownload = kintone.api.urlForGet('/k/v1/file.json', {fileKey: attachment.fileKey}, true);
 
             // ファイルダウンロードAPIを実行します。
-            const downheaders = {
+            let headers = {
             'X-Requested-With': 'XMLHttpRequest',
             };
             const downresp = await fetch(urlForDownload, {
             method: 'GET',
-            downheaders,
+            headers,
             });
             const blob = await downresp.blob();
             // Blob を File に変換して名前を付ける
