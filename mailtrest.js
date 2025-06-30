@@ -203,6 +203,7 @@
             const content = record[CONFIG.CONTENT_FIELD]?.value || '';
             const title = '転送: ' + (record[CONFIG.TITLE_FIELD]?.value || '');
             const recipient = record[CONFIG.RECIPIENT_FIELD]?.value || [];
+            const creator = record[CONFIG.CREATOR_FIELD]?.value || [];
             const filekeys = [];
             processedAttachments.forEach(item =>{
                 filekeys.push({fileKey:item})
