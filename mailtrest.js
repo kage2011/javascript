@@ -189,8 +189,6 @@
     // 転送処理
     async function handleForward(record, appId) {
         try {
-            const loginUser = kintone.getLoginUser();
-            
             // 添付ファイルの処理
             const originalAttachments = record[CONFIG.ATTACH_FILE_FIELD]?.value || [];
             let processedAttachments = [];
@@ -243,51 +241,83 @@
     }
   
     // 返信処理
-    function handleReply(record, appId) {
-        try {
-            const newRecord = {};
-            const loginUser = kintone.getLoginUser();
+    async function handleReply(record, appId) {
+        try{            
+            // 元のレコードの値をコピー
+            const content = record[CONFIG.CONTENT_FIELD]?.value || '';
+            const title = '返信: ' + (record[CONFIG.TITLE_FIELD]?.value || '');
+            const recipient = record[CONFIG.RECIPIENT_FIELD]?.value || [];
+            const body = {
+                app: kintone.app.getId(),
+                record: {
+                    [CONFIG.CONTENT_FIELD]: {
+                        value: content
+                    },
+                    [CONFIG.TITLE_FIELD]: {
+                        value: title
+                    },
+                    [CONFIG.RECIPIENT_FIELD]: {
+                        value: recipient
+                    }
+                }
+            };
             
-            // 送信先に元の作成者を設定
-            const originalSender = record.作成者?.value || record.creator?.value;
-            if (originalSender && newRecord.送信先) {
-                newRecord.送信先 = { value: [originalSender] };
-            } else if (originalSender && newRecord.to) {
-                newRecord.to = { value: [originalSender] };
-            }
-            
-            // 作成者を現在のユーザーに設定
-            if (newRecord.作成者) {
-                newRecord.作成者.value = loginUser.name;
-            }
-            
-            // 件名に「Re:」を追加
-            const originalSubject = record.件名?.value || record.subject?.value || '';
-            const replySubject = originalSubject.startsWith('Re:') ? originalSubject : 'Re: ' + originalSubject;
-            
-            if (newRecord.件名) {
-                newRecord.件名.value = replySubject;
-            } else if (newRecord.subject) {
-                newRecord.subject.value = replySubject;
-            }
-            
-            // 元のメッセージを引用として追加
-            const originalMessage = record.本文?.value || record.message?.value || '';
-            const quotedMessage = `\n\n--- 元のメッセージ ---\n${originalMessage}`;
-            
-            if (newRecord.本文) {
-                newRecord.本文.value = quotedMessage;
-            } else if (newRecord.message) {
-                newRecord.message.value = quotedMessage;
-            }
+            const response = await kintone.api(kintone.api.url('/k/v1/record.json', true), 'POST', body);
             
             // レコード作成画面を開く
-            window.open(`/k/${appId}/edit?${buildQueryString(newRecord)}`, '_blank');
+            const recordID = parseInt(response.id);
+            window.open(`/k/${appId}/show#record=${recordID}&mode=edit`, '_blank');
+            
+            console.log('返信レコード作成完了:', response);
             
         } catch (error) {
             console.error('返信処理でエラーが発生しました:', error);
-            alert('返信処理中にエラーが発生しました。');
+            alert('返信処理中にエラーが発生しました: ' + error.message);
         }
+        // try {
+        //     const newRecord = {};
+        //     const loginUser = kintone.getLoginUser();
+            
+        //     // 送信先に元の作成者を設定
+        //     const originalSender = record.作成者?.value || record.creator?.value;
+        //     if (originalSender && newRecord.送信先) {
+        //         newRecord.送信先 = { value: [originalSender] };
+        //     } else if (originalSender && newRecord.to) {
+        //         newRecord.to = { value: [originalSender] };
+        //     }
+            
+        //     // 作成者を現在のユーザーに設定
+        //     if (newRecord.作成者) {
+        //         newRecord.作成者.value = loginUser.name;
+        //     }
+            
+        //     // 件名に「Re:」を追加
+        //     const originalSubject = record.件名?.value || record.subject?.value || '';
+        //     const replySubject = originalSubject.startsWith('Re:') ? originalSubject : 'Re: ' + originalSubject;
+            
+        //     if (newRecord.件名) {
+        //         newRecord.件名.value = replySubject;
+        //     } else if (newRecord.subject) {
+        //         newRecord.subject.value = replySubject;
+        //     }
+            
+        //     // 元のメッセージを引用として追加
+        //     const originalMessage = record.本文?.value || record.message?.value || '';
+        //     const quotedMessage = `\n\n--- 元のメッセージ ---\n${originalMessage}`;
+            
+        //     if (newRecord.本文) {
+        //         newRecord.本文.value = quotedMessage;
+        //     } else if (newRecord.message) {
+        //         newRecord.message.value = quotedMessage;
+        //     }
+            
+        //     // レコード作成画面を開く
+        //     window.open(`/k/${appId}/edit?${buildQueryString(newRecord)}`, '_blank');
+            
+        // } catch (error) {
+        //     console.error('返信処理でエラーが発生しました:', error);
+        //     alert('返信処理中にエラーが発生しました。');
+        // }
     }
   
     // 全員に返信処理（現在は返信と同じ）
