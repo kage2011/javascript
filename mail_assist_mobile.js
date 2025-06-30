@@ -264,7 +264,7 @@
                 }
             };
             
-            const response = await kintone.api(kintone.api.url('/k/m/v1/record.json', true), 'POST', body);
+            const response = await kintone.api(kintone.api.url('/k/v1/record.json', true), 'POST', body);
             
             // レコード作成画面を開く
             const recordID = parseInt(response.id);
