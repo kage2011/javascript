@@ -14,19 +14,6 @@
         const record = event.record;
         const appId = kintone.mobile.app.getId();
         
-        // 既存のボタンが存在したら削除（重複防止）
-        const existingButtons = document.querySelectorAll('.custom-reply-buttons');
-        existingButtons.forEach(btn => btn.remove());
-        
-        // ボタンを配置するコンテナを作成
-        const buttonContainer = document.createElement('div');
-        buttonContainer.className = 'custom-reply-buttons';
-        buttonContainer.style.cssText = `
-        display: flex;
-        gap: 8px;
-        align-items: center;
-        `;
-
         // 転送ボタン
         const forwardButton = createKintoneButton('転送する', 'forward');
         forwardButton.addEventListener('click', () => handleForward(record, appId));
