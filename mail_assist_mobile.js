@@ -62,10 +62,8 @@
             node.nodeType === 1 &&
             node.classList.contains('gaia-mobile-v2-app-record-actionbar-buttons')
         ) {
-            // すでにボタンが追加されている場合はスキップ
-            if (node.querySelector('.my-custom-button')) return;
-
             addbuttons();
+            observer.disconnect();
         }
         }
     }
