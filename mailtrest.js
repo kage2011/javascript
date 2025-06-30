@@ -146,21 +146,36 @@
         
         for (const attachment of attachments) {
             try {
-                var url = kintone.api.url('/k/1/file',true) + '?filekey=' + attachment.fileKey;
-                var xhr = new XMLHttpRequest();
-                xhr.open('GET',url);
-                xhr.setRequestHeader('X-Requested-With','XMLHttpRequest');
-                xhr.responseType = 'blob';
-                xhr.onload = function () {
-                    if (xhr.status === 200){
-                        console.log(xhr.response);
-                    }else{
-                        console.log(Error('ファイルダウンロードエラー：' + xhr.statusText));
-                    }
+                // 手順1で取得したfileKeyをurlに設定します。
+                const urlForDownload = kintone.api.urlForGet('/k/v1/file.json', {fileKey: attachment.fileKey}, true);
+
+                // ファイルダウンロードAPIを実行します。
+                const headers = {
+                'X-Requested-With': 'XMLHttpRequest',
                 };
-                xhr.onerror = function () {
-                    console.log(Error('ネットワークエラー'));
-                };
+                const resp = await fetch(urlForDownload, {
+                method: 'GET',
+                headers,
+                });
+                const blob = await resp.blob();                
+                
+                //var url = kintone.api.url('/k/1/file',true) + '?filekey=' + attachment.fileKey;
+
+                // var xhr = new XMLHttpRequest();
+                // xhr.open('GET',url);
+                // xhr.setRequestHeader('X-Requested-With','XMLHttpRequest');
+                // xhr.responseType = 'blob';
+                // xhr.onload = function () {
+                //     if (xhr.status === 200){
+                //         console.log(xhr.response);
+                //     }else{
+                //         console.log(Error('ファイルダウンロードエラー：' + xhr.statusText));
+                //     }
+                // };
+                // xhr.onerror = function () {
+                //     console.log(Error('ネットワークエラー'));
+                // };
+
                 // ファイルをダウンロード
             //     const downloadUrl = `/k/v1/file?fileKey=${attachment.fileKey}`;
             //     const response = await kintone.api.url(downloadUrl, true), 'GET', {
