@@ -217,10 +217,10 @@
                     },
                     [CONFIG.TITLE_FIELD]: {
                         value: title
-                    },
-                    [CONFIG.RECIPIENT_FIELD]: {
-                        value: recipient
                     }
+                    // [CONFIG.RECIPIENT_FIELD]: {
+                    //     value: recipient
+                    // }
                 }
             };
             
