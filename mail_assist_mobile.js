@@ -117,7 +117,8 @@
         // button.addEventListener('mouseleave', () => {
         //     button.style.backgroundColor = '#f7f9fa';
         // });
-        return span.appendChild(button);
+        span.appendChild(button);
+        return span;
     }
 
     // 添付ファイルをダウンロードして再アップロード
