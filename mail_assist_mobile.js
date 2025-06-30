@@ -9,10 +9,8 @@
         CREATOR_FIELD: '作成者',              // 作成者
         CREATED_AT_FIELD: '作成日時'          // 作成日時
     };
-    
-    // レコード詳細画面表示時のイベント
-    kintone.events.on('mobile.app.record.detail.show', (event) => {
-        const record = event.record;
+
+    function addbuttons(){
         const appId = kintone.mobile.app.getId();
         
         // 既存のボタンが存在したら削除（重複防止）
@@ -50,6 +48,34 @@
         if (statusbarAction) {
             statusbarAction.appendChild(buttonContainer);
         }
+
+    }
+
+    // レコード詳細画面表示時のイベント
+    kintone.events.on('mobile.app.record.detail.show', (event) => {
+        // 監視対象（bodyなど広い範囲が安全）
+        const target = document.body;
+
+        const observer = new MutationObserver(function (mutationsList) {
+        for (const mutation of mutationsList) {
+            for (const node of mutation.addedNodes) {
+            // 必要な要素が追加されたら処理
+            if (
+                node.nodeType === 1 &&
+                node.classList.contains('gaia-mobile-v2-app-record-actionbar-buttons')
+            ) {
+                // すでにボタンが追加されている場合はスキップ
+                if (node.querySelector('.my-custom-button')) return;
+
+                addbuttons();
+            }
+            }
+        }
+        });
+
+        // 監視の開始
+        observer.observe(target, { childList: true, subtree: true });        const record = event.record;
+
     });
   
     // kintone標準デザインのボタンを作成
