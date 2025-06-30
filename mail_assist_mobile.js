@@ -12,8 +12,13 @@
     
     // レコード詳細画面表示時のイベント
     kintone.events.on('mobile.app.record.detail.show', (event) => {
+        const footerElem = document.querySelector('.gaia-mobile-v2-viewpanel-footer');
+        if (!footerElem) {
+            console.warn('フッターがまだDOMに存在しません');
+            return;
+        }
         // 監視対象の親要素を取得
-        const parentNode = document.body; // 親要素を監視
+        const parentNode = footerElem; // 親要素を監視
 
         // オプション設定
         const config = { childList: true, subtree: true };
