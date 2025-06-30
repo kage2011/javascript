@@ -70,6 +70,22 @@
   
     // kintone標準デザインのボタンを作成
     function createKintoneButton(text, type) {
+        const span = document.createElement('span');
+        span.style.cssText = `
+            -webkit-text-size-adjust: 100%;
+            margin: 0;
+            vertical-align: baseline;
+            cursor: pointer;
+            -webkit-appearance: button;
+            font: 99% sans-serif;
+            outline: 0;
+            text-decoration: none;
+            font-family: "メイリオ",Meiryo,"Hiragino Kaku Gothic ProN","ヒラギノ角ゴ ProN W3","ＭＳ Ｐゴシック","Lucida Grande","Lucida Sans Unicode",Arial,Verdana,sans-serif;
+            background-color: inherit;
+            border: 0;
+            padding: 5px;
+            min-width: 80px;        
+        `;
         const button = document.createElement('button');
         button.textContent = text;
         button.className = `${type}-button`;
@@ -101,7 +117,7 @@
         // button.addEventListener('mouseleave', () => {
         //     button.style.backgroundColor = '#f7f9fa';
         // });
-        return button;
+        return span.appendChild(button);
     }
 
     // 添付ファイルをダウンロードして再アップロード
