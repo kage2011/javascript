@@ -206,11 +206,16 @@
             const title = '転送: ' + (record[CONFIG.TITLE_FIELD]?.value || '');
             const recipient = record[CONFIG.RECIPIENT_FIELD]?.value || [];
             
+            const filekeys = []
+            processAttachments.forEach(item =>{
+                filekeys.push({fileKey:item})
+            })
+
             const body = {
                 app: kintone.app.getId(),
                 record: {
                     [CONFIG.ATTACH_FILE_FIELD]: {
-                        value: [{fileKey:processedAttachments[0]}]
+                        value: filekeys
                     },
                     [CONFIG.CONTENT_FIELD]: {
                         value: content
@@ -228,10 +233,7 @@
             
             // レコード作成画面を開く
             const recordID = parseInt(response.id);
-            setTimeout(() => {
-                window.open(`/k/${appId}/show#record=${recordID}&mode=edit`, '_blank');
-                console.log("3秒後に編集画面を開きました");
-            }, 3000);
+            window.open(`/k/${appId}/show#record=${recordID}&mode=edit`, '_blank');
             
             console.log('転送レコード作成完了:', response);
             
