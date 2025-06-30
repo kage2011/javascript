@@ -220,9 +220,6 @@
                     },
                     [CONFIG.TITLE_FIELD]: {
                         value: title
-                    },
-                    [CONFIG.CREATOR_FIELD]: {
-                        value: creator
                     }
                 }
             };
