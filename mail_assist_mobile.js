@@ -1,5 +1,40 @@
-window.addEventListener('load', function () {
-    function addbuttons(){
+(() => {
+    'use strict';
+    // 設定値（実際の環境に合わせて変更してください）
+    const CONFIG = {
+        ATTACH_FILE_FIELD: '添付ファイル',     // 添付ファイル
+        CONTENT_FIELD: '本文',                // 本文
+        TITLE_FIELD: 'タイトル',              // タイトル
+        RECIPIENT_FIELD: '宛先',              // 宛先
+        CREATOR_FIELD: '作成者',              // 作成者
+        CREATED_AT_FIELD: '作成日時'          // 作成日時
+    };
+    
+    // レコード詳細画面表示時のイベント
+    kintone.events.on('mobile.app.record.detail.show', (event) => {
+        // 監視対象の親要素を取得
+        const parentNode = document.body; // 親要素を監視
+
+        // オプション設定
+        const config = { childList: true, subtree: true };
+
+        // オブザーバーインスタンスを生成
+        const observer = new MutationObserver((mutationsList) => {
+            mutationsList.forEach(mutation => {
+                mutation.addedNodes.forEach(elem => {
+                    if (elem.nodeType === Node.ELEMENT_NODE && elem.querySelector('[field-id="作業服"]')) {
+                        var node = elem.querySelector('tr');
+                        addevent(node);
+                        startObservingTargetElement();
+                    }
+                });
+            });
+        });
+
+        // 監視を開始
+        observer.observe(parentNode, config);
+
+        const record = event.record;
         const appId = kintone.mobile.app.getId();
         
         // 既存のボタンが存在したら削除（重複防止）
@@ -33,113 +68,10 @@ window.addEventListener('load', function () {
         buttonContainer.appendChild(replyAllButton);
         
         // kintoneの標準ボタンエリアに挿入
-        const statusbarAction = document.querySelector('gaia-mobile-v2-app-record-actionbar-buttons');
+        const statusbarAction = document.querySelector('.gaia-mobile-v2-app-record-actionbar');
         if (statusbarAction) {
             statusbarAction.appendChild(buttonContainer);
         }
-
-    }
-
-    // 監視対象（bodyなど広い範囲が安全）
-    const target = document.body;
-
-    const observer = new MutationObserver(function (mutationsList) {
-    for (const mutation of mutationsList) {
-        for (const node of mutation.addedNodes) {
-        // 必要な要素が追加されたら処理
-        if (
-            node.nodeType === 1 &&
-            node.classList.contains('gaia-mobile-v2-app-record-actionbar-buttons')
-        ) {
-            addbuttons();
-            observer.disconnect();
-        }
-        }
-    }
-    });
-
-    // 監視の開始
-    observer.observe(target, { childList: true, subtree: true });
-
-});
-(() => {
-    'use strict';
-    // 設定値（実際の環境に合わせて変更してください）
-    const CONFIG = {
-        ATTACH_FILE_FIELD: '添付ファイル',     // 添付ファイル
-        CONTENT_FIELD: '本文',                // 本文
-        TITLE_FIELD: 'タイトル',              // タイトル
-        RECIPIENT_FIELD: '宛先',              // 宛先
-        CREATOR_FIELD: '作成者',              // 作成者
-        CREATED_AT_FIELD: '作成日時'          // 作成日時
-    };
-
-    // function addbuttons(){
-    //     const appId = kintone.mobile.app.getId();
-        
-    //     // 既存のボタンが存在したら削除（重複防止）
-    //     const existingButtons = document.querySelectorAll('.custom-reply-buttons');
-    //     existingButtons.forEach(btn => btn.remove());
-        
-    //     // ボタンを配置するコンテナを作成
-    //     const buttonContainer = document.createElement('div');
-    //     buttonContainer.className = 'custom-reply-buttons';
-    //     buttonContainer.style.cssText = `
-    //     display: flex;
-    //     gap: 8px;
-    //     align-items: center;
-    //     `;
-
-    //     // 転送ボタン
-    //     const forwardButton = createKintoneButton('転送する', 'forward');
-    //     forwardButton.addEventListener('click', () => handleForward(record, appId));
-        
-    //     // 返信ボタン
-    //     const replyButton = createKintoneButton('返信する', 'reply');
-    //     replyButton.addEventListener('click', () => handleReply(record, appId));
-        
-    //     // 全員に返信ボタン
-    //     const replyAllButton = createKintoneButton('全員に返信', 'reply-all');
-    //     replyAllButton.addEventListener('click', () => handleReplyAll(record, appId));
-        
-    //     // ボタンをコンテナに追加
-    //     buttonContainer.appendChild(forwardButton);
-    //     buttonContainer.appendChild(replyButton);
-    //     buttonContainer.appendChild(replyAllButton);
-        
-    //     // kintoneの標準ボタンエリアに挿入
-    //     const statusbarAction = document.querySelector('gaia-mobile-v2-app-record-actionbar-buttons');
-    //     if (statusbarAction) {
-    //         statusbarAction.appendChild(buttonContainer);
-    //     }
-
-    // }
-
-    // // 監視対象（bodyなど広い範囲が安全）
-    // const target = document.body;
-
-    // const observer = new MutationObserver(function (mutationsList) {
-    // for (const mutation of mutationsList) {
-    //     for (const node of mutation.addedNodes) {
-    //     // 必要な要素が追加されたら処理
-    //     if (
-    //         node.nodeType === 1 &&
-    //         node.classList.contains('gaia-mobile-v2-app-record-actionbar-buttons')
-    //     ) {
-    //         addbuttons();
-    //         observer.disconnect();
-    //     }
-    //     }
-    // }
-    // });
-
-    // // 監視の開始
-    // observer.observe(target, { childList: true, subtree: true });
-
-    // レコード詳細画面表示時のイベント
-    kintone.events.on('mobile.app.record.detail.show', (event) => {
-        const record = event.record;
-
     });
   
     // kintone標準デザインのボタンを作成
