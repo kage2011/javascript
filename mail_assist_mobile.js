@@ -26,15 +26,15 @@
         const replyAllButton = createKintoneButton('全員に返信', 'reply-all');
         replyAllButton.addEventListener('click', () => handleReplyAll(record, appId));
         
-        // ボタンをコンテナに追加
-        buttonContainer.appendChild(forwardButton);
-        buttonContainer.appendChild(replyButton);
-        buttonContainer.appendChild(replyAllButton);
         
         // kintoneの標準ボタンエリアに挿入
         const statusbarAction = document.querySelector('.gaia-mobile-v2-app-record-actionbar');
         if (statusbarAction) {
-            statusbarAction.appendChild(buttonContainer);
+            // ボタンをコンテナに追加
+            statusbarAction.appendChild(forwardButton);
+            statusbarAction.appendChild(replyButton);
+            statusbarAction.appendChild(replyAllButton);
+            //statusbarAction.appendChild(buttonContainer);
         }
         
     }
