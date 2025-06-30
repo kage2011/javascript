@@ -149,7 +149,7 @@
             const urlForDownload = kintone.api.urlForGet('/k/v1/file.json', {fileKey: attachment.fileKey}, true);
 
             // ファイルダウンロードAPIを実行します。
-            let headers = {
+            const headers = {
             'X-Requested-With': 'XMLHttpRequest',
             };
             const downresp = await fetch(urlForDownload, {
@@ -163,10 +163,9 @@
             formData.append('__REQUEST_TOKEN__', kintone.getRequestToken());
             formData.append('file', namedFile);
             
-            const upheaders = {'X-Requested-With': 'XMLHttpRequest',};
             const upresp = await fetch('/k/v1/file.json', {
                 method: 'POST',
-                upheaders,
+                headers,
                 body: formData,
             });
             const updata = await upresp.json();
