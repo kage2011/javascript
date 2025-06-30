@@ -24,8 +24,7 @@
                 mutation.addedNodes.forEach(elem => {
                     if (elem.nodeType === Node.ELEMENT_NODE && elem.querySelector('[field-id="作業服"]')) {
                         var node = elem.querySelector('tr');
-                        addevent(node);
-                        startObservingTargetElement();
+                        console.log(node);
                     }
                 });
             });
