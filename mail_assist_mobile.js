@@ -10,25 +10,7 @@
         CREATED_AT_FIELD: '作成日時'          // 作成日時
     };
     
-    // レコード詳細画面表示時のイベント
-    kintone.events.on('mobile.app.record.detail.show', (event) => {
-        console.log('Intersection Observer テスト開始');
-        
-        // ダミー要素を作成
-        const sentinel = document.createElement('div');
-        sentinel.style.position = 'absolute';
-        sentinel.style.top = '0';
-        sentinel.style.left = '0';
-        sentinel.style.width = '1px';
-        sentinel.style.height = '1px';
-        sentinel.style.opacity = '0';
-        document.body.appendChild(sentinel);
-        
-        const observer = new IntersectionObserver((entries) => {
-            console.log('IntersectionObserver動作中！');
-        });
-        
-        observer.observe(sentinel);
+    function addbuttons(event){
         const record = event.record;
         const appId = kintone.mobile.app.getId();
         
@@ -67,6 +49,36 @@
         if (statusbarAction) {
             statusbarAction.appendChild(buttonContainer);
         }
+        
+    }
+
+
+    // レコード詳細画面表示時のイベント
+    kintone.events.on('mobile.app.record.detail.show', (event) => {
+        console.log('シンプル定期チェック開始');
+        
+        let checkCount = 0;
+        const maxChecks = 100; // 10秒間チェック
+        
+        const checkForField = () => {
+            checkCount++;
+            
+            const targetElement = document.querySelector('.gaia-mobile-v2-app-record-actionbar');
+            if (targetElement) {
+                addbuttons(event);
+                return; // 処理完了
+            }
+            
+            if (checkCount < maxChecks) {
+                setTimeout(checkForField, 100);
+            } else {
+                console.log('フィールドが見つかりませんでした');
+            }
+        };
+        
+        // 少し待ってからチェック開始
+        setTimeout(checkForField, 500);
+
     });
   
     // kintone標準デザインのボタンを作成
