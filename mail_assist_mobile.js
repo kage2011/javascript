@@ -12,29 +12,23 @@
     
     // レコード詳細画面表示時のイベント
     kintone.events.on('mobile.app.record.detail.show', (event) => {
-        console.log('イベント発火');
+        console.log('Intersection Observer テスト開始');
         
-        // 最もシンプルなテスト
-        const observer = new MutationObserver((mutations) => {
-            console.log('MutationObserver動作中！', mutations.length);
+        // ダミー要素を作成
+        const sentinel = document.createElement('div');
+        sentinel.style.position = 'absolute';
+        sentinel.style.top = '0';
+        sentinel.style.left = '0';
+        sentinel.style.width = '1px';
+        sentinel.style.height = '1px';
+        sentinel.style.opacity = '0';
+        document.body.appendChild(sentinel);
+        
+        const observer = new IntersectionObserver((entries) => {
+            console.log('IntersectionObserver動作中！');
         });
         
-        // bodyを監視
-        observer.observe(document.body, {
-            childList: true,
-            subtree: true
-        });
-        
-        console.log('Observer設定完了');
-        
-        // 手動でDOMを変更してテスト
-        setTimeout(() => {
-            const testDiv = document.createElement('div');
-            testDiv.textContent = 'テスト要素';
-            document.body.appendChild(testDiv);
-            console.log('テスト要素追加');
-        }, 1000);
-
+        observer.observe(sentinel);
         const record = event.record;
         const appId = kintone.mobile.app.getId();
         
