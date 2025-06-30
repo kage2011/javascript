@@ -12,31 +12,43 @@
     
     // レコード詳細画面表示時のイベント
     kintone.events.on('mobile.app.record.detail.show', (event) => {
-        const footerElem = document.querySelector('.gaia-mobile-v2-viewpanel-footer');
-        if (!footerElem) {
-            console.warn('フッターがまだDOMに存在しません');
-            return;
-        }
-        // 監視対象の親要素を取得
-        const parentNode = footerElem; // 親要素を監視
-
-        // オプション設定
-        const config = { childList: true, subtree: true };
-
-        // オブザーバーインスタンスを生成
-        const observer = new MutationObserver((mutationsList) => {
-            mutationsList.forEach(mutation => {
-                mutation.addedNodes.forEach(elem => {
-                    if (elem.nodeType === Node.ELEMENT_NODE && elem.querySelector('[field-id="作業服"]')) {
-                        var node = elem.querySelector('tr');
-                        console.log(node);
-                    }
+        setTimeout(() => {
+            // より広範囲を監視
+            const targetElem = document.querySelector('body');
+            
+            const config = { 
+                childList: true, 
+                subtree: true,
+                attributes: true, // 属性変更も監視
+                attributeFilter: ['field-id'] // field-id属性のみ
+            };
+            
+            const observer = new MutationObserver((mutationsList) => {
+                console.log('DOM変更を検知:', mutationsList.length);
+                
+                mutationsList.forEach(mutation => {
+                    // 追加されたノードをチェック
+                    mutation.addedNodes.forEach(elem => {
+                        if (elem.nodeType === Node.ELEMENT_NODE) {
+                            // 直接チェック
+                            if (elem.getAttribute && elem.getAttribute('field-id') === '作業服') {
+                                console.log('作業服フィールド(直接):', elem);
+                            }
+                            // 子要素をチェック
+                            if (elem.querySelector) {
+                                const fieldElem = elem.querySelector('[field-id="作業服"]');
+                                if (fieldElem) {
+                                    console.log('作業服フィールド(子要素):', fieldElem);
+                                }
+                            }
+                        }
+                    });
                 });
             });
-        });
-
-        // 監視を開始
-        observer.observe(parentNode, config);
+            
+            observer.observe(targetElem, config);
+            console.log('MutationObserver開始');
+        }, 500); // 待機時間を増加
 
         const record = event.record;
         const appId = kintone.mobile.app.getId();
