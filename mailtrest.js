@@ -210,7 +210,7 @@
                 app: kintone.app.getId(),
                 record: {
                     [CONFIG.ATTACH_FILE_FIELD]: {
-                        value: processedAttachments
+                        value: [{fileKey:processedAttachments[0]}]
                     },
                     [CONFIG.CONTENT_FIELD]: {
                         value: content
