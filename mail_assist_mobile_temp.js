@@ -55,7 +55,7 @@
                 });
 
                 // 元の詳細画面に戻る
-                location.href = `/k/${kintone.mobile.app.getId()}/show?record=${copiedFrom}`;
+                location.href = `/k/m/${kintone.mobile.app.getId()}/show?record=${copiedFrom}`;
 
             }
         });
@@ -281,7 +281,7 @@
             // 新規作成レコードのIDを保存しておく
             sessionStorage.setItem('copiedFrom', fromId);
             sessionStorage.setItem('copiedTo', recordID);
-            window.open(`/k/${appId}/show#record=${recordID}&mode=edit`, '_blank');
+            window.open(`/k/m/${appId}/show?record=${recordID}#mode=edit`, '_blank');
             
             console.log('転送レコード作成完了:', response);
             
@@ -332,7 +332,7 @@
             sessionStorage.setItem('copiedTo', recordID);
 
             // 作成画面を開く
-            window.open(`/k/${appId}/show#record=${recordID}&mode=edit`, '_blank');
+            window.open(`/k/m/${appId}/show?record=${recordID}#mode=edit`, '_blank');
             
             console.log('返信レコード作成完了:', response);
             
@@ -386,7 +386,7 @@
             sessionStorage.setItem('copiedTo', recordID);
 
             // 作成画面を開く
-            window.open(`/k/${appId}/show#record=${recordID}&mode=edit`, '_blank');
+            window.open(`/k/m/${appId}/show?record=${recordID}#mode=edit`, '_blank');
             
             console.log('返信レコード作成完了:', response);
             
