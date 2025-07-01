@@ -13,6 +13,6 @@
         const record = event.record;
         const user = kintone.getLoginUser();            
         record[CONFIG.RECIPIENT_FIELD].value = [{code:user.code}];
-
+        return event;
     });
 })();
