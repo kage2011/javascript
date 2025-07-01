@@ -12,7 +12,6 @@
     };
     
     kintone.events.on('app.record.edit.show', (event) => {
-        const record = event.record;
         const cancelBtn = document.querySelector('.gaia-argoui-app-edit-buttons');
         cancelBtn.addEventListener('click', async (e) => {
             const copiedTo = parseInt(sessionStorage.getItem('copiedTo'));
@@ -219,7 +218,7 @@
     }
   
     // 返信処理
-    async function handleReply(record, appId) {
+    async function handleReply(record, appId, fromId) {
         try{            
             // 元のレコードの値をコピー
             const content = record[CONFIG.CONTENT_FIELD]?.value || '';
@@ -253,6 +252,10 @@
             }
             kintone.api(kintone.api.url('/k/v1/record/assignees.json', true), 'PUT', signee);
             
+            // 新規作成レコードのIDを保存しておく
+            sessionStorage.setItem('copiedFrom', fromId);
+            sessionStorage.setItem('copiedTo', recordID);
+
             // 作成画面を開く
             window.open(`/k/${appId}/show#record=${recordID}&mode=edit`, '_blank');
             
@@ -265,7 +268,7 @@
     }
   
     // 全員に返信処理（現在は返信と同じ）
-    async function handleReplyAll(record, appId) {
+    async function handleReplyAll(record, appId, fromId) {
         try{
             const user = kintone.getLoginUser();            
             // 元のレコードの値をコピー
@@ -303,6 +306,10 @@
             }
             kintone.api(kintone.api.url('/k/v1/record/assignees.json', true), 'PUT', signee);
             
+            // 新規作成レコードのIDを保存しておく
+            sessionStorage.setItem('copiedFrom', fromId);
+            sessionStorage.setItem('copiedTo', recordID);
+
             // 作成画面を開く
             window.open(`/k/${appId}/show#record=${recordID}&mode=edit`, '_blank');
             
