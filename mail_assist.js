@@ -11,6 +11,8 @@
     };
     
     kintone.events.on('app.record.create.show', (event) => {
+        const record = event.record;
+        console.assert.log(record);
         return event;
     });
 
