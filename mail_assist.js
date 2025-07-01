@@ -170,7 +170,7 @@
             ];
             const body = {
                 app: kintone.app.getId(),
-                assignees: [user.name],
+                assignees: [user.code],
                 record: {
                     [CONFIG.ATTACH_FILE_FIELD]: {
                         value: filekeys
