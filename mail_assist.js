@@ -54,15 +54,15 @@
 
         // 転送ボタン
         const forwardButton = createKintoneButton('転送する', 'forward');
-        forwardButton.addEventListener('click', () => handleForward(record, appId));
+        forwardButton.addEventListener('click', () => handleForward(record, appId, event.recordId));
         
         // 返信ボタン
         const replyButton = createKintoneButton('返信する', 'reply');
-        replyButton.addEventListener('click', () => handleReply(record, appId));
+        replyButton.addEventListener('click', () => handleReply(record, appId,event.recordId));
         
         // 全員に返信ボタン
         const replyAllButton = createKintoneButton('全員に返信', 'reply-all');
-        replyAllButton.addEventListener('click', () => handleReplyAll(record, appId));
+        replyAllButton.addEventListener('click', () => handleReplyAll(record, appId,event.recordId));
         
         // ボタンをコンテナに追加
         buttonContainer.appendChild(forwardButton);
@@ -161,7 +161,7 @@
     }
 
     // 転送処理
-    async function handleForward(record, appId) {
+    async function handleForward(record, appId, fromId) {
         try {
             // 添付ファイルの処理
             const originalAttachments = record[CONFIG.ATTACH_FILE_FIELD]?.value || [];
@@ -206,7 +206,7 @@
             }
             kintone.api(kintone.api.url('/k/v1/record/assignees.json', true), 'PUT', signee);
             // 新規作成レコードのIDを保存しておく
-            sessionStorage.setItem('copiedFrom', kintone.getId());
+            sessionStorage.setItem('copiedFrom', fromId);
             sessionStorage.setItem('copiedTo', recordID);
             window.open(`/k/${appId}/show#record=${recordID}&mode=edit`, '_blank');
             
