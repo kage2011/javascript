@@ -181,7 +181,7 @@
                 filekeys:filekeys,
                 opentype:opentype
             }
-            localStorage.setItem('tempRecord', JSON.stringify(dataTosave));
+            localStorage.setItem('tempRecord', dataTosave);
             window.open(`/k/${appId}/edit`, '_blank');
 
             // const body = {
