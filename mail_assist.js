@@ -12,7 +12,7 @@
     };
     
     kintone.events.on('app.record.edit.show', (event) => {
-        const cancelBtn = document.querySelector('.gaia-argoui-app-edit-buttons');
+        const cancelBtn = document.querySelector('.gaia-ui-actionmenu-cancel');
         cancelBtn.addEventListener('click', async (e) => {
             const copiedTo = parseInt(sessionStorage.getItem('copiedTo'));
             const copiedFrom = parseInt(sessionStorage.getItem('copiedFrom'));
