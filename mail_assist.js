@@ -10,6 +10,21 @@
         CREATED_AT_FIELD: '作成日時'          // 作成日時
     };
     
+    let title;
+    let content;
+    let filekeys = [];
+    let recipient = [];
+    let opentype;
+    kintone.events.on('app.record.create.show', (event) => {
+        const record = event.record;
+        if (opentype === '転送'){
+            record[CONFIG.TITLE_FIELD].value = title;
+            record[CONFIG.CONTENT_FIELD].value = content;
+            record[CONFIG.ATTACH_FILE_FIELD].value = filekeys;
+        }
+        return event;
+    });
+
     // レコード詳細画面表示時のイベント
     kintone.events.on('app.record.detail.show', (event) => {
         const record = event.record;
@@ -150,35 +165,38 @@
             }
             
             // 元のレコードの値をコピー
-            const content = record[CONFIG.CONTENT_FIELD]?.value || '';
-            const title = '転送: ' + (record[CONFIG.TITLE_FIELD]?.value || '');
-            const filekeys = [];
+            content = record[CONFIG.CONTENT_FIELD]?.value || '';
+            title = '転送: ' + (record[CONFIG.TITLE_FIELD]?.value || '');
+            filekeys = [];
             processedAttachments.forEach(item =>{
                 filekeys.push({fileKey:item})
             })
+            opentype = '転送';
 
-            const body = {
-                app: kintone.app.getId(),
-                record: {
-                    [CONFIG.ATTACH_FILE_FIELD]: {
-                        value: filekeys
-                    },
-                    [CONFIG.CONTENT_FIELD]: {
-                        value: content
-                    },
-                    [CONFIG.TITLE_FIELD]: {
-                        value: title
-                    }
-                }
-            };
+            window.open(`/k/${appId}/edit`, '_blank');
+
+            // const body = {
+            //     app: kintone.app.getId(),
+            //     record: {
+            //         [CONFIG.ATTACH_FILE_FIELD]: {
+            //             value: filekeys
+            //         },
+            //         [CONFIG.CONTENT_FIELD]: {
+            //             value: content
+            //         },
+            //         [CONFIG.TITLE_FIELD]: {
+            //             value: title
+            //         }
+            //     }
+            // };
             
-            const response = await kintone.api(kintone.api.url('/k/v1/record.json', true), 'POST', body);
+            // const response = await kintone.api(kintone.api.url('/k/v1/record.json', true), 'POST', body);
             
-            // レコード作成画面を開く
-            const recordID = parseInt(response.id);
-            window.open(`/k/${appId}/show#record=${recordID}&mode=edit`, '_blank');
+            // // レコード作成画面を開く
+            // const recordID = parseInt(response.id);
+            // window.open(`/k/${appId}/show#record=${recordID}&mode=edit`, '_blank');
             
-            console.log('転送レコード作成完了:', response);
+            // console.log('転送レコード作成完了:', response);
             
         } catch (error) {
             console.error('転送処理でエラーが発生しました:', error);
@@ -260,5 +278,10 @@
             console.error('返信処理でエラーが発生しました:', error);
             alert('返信処理中にエラーが発生しました: ' + error.message);
         }
-    }  
+    }
+    
+    function fwRecordOpen(content,title,filekeys){
+
+    }
+
 })();
