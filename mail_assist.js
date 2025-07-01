@@ -17,7 +17,7 @@
         cancelBtn.addEventListener('click', async (e) => {
             const copiedTo = sessionStorage.getItem('copiedTo');
             const copiedFrom = sessionStorage.getItem('copiedFrom');
-            const recordID = kintone.getId();
+            const recordID = event.recordId;
             if ( copiedTo === recordID){
                 e.preventDefault();
                 // レコード削除
