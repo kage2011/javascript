@@ -10,7 +10,7 @@
         CREATED_AT_FIELD: '作成日時'          // 作成日時
     };
     
-    kintone.events.on('app.record.create.show', (event) => {
+    kintone.events.on('app.record.edit.show', (event) => {
         const record = event.record;
         console.assert.log(record);
         return event;
