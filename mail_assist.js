@@ -10,6 +10,10 @@
         CREATED_AT_FIELD: '作成日時'          // 作成日時
     };
     
+    kintone.events.on('app.record.create.show', (event) => {
+        return event;
+    });
+
     // レコード詳細画面表示時のイベント
     kintone.events.on('app.record.detail.show', (event) => {
         const record = event.record;
