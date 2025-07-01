@@ -179,6 +179,9 @@
                         value: content
                     },
                     [CONFIG.TITLE_FIELD]: {
+                        value: [{code:user.code}]
+                    },
+                    [CONFIG.TITLE_FIELD]: {
                         value: title
                     }
                 }
