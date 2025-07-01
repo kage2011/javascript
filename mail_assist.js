@@ -21,9 +21,9 @@
             if ( copiedTo === recordID){
                 e.preventDefault();
                 // レコード削除
-                await kintone.api(kintone.api.url('/k/v1/record.json', true), 'DELETE', {
+                await kintone.api(kintone.api.url('/k/v1/records.json', true), 'DELETE', {
                 app: kintone.app.getId(),
-                id: copiedTo
+                ids: [copiedTo]
                 });
 
                 // 元の詳細画面に戻る
