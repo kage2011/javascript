@@ -14,18 +14,18 @@
     function addbuttons(event){
         const record = event.record;
         const appId = kintone.mobile.app.getId();
-        
+        const fromId = event.recordId;
         // 転送ボタン
         const forwardButton = createKintoneButton('転送する', 'forward');
-        forwardButton.addEventListener('click', () => handleForward(record, appId));
+        forwardButton.addEventListener('click', () => handleForward(record, appId, fromId));
         
         // 返信ボタン
         const replyButton = createKintoneButton('返信する', 'reply');
-        replyButton.addEventListener('click', () => handleReply(record, appId));
+        replyButton.addEventListener('click', () => handleReply(record, appId, fromId));
         
         // 全員に返信ボタン
         const replyAllButton = createKintoneButton('全員に返信', 'reply-all');
-        replyAllButton.addEventListener('click', () => handleReplyAll(record, appId));
+        replyAllButton.addEventListener('click', () => handleReplyAll(record, appId, fromId));
         
         
         // kintoneの標準ボタンエリアに挿入
