@@ -178,7 +178,7 @@
                     [CONFIG.CONTENT_FIELD]: {
                         value: content
                     },
-                    [CONFIG.TITLE_FIELD]: {
+                    [CONFIG.WORKER_FIELD]: {
                         value: [{code:user.code}]
                     },
                     [CONFIG.TITLE_FIELD]: {
