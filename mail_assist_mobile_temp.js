@@ -50,7 +50,7 @@
                 e.preventDefault();
                 // レコード削除
                 await kintone.api(kintone.api.url('/k/v1/records.json', true), 'DELETE', {
-                app: kintone.app.getId(),
+                app: kintone.mobile.app.getId(),
                 ids: [copiedTo]
                 });
 
