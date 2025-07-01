@@ -143,47 +143,55 @@
   
     // kintone標準デザインのボタンを作成
     function createKintoneButton(text, type) {
+        const span = document.createElement('span');
+        span.style.cssText = `
+            -webkit-text-size-adjust: 100%;
+            margin: 0;
+            vertical-align: baseline;
+            cursor: pointer;
+            -webkit-appearance: button;
+            font: 99% sans-serif;
+            outline: 0;
+            text-decoration: none;
+            font-family: "メイリオ",Meiryo,"Hiragino Kaku Gothic ProN","ヒラギノ角ゴ ProN W3","ＭＳ Ｐゴシック","Lucida Grande","Lucida Sans Unicode",Arial,Verdana,sans-serif;
+            background-color: inherit;
+            border: 0;
+            padding: 5px;
+            min-width: 80px;        
+        `;
         const button = document.createElement('button');
         button.textContent = text;
         button.className = `${type}-button`;
         // ツールチップを設定（1秒後に表示）
         button.title = button.textContent;
         button.style.cssText = `
-          -webkit-text-size-adjust: 100%;
-          word-wrap: break-word;
-          font-family: "メイリオ","Hiragino Kaku Gothic ProN",Meiryo,sans-serif;
-          position: relative;
-          box-sizing: border-box;
-          height: 40px;
-          border: 1px solid #e3e7e8;
-          background-color: #f7f9fa;
-          box-shadow: 1px 1px 1px #fff inset;
-          color: #3498db;
-          text-overflow: ellipsis;
-          display: inline-block;
-          margin-right: 8px;
-          padding: 0 40px 0 16px;
-          min-width: 80px;
-          max-width: 280px;
-          font-size: 14px;
-          line-height: 1;
-          vertical-align: middle;
-          margin-top: 3px;
-          margin-bottom: 3px;
-          overflow: visible;
-          user-select: none;
-          cursor: pointer;
-          text-decoration: none;
-          outline: none;
+            -webkit-text-size-adjust: 100%;
+            cursor: pointer;
+            font: 99% sans-serif;
+            font-family: "メイリオ",Meiryo,"Hiragino Kaku Gothic ProN","ヒラギノ角ゴ ProN W3","ＭＳ Ｐゴシック","Lucida Grande","Lucida Sans Unicode",Arial,Verdana,sans-serif;
+            color: #fff;
+            background-color: #206694;
+            font-size: 1.4rem;
+            font-weight: 700;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            word-wrap: normal;
+            display: block;
+            border: 2px solid #206694;
+            border-radius: 6px;
+            line-height: 1;
+            padding: 6px 8px;
         `;
-        // ホバー効果
-        button.addEventListener('mouseenter', () => {
-            button.style.backgroundColor = '#f4f6f7';
-        });
-        button.addEventListener('mouseleave', () => {
-            button.style.backgroundColor = '#f7f9fa';
-        });
-        return button;
+        // // ホバー効果
+        // button.addEventListener('mouseenter', () => {
+        //     button.style.backgroundColor = '#f4f6f7';
+        // });
+        // button.addEventListener('mouseleave', () => {
+        //     button.style.backgroundColor = '#f7f9fa';
+        // });
+        span.appendChild(button);
+        return span;
     }
 
     // 添付ファイルをダウンロードして再アップロード
