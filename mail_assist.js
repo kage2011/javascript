@@ -17,7 +17,7 @@
     let opentype;
     kintone.events.on('app.record.create.show', (event) => {
         const record = event.record;
-        const savedData = localStorage.getItem('tempRecord');
+        const savedData = JSON.parse(localStorage.getItem('tempRecord'));
         if (savedData){
             if (savedData.opentype === '転送'){
                 record[CONFIG.TITLE_FIELD].value = savedData.title;
@@ -181,7 +181,7 @@
                 filekeys:filekeys,
                 opentype:opentype
             }
-            localStorage.setItem('tempRecord', dataTosave);
+            localStorage.setItem('tempRecord', JSON.stringify(dataTosave));
             window.open(`/k/${appId}/edit`, '_blank');
 
             // const body = {
