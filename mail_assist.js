@@ -13,7 +13,24 @@
     
     kintone.events.on('app.record.edit.show', (event) => {
         const record = event.record;
-        console.assert.log(record);
+        const cancelBtn = document.querySelector('.gaia-argoui-app-edit-buttons');
+        cancelBtn.addEventListener('click', async (e) => {
+            const copiedTo = sessionStorage.getItem('copiedTo');
+            const copiedFrom = sessionStorage.getItem('copiedFrom');
+            const recordID = kintone.getId();
+            if ( copiedTo === recordID){
+                e.preventDefault();
+                // レコード削除
+                await kintone.api(kintone.api.url('/k/v1/record.json', true), 'DELETE', {
+                app: kintone.app.getId(),
+                id: copiedTo
+                });
+
+                // 元の詳細画面に戻る
+                location.href = `/k/${kintone.app.getId()}/show#record=${copiedFrom}`;
+
+            }
+        });
         return event;
     });
 
@@ -188,6 +205,9 @@
                 assignees: [user.code]
             }
             kintone.api(kintone.api.url('/k/v1/record/assignees.json', true), 'PUT', signee);
+            // 新規作成レコードのIDを保存しておく
+            sessionStorage.setItem('copiedFrom', kintone.getId());
+            sessionStorage.setItem('copiedTo', recordID);
             window.open(`/k/${appId}/show#record=${recordID}&mode=edit`, '_blank');
             
             console.log('転送レコード作成完了:', response);
@@ -222,8 +242,18 @@
             
             const response = await kintone.api(kintone.api.url('/k/v1/record.json', true), 'POST', body);
             
-            // レコード作成画面を開く
+            // レコードID取得
             const recordID = parseInt(response.id);
+
+            // 作業者を設定
+            const signee = {
+                app:appId,
+                id:recordID,
+                assignees: [user.code]
+            }
+            kintone.api(kintone.api.url('/k/v1/record/assignees.json', true), 'PUT', signee);
+            
+            // 作成画面を開く
             window.open(`/k/${appId}/show#record=${recordID}&mode=edit`, '_blank');
             
             console.log('返信レコード作成完了:', response);
@@ -262,8 +292,18 @@
             
             const response = await kintone.api(kintone.api.url('/k/v1/record.json', true), 'POST', body);
             
-            // レコード作成画面を開く
+            // レコードID取得
             const recordID = parseInt(response.id);
+
+            // 作業者を設定
+            const signee = {
+                app:appId,
+                id:recordID,
+                assignees: [user.code]
+            }
+            kintone.api(kintone.api.url('/k/v1/record/assignees.json', true), 'PUT', signee);
+            
+            // 作成画面を開く
             window.open(`/k/${appId}/show#record=${recordID}&mode=edit`, '_blank');
             
             console.log('返信レコード作成完了:', response);
