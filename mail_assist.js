@@ -15,8 +15,8 @@
         const record = event.record;
         const cancelBtn = document.querySelector('.gaia-argoui-app-edit-buttons');
         cancelBtn.addEventListener('click', async (e) => {
-            const copiedTo = sessionStorage.getItem('copiedTo');
-            const copiedFrom = sessionStorage.getItem('copiedFrom');
+            const copiedTo = parseInt(sessionStorage.getItem('copiedTo'));
+            const copiedFrom = parseInt(sessionStorage.getItem('copiedFrom'));
             const recordID = event.recordId;
             if ( copiedTo === recordID){
                 e.preventDefault();
