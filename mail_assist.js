@@ -220,7 +220,8 @@
     // 返信処理
     async function handleReply(record, appId, fromId) {
         try{            
-            // 元のレコードの値をコピー
+             const user = kintone.getLoginUser();
+           // 元のレコードの値をコピー
             const content = record[CONFIG.CONTENT_FIELD]?.value || '';
             const title = '返信: ' + (record[CONFIG.TITLE_FIELD]?.value || '');
             const creator = record[CONFIG.CREATOR_FIELD]?.value || [];
