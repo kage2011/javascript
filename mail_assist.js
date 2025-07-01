@@ -17,10 +17,13 @@
     let opentype;
     kintone.events.on('app.record.create.show', (event) => {
         const record = event.record;
-        if (opentype === '転送'){
-            record[CONFIG.TITLE_FIELD].value = title;
-            record[CONFIG.CONTENT_FIELD].value = content;
-            record[CONFIG.ATTACH_FILE_FIELD].value = filekeys;
+        const savedData = localStorage.getItem('tempRecord');
+        if (savedData){
+            if (opentype === '転送'){
+                record[CONFIG.TITLE_FIELD].value = title;
+                record[CONFIG.CONTENT_FIELD].value = content;
+                record[CONFIG.ATTACH_FILE_FIELD].value = filekeys;
+            }
         }
         return event;
     });
@@ -172,7 +175,13 @@
                 filekeys.push({fileKey:item})
             })
             opentype = '転送';
-
+            const dataTosave = {
+                title:title,
+                contenct:content,
+                filekeys:filekeys,
+                opentype:opentype
+            }
+            localStorage.setItem('tempRecord', JSON.stringify(dataTosave));
             window.open(`/k/${appId}/edit`, '_blank');
 
             // const body = {
