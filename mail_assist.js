@@ -164,22 +164,14 @@
                 filekeys.push({fileKey:item})
             })
             const user = kintone.getLoginUser();
-            const worker = [
-                { code:user.code },
-                { name:user.name}
-            ];
             const body = {
                 app: kintone.app.getId(),
-                assignees: [user.code],
                 record: {
                     [CONFIG.ATTACH_FILE_FIELD]: {
                         value: filekeys
                     },
                     [CONFIG.CONTENT_FIELD]: {
                         value: content
-                    },
-                    [CONFIG.WORKER_FIELD]: {
-                        value: [{code:user.code}]
                     },
                     [CONFIG.TITLE_FIELD]: {
                         value: title
