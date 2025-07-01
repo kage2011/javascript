@@ -7,7 +7,8 @@
         TITLE_FIELD: 'タイトル',              // タイトル
         RECIPIENT_FIELD: '宛先',              // 宛先
         CREATOR_FIELD: '作成者',              // 作成者
-        CREATED_AT_FIELD: '作成日時'          // 作成日時
+        CREATED_AT_FIELD: '作成日時' ,         // 作成日時
+        WORKER_FIELD: '作業者'                 // 作業者
     };
     
     kintone.events.on('app.record.edit.show', (event) => {
@@ -162,7 +163,11 @@
             processedAttachments.forEach(item =>{
                 filekeys.push({fileKey:item})
             })
-
+            const user = kintone.getLoginUser();
+            const worker = [
+                { code:user.code },
+                { name:user.name}
+            ];
             const body = {
                 app: kintone.app.getId(),
                 record: {
@@ -174,6 +179,9 @@
                     },
                     [CONFIG.TITLE_FIELD]: {
                         value: title
+                    },
+                    [CONFIG.WORKER_FIELD]: {
+                        value: worker
                     }
                 }
             };
