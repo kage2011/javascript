@@ -170,6 +170,7 @@
             ];
             const body = {
                 app: kintone.app.getId(),
+                assignees: [user.name],
                 record: {
                     [CONFIG.ATTACH_FILE_FIELD]: {
                         value: filekeys
@@ -179,9 +180,6 @@
                     },
                     [CONFIG.TITLE_FIELD]: {
                         value: title
-                    },
-                    [CONFIG.WORKER_FIELD]: {
-                        value: worker
                     }
                 }
             };
