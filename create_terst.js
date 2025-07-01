@@ -15,4 +15,4 @@
         record[CONFIG.RECIPIENT_FIELD].value = user;
 
     });
-});
+})();
