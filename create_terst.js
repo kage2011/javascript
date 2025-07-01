@@ -12,7 +12,7 @@
     kintone.events.on('app.record.create.show', (event) => {
         const record = event.record;
         const user = kintone.getLoginUser();            
-        record[CONFIG.RECIPIENT_FIELD].value = [{code:user.code},{name:user.name}];
+        record[CONFIG.RECIPIENT_FIELD].value = user;//[{code:user.code},{name:user.name}];
         return event;
     });
 })();
