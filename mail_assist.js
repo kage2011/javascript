@@ -188,9 +188,14 @@
             };
             
             const response = await kintone.api(kintone.api.url('/k/v1/record.json', true), 'POST', body);
-            
+            const recordID = parseInt(response.id);            
             // レコード作成画面を開く
-            const recordID = parseInt(response.id);
+            const signee = {
+                app:appId,
+                id:recordID,
+                assignees: [user.code]
+            }
+            kintone.api(kintone.api.url('/k/v1/record/assignees.json', true), 'PUT', signee);
             window.open(`/k/${appId}/show#record=${recordID}&mode=edit`, '_blank');
             
             console.log('転送レコード作成完了:', response);
