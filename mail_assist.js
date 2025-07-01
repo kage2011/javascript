@@ -20,9 +20,9 @@
         const savedData = localStorage.getItem('tempRecord');
         if (savedData){
             if (opentype === '転送'){
-                record[CONFIG.TITLE_FIELD].value = title;
-                record[CONFIG.CONTENT_FIELD].value = content;
-                record[CONFIG.ATTACH_FILE_FIELD].value = filekeys;
+                record[CONFIG.TITLE_FIELD].value = savedData.title;
+                record[CONFIG.CONTENT_FIELD].value = savedData.content;
+                record[CONFIG.ATTACH_FILE_FIELD].value = savedData.filekeys;
             }
         }
         return event;
