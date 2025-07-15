@@ -32,6 +32,37 @@
             outline: none;
         `;
 
+    async function createRecord(record){
+        const body = {
+            app : kintone.app.getId(),
+            record : record
+            // {
+            //     [CONFIG.ATTACH_FILE_FIELD]:{
+            //         value:attachFile
+            //     },
+            //     [CONFIG.CONTENT_FIELD]:{
+            //         value:content
+            //     },
+            //     [CONFIG.TITLE_FIELD]:{
+            //         value:title
+            //     },
+            //     [CONFIG.RECIPIENT_FIELD]:{
+            //         value:recipient
+            //     }
+            // }
+        }
+        await kintone.api(kintone.api.url('/k/v1/record.json', true), 'POST', body)
+        .then(function(resp){
+            // レコード作成画面を開く
+            const recordID = parseInt(resp['id']);
+            setTimeout(() => {
+                 window.open(`/k/${appId}/show#record=${recordID}&mode=edit`, '_blank');
+                console.log("3秒後に実行されました");
+            }, 3000); // 単位はミリ秒（＝3秒）
+            console.log(resp);
+        });
+        
+    }
 
     // 詳細画面にボタンを追加
     kintone.events.on(['app.record.detail.show'], function(event) {
@@ -57,13 +88,13 @@
         
         // ホバー効果を追加
         button_forward.addEventListener('mouseenter', function() {
-            this.style.backgroundColor = '#f3f5f6';
+            this.style.backgroundColor = '#f4f6f7';
         });
         button_reply.addEventListener('mouseenter', function() {
-            this.style.backgroundColor = '#f3f5f6';
+            this.style.backgroundColor = '#f4f6f7';
         });
         button_allreply.addEventListener('mouseenter', function() {
-            this.style.backgroundColor = '#f3f5f6';
+            this.style.backgroundColor = '#f4f6f7';
         });
         
         button_forward.addEventListener('mouseleave', function() {
@@ -81,47 +112,45 @@
             // 引用したい値をlocalStorageに保存
             const dataToQuote = {
                 // 例：以下のフィールドコードを実際のものに変更してください
-                タイトル: 'Fw :' + record.タイトル.value,
-                本文: record.本文.value,
-                添付ファイル: record.添付ファイル.value,
+                タイトル: { value : 'Fw :' + record.タイトル.value },
+                本文: { value : record.本文.value },
+                添付ファイル: { value : record.添付ファイル.value },
                 // 必要な分だけ追加
             };
-            localStorage.setItem('quoteData', JSON.stringify(dataToQuote));
-            quoteType = 'for';
-            // 新規作成画面を開く
-            window.open(`/k/${kintone.app.getId()}/edit`, '_blank');
+            createRecord(dataToQuote);
         };
         button_reply.onclick = function() {
             // 引用したい値をlocalStorageに保存
             const dataToQuote = {
                 // 例：以下のフィールドコードを実際のものに変更してください
-                タイトル: 'Re :' + record.タイトル.value,
-                本文: '\n\n-----------------------------------------------------\n' + 
+                タイトル: { value : 'Re :' + record.タイトル.value },
+                本文: { value : 
+                        '\n\n-----------------------------------------------------\n' + 
                         record.本文.value +
-                      '-----------------------------------------------------',
-                作成者: record.作成者.value,
+                        '-----------------------------------------------------'
+                        },
+                宛先: { value : record.作成者.value },
                 // 必要な分だけ追加
             };
-            localStorage.setItem('quoteData', JSON.stringify(dataToQuote));
-            quoteType = 'rep'
-            // 新規作成画面を開く
-            window.open(`/k/${kintone.app.getId()}/edit`, '_blank');
+            createRecord(dataToQuote);
         };
         button_allreply.onclick = function() {
             // 引用したい値をlocalStorageに保存
+            let sendlist = []
+            sendlist += record.作成者.value;
+            sendlist += record.宛先.value;
             const dataToQuote = {
                 // 例：以下のフィールドコードを実際のものに変更してください
-                タイトル: 'Re :' + record.タイトル.value,
-                本文: '\n\n-----------------------------------------------------\n' + 
+                タイトル: { value : 'Re :' + record.タイトル.value },
+                本文: { value : 
+                        '\n\n-----------------------------------------------------\n' + 
                         record.本文.value +
-                      '-----------------------------------------------------',
-                作成者: record.作成者.value,
+                        '-----------------------------------------------------'
+                        },
+                宛先: { value : sendlist },
                 // 必要な分だけ追加
             };
-            localStorage.setItem('quoteData', JSON.stringify(dataToQuote));
-            quoteType = 'allrep'
-            // 新規作成画面を開く
-            window.open(`/k/${kintone.app.getId()}/edit`, '_blank');
+            createRecord(dataToQuote);
         };
         
         // gaia-app-statusbar-actionlistに配置
@@ -137,49 +166,5 @@
         
         return event;
     });
-    
-    // 新規作成画面で値を設定
-    kintone.events.on(['app.record.create.show'], function(event) {
-        const quoteData = localStorage.getItem('quoteData');
-        if (quoteData) {
-            const data = JSON.parse(quoteData);
-            if (data.タイトル && event.record.タイトル) {
-                event.record.タイトル.value = data.タイトル;
-            }
-            if (data.本文 && event.record.本文) {
-                event.record.本文.value = data.本文;
-            }
-            switch (quoteType) {
-                case 'for':
-                    const record = kintone.app.record.get();
-                    record.record['添付ファイル'].value = data.添付ファイル;
-                    kintone.app.record.set(record);                    
-                    break;
-                case 'rep':
-                    if (data.作成者 && event.record.宛先) {
-                        event.record.宛先.value = data.作成者;
-                    }
-                    break;
-                case 'allrep':
-                    if (data.作成者 && event.record.宛先) {
-                        event.record.宛先.value = data.作成者;
-                    }
-                    break;
-                default:
-                    break;
-            };
-            
-            
-            // 使用済みデータを削除
-            localStorage.removeItem('quoteData');
-        }
-        return event;
-    });
-    
-    // デバッグ用：利用可能なフィールドコードを確認（開発時のみ使用）
-    // kintone.events.on(['app.record.detail.show'], function(event) {
-    //     console.log('利用可能なフィールド:', Object.keys(event.record));
-    //     return event;
-    // });
-    
+        
 })();
