@@ -135,8 +135,25 @@
     // ファイルアップロード関数
     async function uploadFile(blob, filename) {
         return new Promise((resolve, reject) => {
+            // Blob を File に変換して名前を付ける
+            const namedFile = new File([blob], filename, { type: blob.type });
             const formData = new FormData();
-            formData.append('file', blob, filename);
+            formData.append('__REQUEST_TOKEN__', kintone.getRequestToken());
+            formData.append('file', namedFile);
+            // const headers = {
+            // 'X-Requested-With': 'XMLHttpRequest',
+            // };
+            
+            // const upresp = fetch('/k/v1/file.json', {
+            //     method: 'POST',
+            //     headers,
+            //     body: formData,
+            // });
+            // const updata = upresp.json();
+            // processedFiles.push(updata.fileKey);
+
+            // const formData = new FormData();
+            // formData.append('file', blob, filename);
             
             const url = kintone.api.url('/k/v1/file', true);
             
