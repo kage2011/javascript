@@ -196,7 +196,7 @@
                 app: appId,
                 id: recordId,
                 record: {
-                    attachment: {
+                    添付ファイル: {
                         value: updatedFiles
                     }
                 }
