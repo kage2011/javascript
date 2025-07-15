@@ -11,7 +11,7 @@
         const recordId = record.$id.value;
         
         // 添付ファイルフィールドを取得（フィールドコードは適宜変更してください）
-        const attachmentField = record.attachment; // 'attachment'は添付ファイルフィールドのコード
+        const attachmentField = record.添付ファイル; // 'attachment'は添付ファイルフィールドのコード
         
         if (!attachmentField || !attachmentField.value || attachmentField.value.length === 0) {
             return event;
