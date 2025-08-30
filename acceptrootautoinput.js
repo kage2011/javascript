@@ -15,16 +15,23 @@
     const userCode = loginUser.code;
 
     // 2. 社員名簿アプリから所属部署と肩書を取得
-    const querySelf = `社員番号 = "${userCode}"`;
+    // const querySelf = `社員番号 = "${userCode}"`;
+    const querySelf = ``;
     const selfResp = await kintone.api(kintone.api.url('/k/v1/records', true), 'GET', {
       app: EMPLOYEE_APP_ID,
-      query: querySelf
+      query: querySelf,
+      fields: ['組織選択', '役職','社員番号']
     });
 
     if (selfResp.records.length === 0) return event;
 
     const department = selfResp.records[0].department.value;
     const title = selfResp.records[0].title.value;
+
+    // 工機課長、係長取得
+    // 改善推進課長、係長取得
+    // 開発課長、係長取得
+
 
     // 3. 同じ部署で肩書が「課長」「部長」のレコードを検索
     const queryLeaders = `department = "${department}" and (title = "課長" or title = "部長")`;
