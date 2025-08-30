@@ -25,6 +25,21 @@
 
     if (selfResp.records.length === 0) return event;
 
+    const filtered = records.filter(record => {
+      const orgName = record['組織選択']?.value?.[0]?.name || '';
+      const title = record['役職']?.value || '';
+
+      return (
+        (orgName.includes('工機') && title === '課長') ||
+        (title === '係長') ||
+        (orgName === '改善推進課' && (title === '課長' || title === '係長'))
+      );
+    });
+
+  // 抽出した社員番号一覧を表示
+  const employeeCodes = filtered.map(record => record['社員番号']?.value);
+  console.log(employeeCodes);
+
     const department = selfResp.records[0].department.value;
     const title = selfResp.records[0].title.value;
 
