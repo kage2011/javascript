@@ -20,13 +20,12 @@
     const selfResp = await kintone.api(kintone.api.url('/k/v1/records', true), 'GET', {
       app: EMPLOYEE_APP_ID,
       query: querySelf,
-      fields: ['組織選択', '役職','社員番号']
+      fields: ['組織選択', '役職','社員番号','一次考課者','課長調整','部門調整']
     });
 
     if (selfResp.records.length === 0) return event;
     const userInfo = selfResp.records.filter(item => item["社員番号"].value === userCode);
-    var sectionManager;
-    var generalManager;
+    const sectionManager = userInfo['課長調整'].value;
     var kokiManager = [];
     var kokiChief = [];
     var kaizenManager = [];
@@ -35,30 +34,22 @@
     var kaihastuChief = [];
 
     selfResp.records.forEach( record =>{
-      if ( userInfo[0]['組織選択'].value[0].name === record['組織選択'].value[0].name){
-        if (record['役職'].value === '課長'){
-          sectionManager = record;
-        }
-        if (record['役職'].value === '部長'){
-          generalManager = record;
-        }
-      }
-      if (record['組織選択'].value[0].name.includes('工機') && (record['役職'].value === '課長' || record['役職'].value === '次長')){
+      if (record['組織選択'].value[0].name.includes('工機') && record['役職'].value.includes('課長')){
         kokiManager.push(record);
       }
-      if (record['組織選択'].value[0].name.includes('工機') && record['役職'].value === '係長'){
+      if (record['組織選択'].value[0].name.includes('工機') && record['役職'].value.includes('係長')){
         kokiChief.push(record);
       }
-      if (record['組織選択'].value[0].name.includes('改善推進') && (record['役職'].value === '課長' || record['役職'].value === '次長')){
+      if (record['組織選択'].value[0].name.includes('改善推進') && record['役職'].value.includes('課長')){
         kaizenManager.push(record);
       }
-      if (record['組織選択'].value[0].name.includes('改善推進') && record['役職'].value === '係長'){
+      if (record['組織選択'].value[0].name.includes('改善推進') && record['役職'].value.includes('係長')){
         kaizenChief.push(record);
       }
-      if (record['組織選択'].value[0].name.includes('開発') && (record['役職'].value === '課長' || record['役職'].value === '次長')){
+      if (record['組織選択'].value[0].name.includes('開発') && record['役職'].value.includes('課長')){
         kaihastuManager.push(record);
       }
-      if (record['組織選択'].value[0].name.includes('開発') && record['役職'].value === '係長'){
+      if (record['組織選択'].value[0].name.includes('開発') && record['役職'].value.includes('係長')){
         kaihastuChief.push(record);
       }
     })
