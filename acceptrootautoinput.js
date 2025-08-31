@@ -32,9 +32,9 @@
     var kaizenManager = [];
     var kaizenChief = [];
     var kaizenLeader = [];
-    var kaihastuManager = [];
-    var kaihastuChief = [];
-    var kaihastuLeader = [];
+    var kaihatsuManager = [];
+    var kaihatsuChief = [];
+    var kaihatsuLeader = [];
 
     selfResp.records.forEach( record =>{
       if (record['組織選択'].value[0].name.includes('工機') && record['役職'].value.includes('課長')){
@@ -56,13 +56,13 @@
         kaizenLeader.push(record);
       }
       if (record['組織選択'].value[0].name.includes('開発') && record['役職'].value.includes('課長')){
-        kaihastuManager.push(record);
+        kaihatsuManager.push(record);
       }
       if (record['組織選択'].value[0].name.includes('開発') && record['役職'].value.includes('係長')){
-        kaihastuChief.push(record);
+        kaihatsuChief.push(record);
       }
       if (record['組織選択'].value[0].name.includes('開発') && record['役職'].value.includes('班長')){
-        kaihastuLeader.push(record);
+        kaihatsuLeader.push(record);
       }
     })
     if (kokiManager.length === 0 ){
