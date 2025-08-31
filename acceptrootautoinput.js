@@ -25,7 +25,7 @@
 
     if (selfResp.records.length === 0) return event;
 
-    const filtered = records.filter(record => {
+    const filtered = selfResp.records.filter(record => {
       const orgName = record['組織選択']?.value?.[0]?.name || '';
       const title = record['役職']?.value || '';
 
