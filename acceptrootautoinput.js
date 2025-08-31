@@ -24,7 +24,7 @@
     });
 
     if (selfResp.records.length === 0) return event;
-    const userInfo = data.filter(item => item["社員番号"].value === usercode);
+    const userInfo = selfResp.records.filter(item => item["社員番号"].value === usercode);
     var sectionManager;
     var generalManager;
     var kokiManager = [];
