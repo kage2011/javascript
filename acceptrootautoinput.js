@@ -78,10 +78,10 @@
       kaizenChief = kaizenLeader;
     }
     if (kaihatsuManager.length === 0 ){
-      kaihastuManager = kaihatsuChief;
+      kaihatsuManager = kaihatsuChief;
     }
     if (kaihatsuChief.length === 0 ){
-      kaihastuChief = kaihastuLeader;
+      kaihatsuChief = kaihatsuLeader;
     }
     
   //   const filtered = selfResp.records.filter(record => {
