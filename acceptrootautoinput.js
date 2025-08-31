@@ -28,10 +28,13 @@
     const sectionManager = userInfo[0]['課長調整'].value[0].code;
     var kokiManager = [];
     var kokiChief = [];
+    var kokiLeader = [];
     var kaizenManager = [];
     var kaizenChief = [];
+    var kaizenLeader = [];
     var kaihastuManager = [];
     var kaihastuChief = [];
+    var kaihastuLeader = [];
 
     selfResp.records.forEach( record =>{
       if (record['組織選択'].value[0].name.includes('工機') && record['役職'].value.includes('課長')){
@@ -40,11 +43,17 @@
       if (record['組織選択'].value[0].name.includes('工機') && record['役職'].value.includes('係長')){
         kokiChief.push(record);
       }
+      if (record['組織選択'].value[0].name.includes('工機') && record['役職'].value.includes('班長')){
+        kokiLeader.push(record);
+      }
       if (record['組織選択'].value[0].name.includes('改善推進') && record['役職'].value.includes('課長')){
         kaizenManager.push(record);
       }
       if (record['組織選択'].value[0].name.includes('改善推進') && record['役職'].value.includes('係長')){
         kaizenChief.push(record);
+      }
+      if (record['組織選択'].value[0].name.includes('改善推進') && record['役職'].value.includes('班長')){
+        kaizenLeader.push(record);
       }
       if (record['組織選択'].value[0].name.includes('開発') && record['役職'].value.includes('課長')){
         kaihastuManager.push(record);
@@ -52,7 +61,28 @@
       if (record['組織選択'].value[0].name.includes('開発') && record['役職'].value.includes('係長')){
         kaihastuChief.push(record);
       }
+      if (record['組織選択'].value[0].name.includes('開発') && record['役職'].value.includes('班長')){
+        kaihastuLeader.push(record);
+      }
     })
+    if (kokiManager.length === 0 ){
+      kokiManager = kokiChief;
+    }
+    if (kokiChief.length === 0 ){
+      kokiChief = kokiLeader;
+    }
+    if (kaizenManager.length === 0 ){
+      kaizenManager = kaizenChief;
+    }
+    if (kaizenChief.length === 0 ){
+      kaizenChief = kaizenLeader;
+    }
+    if (kaihatsuManager.length === 0 ){
+      kaihastuManager = kaihatsuChief;
+    }
+    if (kaihatsuChief.length === 0 ){
+      kaihastuChief = kaihastuLeader;
+    }
     
   //   const filtered = selfResp.records.filter(record => {
   //     const orgName = record['組織選択']?.value?.[0]?.name || '';
