@@ -35,7 +35,7 @@
     var kaihastuChief = [];
 
     selfResp.records.forEach( record =>{
-      if ( userInfo['組織選択'].value[0].name === record['組織選択'].value[0].name){
+      if ( userInfo[0]['組織選択'].value[0].name === record['組織選択'].value[0].name){
         if (record['役職'].value === '課長'){
           sectionManager = record;
         }
