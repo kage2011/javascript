@@ -69,14 +69,15 @@
     return event;
   });
   kintone.events.on('app.record.detail.show', async function (event) {
-    if (event.record.status.includes('受理') || event.record.status.includes('振分')){
-      if (event.record.status.includes('工機')){
+    const status = event.record['ステータス'].value;
+    if (status.includes('受理') || status.includes('振分')){
+      if (status.includes('工機')){
         const section = '工機';
       }
-      if (event.record.status.includes('改善')){
+      if (status.includes('改善')){
         const section = '改善';
       }
-      if (event.record.status.includes('開発')){
+      if (status.includes('開発')){
         const section = '開発';
       }
       // 2. 社員名簿アプリから所属部署と肩書を取得
