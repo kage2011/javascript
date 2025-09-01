@@ -89,7 +89,19 @@
         query: querySelf,
         fields: ['氏名','社員番号']
       });
+      const headerSpace = kintone.app.record.getHeaderMenuSpaceElement();
       selfResp.forEach( item => {
+      // headerSpace.innerHTML = ''; // ← 既存要素を消したくない場合は削除
+        const button = document.createElement('button');
+        button.textContent = item[氏名].value;
+        button.style.margin = '10px';
+        button.style.padding = '8px 16px';
+        button.style.backgroundColor = '#007bff';
+        button.style.color = '#fff';
+        button.style.border = 'none';
+        button.style.borderRadius = '4px';
+        button.style.cursor = 'pointer';
+        headerSpace.appendChild(button);
         console.log(item);
       })
     }
