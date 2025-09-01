@@ -101,6 +101,14 @@
         button.style.border = 'none';
         button.style.borderRadius = '4px';
         button.style.cursor = 'pointer';
+        ;
+
+        // ボタン押下時の処理
+        button.onclick = function() {
+          record['修理担当者'].value = item[氏名].value; // ← フィールドコード「修理担当者」を確認
+          kintone.app.record.set(record); // 表示上の値を更新（保存はされない）
+        }  
+        
         headerSpace.appendChild(button);
         console.log(item);
       })
