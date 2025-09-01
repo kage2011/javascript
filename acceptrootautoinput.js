@@ -93,6 +93,7 @@
       selfResp.records.forEach( record => {
       // headerSpace.innerHTML = ''; // ← 既存要素を消したくない場合は削除
         const button = document.createElement('button');
+        const chargedname = record['氏名'].value;
         button.textContent = record['氏名'].value;
         button.style.margin = '10px';
         button.style.padding = '8px 16px';
@@ -111,7 +112,7 @@
             id: kintone.app.record.getId(),
             record: {
               '修理担当者': {
-                value: record['氏名'].value
+                value: chargedname
               }
             }
           };
