@@ -73,13 +73,13 @@
     var section = "";
     if (status.includes('受理') || status.includes('振分')){
       if (status.includes('工機')){
-        section = '工機';
+        section = '工機課';
       }
       if (status.includes('改善')){
-        section = '改善';
+        section = '改善推進課';
       }
       if (status.includes('開発')){
-        section = '開発';
+        section = '開発課';
       }
       // 2. 社員名簿アプリから所属部署と肩書を取得
       // const querySelf = `社員番号 = "${userCode}"`;
