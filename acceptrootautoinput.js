@@ -25,6 +25,7 @@
 
     if (selfResp.records.length === 0) return event;
     const userInfo = selfResp.records.filter(item => item["社員番号"].value === userCode);
+    const loginUserData = [{'code':loginUser.code,'name':loginUser.name}]
     const sectionManager = [{'code':userInfo[0]['課長調整'].value[0].code,'name':userInfo[0]['課長調整'].value[0].name}];
     var kokiManager = [];
     var kokiChief = [];
@@ -66,13 +67,13 @@
       }
     })
     if (TEST_MODE){
-      record['工機課課長'].value = loginUser;
-      record['工機課係長'].value = loginUser;
-      record['改善推進課課長'].value = loginUser;
-      record['改善推進課係長'].value = loginUser;
-      record['開発課課長'].value = loginUser;
-      record['開発課係長'].value = loginUser;
-      record['提出部署課長承認'].value = loginUser;
+      record['工機課課長'].value = loginUserData;
+      record['工機課係長'].value = loginUserData;
+      record['改善推進課課長'].value = loginUserData;
+      record['改善推進課係長'].value = loginUserData;
+      record['開発課課長'].value = loginUserData;
+      record['開発課係長'].value = loginUserData;
+      record['提出部署課長承認'].value = loginUserData;
     }else{
       record['工機課課長'].value = kokiManager;
       record['工機課係長'].value = kokiChief;
