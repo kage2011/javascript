@@ -110,7 +110,7 @@
         }  
         
         headerSpace.appendChild(button);
-        console.log(item);
+        // console.log(item);
       })
     }
   });
