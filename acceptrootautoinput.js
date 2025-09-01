@@ -107,6 +107,7 @@
         button.onclick = function() {
           event.record['修理担当者'].value = record['氏名'].value; // ← フィールドコード「修理担当者」を確認
           kintone.app.record.set(record); // 表示上の値を更新（保存はされない）
+          return event;
         }  
         
         headerSpace.appendChild(button);
