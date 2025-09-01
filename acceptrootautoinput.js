@@ -38,52 +38,40 @@
 
     selfResp.records.forEach( record =>{
       if (record['組織選択'].value[0].name.includes('工機') && record['役職'].value.includes('課長')){
-        kokiManager.push(record);
+        kokiManager.push({'code':record['社員番号'].value});
       }
       if (record['組織選択'].value[0].name.includes('工機') && record['役職'].value.includes('係長')){
-        kokiChief.push(record);
+        kokiChief.push({'code':record['社員番号'].value});
       }
       if (record['組織選択'].value[0].name.includes('工機') && record['役職'].value.includes('班長')){
-        kokiLeader.push(record);
+        kokiLeader.push({'code':record['社員番号'].value});
       }
       if (record['組織選択'].value[0].name.includes('改善推進') && record['役職'].value.includes('課長')){
-        kaizenManager.push(record);
+        kaizenManager.push({'code':record['社員番号'].value});
       }
       if (record['組織選択'].value[0].name.includes('改善推進') && record['役職'].value.includes('係長')){
-        kaizenChief.push(record);
+        kaizenChief.push({'code':record['社員番号'].value});
       }
       if (record['組織選択'].value[0].name.includes('改善推進') && record['役職'].value.includes('班長')){
-        kaizenLeader.push(record);
+        kaizenLeader.push({'code':record['社員番号'].value});
       }
       if (record['組織選択'].value[0].name.includes('開発') && record['役職'].value.includes('課長')){
-        kaihatsuManager.push(record);
+        kaihatsuManager.push({'code':record['社員番号'].value});
       }
       if (record['組織選択'].value[0].name.includes('開発') && record['役職'].value.includes('係長')){
-        kaihatsuChief.push(record);
+        kaihatsuChief.push({'code':record['社員番号'].value});
       }
       if (record['組織選択'].value[0].name.includes('開発') && record['役職'].value.includes('班長')){
-        kaihatsuLeader.push(record);
+        kaihatsuLeader.push({'code':record['社員番号'].value});
       }
     })
-    if (kokiManager.length === 0 ){
-      kokiManager = kokiChief;
-    }
-    if (kokiChief.length === 0 ){
-      kokiChief = kokiLeader;
-    }
-    if (kaizenManager.length === 0 ){
-      kaizenManager = kaizenChief;
-    }
-    if (kaizenChief.length === 0 ){
-      kaizenChief = kaizenLeader;
-    }
-    if (kaihatsuManager.length === 0 ){
-      kaihatsuManager = kaihatsuChief;
-    }
-    if (kaihatsuChief.length === 0 ){
-      kaihatsuChief = kaihatsuLeader;
-    }
-    
+    record['工機課課長'].value = kokiManager;
+    record['工機課係長'].value = kokiChief;
+    record['改善推進課課長'].value = kaizenManager;
+    record['改善推進課係長'].value = kaizenChief;
+    record['開発課課長'].value = kaihatsuManager;
+    record['開発課係長'].value = kaihatsuChief;
+    record['提出部署課長承認'].value = sectionManager;
   //   const filtered = selfResp.records.filter(record => {
   //     const orgName = record['組織選択']?.value?.[0]?.name || '';
   //     const title = record['役職']?.value || '';
