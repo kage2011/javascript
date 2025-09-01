@@ -20,12 +20,12 @@
     const selfResp = await kintone.api(kintone.api.url('/k/v1/records', true), 'GET', {
       app: EMPLOYEE_APP_ID,
       query: querySelf,
-      fields: ['組織選択', '役職','社員番号','一次考課者','課長調整','部門調整']
+      fields: ['組織選択', '役職','氏名','社員番号','一次考課者','課長調整','部門調整']
     });
 
     if (selfResp.records.length === 0) return event;
     const userInfo = selfResp.records.filter(item => item["社員番号"].value === userCode);
-    const sectionManager = [{'code':userInfo[0]['課長調整'].value[0].code}];
+    const sectionManager = [{'code':userInfo[0]['課長調整'].value[0].code,'name':userInfo[0]['課長調整'].value[0].name}];
     var kokiManager = [];
     var kokiChief = [];
     var kokiLeader = [];
@@ -38,31 +38,31 @@
 
     selfResp.records.forEach( record =>{
       if (record['組織選択'].value[0].name.includes('工機') && record['役職'].value.includes('課長')){
-        kokiManager.push({'code':record['社員番号'].value});
+        kokiManager.push({'code':record['社員番号'].value,'name':record['氏名'].value});
       }
       if (record['組織選択'].value[0].name.includes('工機') && record['役職'].value.includes('係長')){
-        kokiChief.push({'code':record['社員番号'].value});
+        kokiChief.push({'code':record['社員番号'].value,'name':record['氏名'].value});
       }
       if (record['組織選択'].value[0].name.includes('工機') && record['役職'].value.includes('班長')){
-        kokiLeader.push({'code':record['社員番号'].value});
+        kokiLeader.push({'code':record['社員番号'].value,'name':record['氏名'].value});
       }
       if (record['組織選択'].value[0].name.includes('改善推進') && record['役職'].value.includes('課長')){
-        kaizenManager.push({'code':record['社員番号'].value});
+        kaizenManager.push({'code':record['社員番号'].value,'name':record['氏名'].value});
       }
       if (record['組織選択'].value[0].name.includes('改善推進') && record['役職'].value.includes('係長')){
-        kaizenChief.push({'code':record['社員番号'].value});
+        kaizenChief.push({'code':record['社員番号'].value,'name':record['氏名'].value});
       }
       if (record['組織選択'].value[0].name.includes('改善推進') && record['役職'].value.includes('班長')){
-        kaizenLeader.push({'code':record['社員番号'].value});
+        kaizenLeader.push({'code':record['社員番号'].value,'name':record['氏名'].value});
       }
       if (record['組織選択'].value[0].name.includes('開発') && record['役職'].value.includes('課長')){
-        kaihatsuManager.push({'code':record['社員番号'].value});
+        kaihatsuManager.push({'code':record['社員番号'].value,'name':record['氏名'].value});
       }
       if (record['組織選択'].value[0].name.includes('開発') && record['役職'].value.includes('係長')){
-        kaihatsuChief.push({'code':record['社員番号'].value});
+        kaihatsuChief.push({'code':record['社員番号'].value,'name':record['氏名'].value});
       }
       if (record['組織選択'].value[0].name.includes('開発') && record['役職'].value.includes('班長')){
-        kaihatsuLeader.push({'code':record['社員番号'].value});
+        kaihatsuLeader.push({'code':record['社員番号'].value,'name':record['氏名'].value});
       }
     })
     record['工機課課長'].value = kokiManager;
