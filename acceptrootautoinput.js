@@ -25,7 +25,7 @@
 
     if (selfResp.records.length === 0) return event;
     const userInfo = selfResp.records.filter(item => item["社員番号"].value === userCode);
-    const sectionManager = userInfo[0]['課長調整'].value[0].code;
+    const sectionManager = {'code':userInfo[0]['課長調整'].value[0].code};
     var kokiManager = [];
     var kokiChief = [];
     var kokiLeader = [];
