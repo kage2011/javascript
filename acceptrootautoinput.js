@@ -70,15 +70,16 @@
   });
   kintone.events.on('app.record.detail.show', async function (event) {
     const status = event.record['ステータス'].value;
+    var section = "";
     if (status.includes('受理') || status.includes('振分')){
       if (status.includes('工機')){
-        const section = '工機';
+        section = '工機';
       }
       if (status.includes('改善')){
-        const section = '改善';
+        section = '改善';
       }
       if (status.includes('開発')){
-        const section = '開発';
+        section = '開発';
       }
       // 2. 社員名簿アプリから所属部署と肩書を取得
       // const querySelf = `社員番号 = "${userCode}"`;
