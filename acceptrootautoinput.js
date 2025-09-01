@@ -83,7 +83,7 @@
       }
       // 2. 社員名簿アプリから所属部署と肩書を取得
       // const querySelf = `社員番号 = "${userCode}"`;
-      const querySelf = `組織選択 in ${section} and 就労状況 in ("在職") limit 500`;
+      const querySelf = `組織選択 in "${section}" and 就労状況 in ("在職") limit 500`;
       const selfResp = await kintone.api(kintone.api.url('/k/v1/records', true), 'GET', {
         app: EMPLOYEE_APP_ID,
         query: querySelf,
