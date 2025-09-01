@@ -93,7 +93,7 @@
       selfResp.records.forEach( record => {
       // headerSpace.innerHTML = ''; // ← 既存要素を消したくない場合は削除
         const button = document.createElement('button');
-        button.textContent = record[氏名].value;
+        button.textContent = record['氏名'].value;
         button.style.margin = '10px';
         button.style.padding = '8px 16px';
         button.style.backgroundColor = '#007bff';
@@ -105,7 +105,7 @@
 
         // ボタン押下時の処理
         button.onclick = function() {
-          record['修理担当者'].value = record[氏名].value; // ← フィールドコード「修理担当者」を確認
+          record['修理担当者'].value = record['氏名'].value; // ← フィールドコード「修理担当者」を確認
           kintone.app.record.set(record); // 表示上の値を更新（保存はされない）
         }  
         
