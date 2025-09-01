@@ -105,9 +105,21 @@
 
         // ボタン押下時の処理
         button.onclick = function() {
-          event.record['修理担当者'].value = record['氏名'].value; // ← フィールドコード「修理担当者」を確認
-          kintone.app.record.set(record); // 表示上の値を更新（保存はされない）
-          return event;
+          const record = kintone.app.record.get().record;
+          const body = {
+            app: kintone.app.getId(),
+            id: kintone.app.record.getId(),
+            record: {
+              '修理担当者': {
+                value: record['氏名'].value
+              }
+            }
+          };
+
+          kintone.api(kintone.api.url('/k/v1/record', true), 'PUT', body, function(resp) {
+            console.log('修理担当者を保存しました');
+            location.reload();
+          });
         }  
         
         headerSpace.appendChild(button);
