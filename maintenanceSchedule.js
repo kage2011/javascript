@@ -62,7 +62,6 @@ function schedule_load_promise() {
 
 member_load();
 schedule_load();
-
 // 共通：メンバー選択ダイアログ
 function showMemberSelectDialogCommon(selected, onOk) {
     const overlay = document.createElement('div');
@@ -74,76 +73,191 @@ function showMemberSelectDialogCommon(selected, onOk) {
     const dialog = document.createElement('div');
     dialog.style.cssText = `
         background: white; border-radius: 8px; padding: 20px;
-        max-width: 500px; max-height: 600px; overflow-y: auto;
+        max-width: 700px; max-height: 600px; overflow-y: auto;
         box-shadow: 0 4px 6px rgba(0,0,0,0.1);
     `;
     dialog.innerHTML = `<h3 style="margin-top:0;margin-bottom:20px;color:#333;">メンバーを選択してください</h3>`;
-    const buttonContainer = document.createElement('div');
-    buttonContainer.style.marginBottom = '20px';
+    
     let selectedMembers = [...selected];
 
+    // 所属部署ごとにメンバーをグループ化
+    const departmentMap = {};
     members.forEach(member => {
-        const name = member['氏名'].value;
-        const btn = document.createElement('button');
-        btn.textContent = name;
-        btn.type = 'button';
-        const isSelected = selectedMembers.includes(name);
-        btn.style.cssText = `
-            margin:5px; padding:8px 12px;
-            background-color:${isSelected ? '#3498db' : '#ecf0f1'};
-            color:${isSelected ? 'white' : '#2c3e50'};
-            border:2px solid ${isSelected ? '#2980b9' : '#bdc3c7'};
-            border-radius:4px; cursor:pointer; font-size:14px; transition:all 0.2s;
-        `;
-        btn.onclick = () => {
-            const idx = selectedMembers.indexOf(name);
-            if (idx === -1) {
-                selectedMembers.push(name);
-                btn.style.backgroundColor = '#3498db';
-                btn.style.color = 'white';
-                btn.style.borderColor = '#2980b9';
-            } else {
-                selectedMembers.splice(idx, 1);
-                btn.style.backgroundColor = '#ecf0f1';
-                btn.style.color = '#2c3e50';
-                btn.style.borderColor = '#bdc3c7';
-            }
-        };
-        buttonContainer.appendChild(btn);
+        const dept = member['所属部署']?.value || 'その他';
+        if (!departmentMap[dept]) departmentMap[dept] = [];
+        departmentMap[dept].push(member);
     });
-    dialog.appendChild(buttonContainer);
+    const departments = Object.keys(departmentMap).sort();
 
-    // ボタンエリア
-    const buttonArea = document.createElement('div');
-    buttonArea.style.cssText = 'text-align:right;border-top:1px solid #eee;padding-top:15px;';
-    const cancelBtn = document.createElement('button');
-    cancelBtn.textContent = 'キャンセル';
-    cancelBtn.type = 'button';
-    cancelBtn.style.cssText = `
-        margin-right:10px; padding:8px 16px; background:#95a5a6;
-        color:white; border:none; border-radius:4px; cursor:pointer;
-    `;
-    cancelBtn.onclick = () => document.body.removeChild(overlay);
-    const okBtn = document.createElement('button');
-    okBtn.textContent = 'OK';
-    okBtn.type = 'button';
-    okBtn.style.cssText = `
-        padding:8px 16px; background:#27ae60; color:white;
-        border:none; border-radius:4px; cursor:pointer;
-    `;
-    okBtn.onclick = () => {
-        onOk(selectedMembers);
-        document.body.removeChild(overlay);
-    };
-    buttonArea.appendChild(cancelBtn);
-    buttonArea.appendChild(okBtn);
-    dialog.appendChild(buttonArea);
+    // タブコンテナ
+    const tabContainer = document.createElement('div');
+    tabContainer.style.cssText = 'display: flex; border-bottom: 2px solid #3498db; margin-bottom: 15px; gap: 5px;';
 
-    overlay.appendChild(dialog);
-    document.body.appendChild(overlay);
+    // タブコンテンツコンテナ
+    const contentContainer = document.createElement('div');
+    contentContainer.style.cssText = 'min-height: 300px; max-height: 350px; overflow-y: auto; margin-bottom: 20px;';
 
-    overlay.onclick = e => { if (e.target === overlay) document.body.removeChild(overlay); };
+    const tabContents = {};
+    
+    departments.forEach((dept, index) => {
+        // タブボタン
+        const tab = document.createElement('button');
+        tab.textContent = dept;
+        tab.type = 'button';
+        tab.style.cssText = `
+            padding: 10px 20px;
+            background-color: ${index === 0 ? '#3498db' : '#ecf0f1'};
+            color: ${index === 0 ? 'white' : '#2c3e50'};
+            border: none;
+            border-radius: 4px 4px 0 0;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: bold;
+            transition: all 0.2s;
+        `;
+        
+        // タブコンテンツ
+        const content = document.createElement('div');
+        content.style.cssText = `display: ${index === 0 ? 'block' : 'none'};`;
+        
+        departmentMap[dept].forEach(member => {
+            const name = member['氏名'].value;
+            const btn = document.createElement('button');
+            btn.textContent = name;
+            btn.type = 'button';
+            const isSelected = selectedMembers.includes(name);
+            btn.style.cssText = `
+                margin:5px; padding:8px 12px;
+                background-color:${isSelected ? '#3498db' : '#ecf0f1'};
+                color:${isSelected ? 'white' : '#2c3e50'};
+                border:2px solid ${isSelected ? '#2980b9' : '#bdc3c7'};
+                border-radius:4px; cursor:pointer; font-size:14px; transition:all 0.2s;
+            `;
+            btn.onclick = () => {
+                const idx = selectedMembers.indexOf(name);
+                if (idx === -1) {
+                    selectedMembers.push(name);
+                    btn.style.backgroundColor = '#3498db';
+                    btn.style.color = 'white';
+                    btn.style.borderColor = '#2980b9';
+                } else {
+                    selectedMembers.splice(idx, 1);
+                    btn.style.backgroundColor = '#ecf0f1';
+                    btn.style.color = '#2c3e50';
+                    btn.style.borderColor = '#bdc3c7';
+                }
+            };
+            content.appendChild(btn);
+        });
+        
+        tabContents[dept] = content;
+        contentContainer.appendChild(content);
+        
+        // タブクリックイベント
+        tab.onclick = () => {
+            // すべてのタブを非アクティブに
+            Array.from(tabContainer.children).forEach(t => {
+                t.style.backgroundColor = '#ecf0f1';
+                t.style.color = '#2c3e50';
+            });
+            // クリックされたタブをアクティブに
+            tab.style.backgroundColor = '#3498db';
+            tab.style.color = 'white';
+            
+            // すべてのコンテンツを非表示に
+            Object.values(tabContents).forEach(c => c.style.display = 'none');
+            // クリックされたタブのコンテンツを表示
+            content.style.display = 'block';
+        };
+        
+        tabContainer.appendChild(tab);
+    });
+    
+    dialog.appendChild(tabContainer);
+    dialog.appendChild(contentContainer);
 }
+
+// // 共通：メンバー選択ダイアログ
+// function showMemberSelectDialogCommon(selected, onOk) {
+//     const overlay = document.createElement('div');
+//     overlay.style.cssText = `
+//         position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+//         background: rgba(0,0,0,0.5); z-index: 2147480000;
+//         display: flex; justify-content: center; align-items: center;
+//     `;
+//     const dialog = document.createElement('div');
+//     dialog.style.cssText = `
+//         background: white; border-radius: 8px; padding: 20px;
+//         max-width: 500px; max-height: 600px; overflow-y: auto;
+//         box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+//     `;
+//     dialog.innerHTML = `<h3 style="margin-top:0;margin-bottom:20px;color:#333;">メンバーを選択してください</h3>`;
+//     const buttonContainer = document.createElement('div');
+//     buttonContainer.style.marginBottom = '20px';
+//     let selectedMembers = [...selected];
+
+//     members.forEach(member => {
+//         const name = member['氏名'].value;
+//         const btn = document.createElement('button');
+//         btn.textContent = name;
+//         btn.type = 'button';
+//         const isSelected = selectedMembers.includes(name);
+//         btn.style.cssText = `
+//             margin:5px; padding:8px 12px;
+//             background-color:${isSelected ? '#3498db' : '#ecf0f1'};
+//             color:${isSelected ? 'white' : '#2c3e50'};
+//             border:2px solid ${isSelected ? '#2980b9' : '#bdc3c7'};
+//             border-radius:4px; cursor:pointer; font-size:14px; transition:all 0.2s;
+//         `;
+//         btn.onclick = () => {
+//             const idx = selectedMembers.indexOf(name);
+//             if (idx === -1) {
+//                 selectedMembers.push(name);
+//                 btn.style.backgroundColor = '#3498db';
+//                 btn.style.color = 'white';
+//                 btn.style.borderColor = '#2980b9';
+//             } else {
+//                 selectedMembers.splice(idx, 1);
+//                 btn.style.backgroundColor = '#ecf0f1';
+//                 btn.style.color = '#2c3e50';
+//                 btn.style.borderColor = '#bdc3c7';
+//             }
+//         };
+//         buttonContainer.appendChild(btn);
+//     });
+//     dialog.appendChild(buttonContainer);
+
+//     // ボタンエリア
+//     const buttonArea = document.createElement('div');
+//     buttonArea.style.cssText = 'text-align:right;border-top:1px solid #eee;padding-top:15px;';
+//     const cancelBtn = document.createElement('button');
+//     cancelBtn.textContent = 'キャンセル';
+//     cancelBtn.type = 'button';
+//     cancelBtn.style.cssText = `
+//         margin-right:10px; padding:8px 16px; background:#95a5a6;
+//         color:white; border:none; border-radius:4px; cursor:pointer;
+//     `;
+//     cancelBtn.onclick = () => document.body.removeChild(overlay);
+//     const okBtn = document.createElement('button');
+//     okBtn.textContent = 'OK';
+//     okBtn.type = 'button';
+//     okBtn.style.cssText = `
+//         padding:8px 16px; background:#27ae60; color:white;
+//         border:none; border-radius:4px; cursor:pointer;
+//     `;
+//     okBtn.onclick = () => {
+//         onOk(selectedMembers);
+//         document.body.removeChild(overlay);
+//     };
+//     buttonArea.appendChild(cancelBtn);
+//     buttonArea.appendChild(okBtn);
+//     dialog.appendChild(buttonArea);
+
+//     overlay.appendChild(dialog);
+//     document.body.appendChild(overlay);
+
+//     overlay.onclick = e => { if (e.target === overlay) document.body.removeChild(overlay); };
+// }
 
 // 共通：記入者選択ダイアログ（1人だけ選択可）
 function showWriterSelectDialog(inputElem, onOk) {
