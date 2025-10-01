@@ -14,6 +14,30 @@ window.addEventListener('load', function () {
                     if (guideSpan) {
                         const guideText = guideSpan.textContent.trim();
                         console.log('社員番号のガイドテキスト:', guideText);
+                        if (guideText) {
+                            fetch('https://d37ksuq96l.execute-api.us-east-1.amazonaws.com/product/kintoneWebform/anp', {
+                                method: 'PUT',
+                                headers: {
+                                'Content-Type': 'application/json'
+                                },
+                                body: JSON.stringify({ guidetext: guideText })
+                            })
+                            .then(response => {
+                                if (!response.ok) {
+                                throw new Error('APIリクエストに失敗しました');
+                                }
+                                return response.json();
+                            })
+                            .then(data => {
+                                console.log('APIレスポンス:', data);
+                                // location.reload(); // 成功後にページリロード
+                            })
+                            .catch(error => {
+                                console.error('エラー:', error);
+                            });
+                        } else {
+                            console.warn('guidetextが取得できませんでした');
+                        }
                     } else {
                         console.warn('kb-guideクラスのspanが見つかりませんでした');
                     }
