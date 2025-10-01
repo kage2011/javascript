@@ -83,7 +83,7 @@ function showMemberSelectDialogCommon(selected, onOk) {
     // 所属部署ごとにメンバーをグループ化
     const departmentMap = {};
     members.forEach(member => {
-        const dept = member['所属']?.value || 'その他';
+        const dept = member['所属']?.value[0]['code'] || 'その他';
         if (!departmentMap[dept]) departmentMap[dept] = [];
         departmentMap[dept].push(member);
     });
