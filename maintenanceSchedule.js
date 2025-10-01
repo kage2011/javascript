@@ -175,6 +175,37 @@ function showMemberSelectDialogCommon(selected, onOk) {
     
     dialog.appendChild(tabContainer);
     dialog.appendChild(contentContainer);
+
+    // ボタンエリア
+    const buttonArea = document.createElement('div');
+    buttonArea.style.cssText = 'text-align:right;border-top:1px solid #eee;padding-top:15px;';
+    const cancelBtn = document.createElement('button');
+    cancelBtn.textContent = 'キャンセル';
+    cancelBtn.type = 'button';
+    cancelBtn.style.cssText = `
+        margin-right:10px; padding:8px 16px; background:#95a5a6;
+        color:white; border:none; border-radius:4px; cursor:pointer;
+    `;
+    cancelBtn.onclick = () => document.body.removeChild(overlay);
+    const okBtn = document.createElement('button');
+    okBtn.textContent = 'OK';
+    okBtn.type = 'button';
+    okBtn.style.cssText = `
+        padding:8px 16px; background:#27ae60; color:white;
+        border:none; border-radius:4px; cursor:pointer;
+    `;
+    okBtn.onclick = () => {
+        onOk(selectedMembers);
+        document.body.removeChild(overlay);
+    };
+    buttonArea.appendChild(cancelBtn);
+    buttonArea.appendChild(okBtn);
+    dialog.appendChild(buttonArea);
+
+    overlay.appendChild(dialog);
+    document.body.appendChild(overlay);
+
+    overlay.onclick = e => { if (e.target === overlay) document.body.removeChild(overlay); };
 }
 
 // // 共通：メンバー選択ダイアログ
