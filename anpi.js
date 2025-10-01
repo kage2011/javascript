@@ -15,7 +15,7 @@ window.addEventListener('load', function () {
                         const guideText = guideSpan.textContent.trim();
                         console.log('社員番号のガイドテキスト:', guideText);
                         if (guideText) {
-                            fetch('https://d37ksuq96l.execute-api.us-east-1.amazonaws.com/product/kintoneWebform/anp', {
+                            fetch('https://d37ksuq96l.execute-api.us-east-1.amazonaws.com/product/kintoneWebform/anpi', {
                                 method: 'PUT',
                                 headers: {
                                 'Content-Type': 'application/json'
