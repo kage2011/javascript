@@ -110,8 +110,8 @@ function showMemberSelectDialogCommon(selected, onOk) {
         tab.type = 'button';
         tab.style.cssText = `
             flex: 1 1 10%; /* 横長・3段想定 */
-            min-width: 180px;
-            max-width: 33%;
+            min-width: 60px;
+            max-width: 11%;
             margin-bottom: 2px;
             padding: 12px 0;
             background-color: ${index === 0 ? '#3498db' : '#ecf0f1'};
