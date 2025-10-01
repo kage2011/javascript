@@ -89,9 +89,13 @@ function showMemberSelectDialogCommon(selected, onOk) {
     });
     const departments = Object.keys(departmentMap).sort();
 
-    // タブコンテナ
+    // タブコンテナ（横長・複数段）
     const tabContainer = document.createElement('div');
-    tabContainer.style.cssText = 'display: flex; border-bottom: 2px solid #3498db; margin-bottom: 15px; gap: 5px;';
+    tabContainer.style.cssText = `
+        display: flex; flex-wrap: wrap; border-bottom: 2px solid #3498db; margin-bottom: 15px; gap: 5px;
+        max-height: 120px; /* 3段分くらい */
+        overflow-y: auto;
+    `;
 
     // タブコンテンツコンテナ
     const contentContainer = document.createElement('div');
@@ -105,13 +109,17 @@ function showMemberSelectDialogCommon(selected, onOk) {
         tab.textContent = dept;
         tab.type = 'button';
         tab.style.cssText = `
-            padding: 10px 20px;
+            flex: 1 1 30%; /* 横長・3段想定 */
+            min-width: 180px;
+            max-width: 33%;
+            margin-bottom: 2px;
+            padding: 12px 0;
             background-color: ${index === 0 ? '#3498db' : '#ecf0f1'};
             color: ${index === 0 ? 'white' : '#2c3e50'};
             border: none;
             border-radius: 4px 4px 0 0;
             cursor: pointer;
-            font-size: 14px;
+            font-size: 15px;
             font-weight: bold;
             transition: all 0.2s;
         `;
@@ -401,7 +409,47 @@ function addbutton(node) {
     `;
     button.onmouseenter = () => button.style.backgroundColor = '#217dbb';
     button.onmouseleave = () => button.style.backgroundColor = '#3498db';
-    button.onclick = () => {
+    button.onclick = async () => {
+        // --- ここから追加 ---
+        // メンバーがロードされていなければローディング表示
+        if (!members || members.length === 0) {
+            // ローディングオーバーレイ作成
+            const loadingOverlay = document.createElement('div');
+            loadingOverlay.id = 'member-loading-overlay';
+            loadingOverlay.style.cssText = `
+                position: fixed; top:0; left:0; width:100vw; height:100vh;
+                background:rgba(0,0,0,0.5); z-index:2147483647; display:flex; justify-content:center; align-items:center;
+            `;
+            loadingOverlay.innerHTML = `
+                <div style="display:flex; flex-direction:column; align-items:center;">
+                    <div style="
+                        border: 6px solid #f3f3f3;
+                        border-top: 6px solid #3498db;
+                        border-radius: 50%;
+                        width: 48px;
+                        height: 48px;
+                        animation: spin 1s linear infinite;
+                        margin-bottom: 16px;
+                    "></div>
+                    <div style="color:white; font-size:18px; font-weight:bold;">メンバー読込中...<br>しばらくお待ちください</div>
+                </div>
+                <style>
+                    @keyframes spin {
+                        0% { transform: rotate(0deg);}
+                        100% { transform: rotate(360deg);}
+                    }
+                </style>
+            `;
+            document.body.appendChild(loadingOverlay);
+
+            // メンバーがロードされるまで待機
+            while (!members || members.length === 0) {
+                await new Promise(resolve => setTimeout(resolve, 100));
+            }
+            loadingOverlay.remove();
+        }
+        // --- ここまで追加 ---
+
         const inputElem = node.querySelector('input');
         const current = inputElem.value.split(',').map(s => s.trim()).filter(Boolean);
         showMemberSelectDialogCommon(current, selected => {
