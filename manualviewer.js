@@ -1,31 +1,22 @@
 (async () => {
-  // fileKey を指定（例：APIなどで取得済み）
-  const fileKey = "202510020546310F64C750C36D40E6940B8DC8F8E8B82C081"; // ← ここを実際のfileKeyに置き換えてください
+  const url = "https://d37ksuq96l.execute-api.us-east-1.amazonaws.com/product/kintoneWebform/manualviewer";
 
-  // kintoneのファイルダウンロードAPI URLを生成
-  const downloadUrl = `https://ogusu.cybozu.com/k/v1/file.json?fileKey=${fileKey}`;
+  try {
+    const response = await fetch(url, {
+      method: 'GET',
+      headers: {
+        'Accept': 'application/json',
+        'X-Requested-With': 'XMLHttpRequest' // セッション認証が必要な場合に備えて
+      }
+    });
 
-  // 認証が必要な場合は、APIトークンやセッションが有効な状態で実行してください
-  const response = await fetch(downloadUrl, {
-    method: 'GET',
-    headers: {
-      'X-Requested-With': 'XMLHttpRequest'
+    if (!response.ok) {
+      throw new Error(`HTTPエラー: ${response.status}`);
     }
-  });
 
-  if (!response.ok) {
-    alert('ファイルの取得に失敗しました');
-    return;
+    const data = await response.json();
+    console.log("取得したデータ:", data);
+  } catch (error) {
+    console.error("リクエスト失敗:", error);
   }
-
-  // Blobとして取得
-  const blob = await response.blob();
-
-  // ダウンロードリンクを生成
-  const link = document.createElement('a');
-  link.href = URL.createObjectURL(blob);
-  link.download = 'downloaded_file.pdf'; // 任意のファイル名に変更可能
-  document.body.appendChild(link);
-  link.click();
-  document.body.removeChild(link);
 })();
