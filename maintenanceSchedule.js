@@ -890,8 +890,8 @@ async function showScheduleDialog() {
                     left:2px;
                     top:${2 + bar.layer * 24}px;
                     height:22px;
-                    background:${bar.color};
-                    color:white;
+                    background:${bar.color.bg};
+                    color:${bar.color.fg};
                     border-radius:3px;
                     font-size:11px;
                     display:flex;
