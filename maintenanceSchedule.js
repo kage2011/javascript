@@ -724,6 +724,146 @@ function createChartHeader(startDate, endDate, periodType) {
     return thead;
 }
 
+// メンバー行作成
+function createMemberRow(member, tasks, startDate, endDate, periodType) {
+    const row = document.createElement('tr');
+    row.style.cssText = 'border-bottom: 1px solid #eee;';
+
+    // メンバー名セル
+    const memberCell = document.createElement('td');
+    memberCell.textContent = member;
+    memberCell.style.cssText = `
+        background: #f8f9fa;
+        padding: 12px;
+        font-weight: bold;
+        text-align: center;
+        position: sticky;
+        left: 0;
+        z-index: 1;
+        border-right: 2px solid #ddd;
+    `;
+    row.appendChild(memberCell);
+
+    let totalCols;
+
+    switch (periodType) {
+        case 'day':
+            totalCols = 24;
+            break;
+        case 'week':
+            totalCols = 7;
+            break;
+        case 'month':
+            totalCols = new Date(endDate.getFullYear(), endDate.getMonth() + 1, 0).getDate();
+            break;
+    }
+
+    // 各タスクの表示位置を計算
+    const taskBars = [];
+    tasks.forEach(task => {
+        const taskBar = calculateTaskBar(task, startDate, endDate, periodType, totalCols);
+        if (taskBar) {
+            taskBars.push(taskBar);
+        }
+    });
+
+    // タスクの重複を解決するためのレイヤー配置を計算
+    const taskLayers = calculateTaskLayers(taskBars);
+    const maxLayers = Math.max(1, ...taskLayers.map(layer => layer.length));
+
+    // 各時間単位のセルを作成
+    for (let col = 0; col < totalCols; col++) {
+        let colStart, colEnd;
+
+        switch (periodType) {
+            case 'day':
+                colStart = new Date(startDate);
+                colStart.setHours(col, 0, 0, 0);
+                colEnd = new Date(colStart);
+                colEnd.setHours(col + 1, 0, 0, 0);
+                break;
+            case 'week':
+                colStart = new Date(startDate.getFullYear(), startDate.getMonth(), startDate.getDate() + col);
+                colStart.setHours(0, 0, 0, 0);
+                colEnd = new Date(colStart.getFullYear(), colStart.getMonth(), colStart.getDate() + 1);
+                colEnd.setHours(0, 0, 0, 0);
+                break;
+            case 'month':
+                colStart = new Date(startDate.getFullYear(), startDate.getMonth(), col + 1);
+                colStart.setHours(0, 0, 0, 0);
+                colEnd = new Date(colStart.getFullYear(), colStart.getMonth(), colStart.getDate() + 1);
+                colEnd.setHours(0, 0, 0, 0);
+                break;
+        }
+
+        const cell = document.createElement('td');
+        // セルの高さを最大レイヤー数に応じて調整
+        const cellHeight = Math.max(60, maxLayers * 25 + 10);
+        cell.style.cssText = `
+            padding: 0;
+            text-align: center;
+            vertical-align: top;
+            height: ${cellHeight}px;
+            position: relative;
+            border-right: 1px solid #eee;
+            background: #fafafa;
+        `;
+
+        // この列に表示すべきタスクバーを追加（レイヤー情報も含める）
+        taskLayers.forEach((layer, layerIndex) => {
+            layer.forEach(taskBar => {
+                if (taskBar.startCol <= col && col <= taskBar.endCol) {
+                    const taskElement = createTaskBarElement(taskBar, col, taskBar.startCol, taskBar.endCol, layerIndex, maxLayers);
+                    cell.appendChild(taskElement);
+                }
+            });
+        });
+
+        // 今日のマーカー
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        
+        if (periodType === 'day') {
+            const currentHour = new Date().getHours();
+            if (col === currentHour && 
+                today.toDateString() === startDate.toDateString()) {
+                const todayMarker = document.createElement('div');
+                todayMarker.style.cssText = `
+                    position: absolute;
+                    top: 0;
+                    bottom: 0;
+                    left: 50%;
+                    width: 2px;
+                    background: #e74c3c;
+                    z-index: 10;
+                `;
+                cell.appendChild(todayMarker);
+            }
+        } else {
+            const colDate = new Date(colStart);
+            colDate.setHours(0, 0, 0, 0);
+            
+            if (today.getTime() === colDate.getTime()) {
+                const todayMarker = document.createElement('div');
+                todayMarker.style.cssText = `
+                    position: absolute;
+                    top: 0;
+                    bottom: 0;
+                    left: 50%;
+                    width: 2px;
+                    background: #e74c3c;
+                    z-index: 10;
+                `;
+                cell.appendChild(todayMarker);
+            }
+        }
+
+        row.appendChild(cell);
+    }
+
+    return row;
+}
+
 // スケジュールダイアログ
 async function showScheduleDialog() {
 
@@ -1013,13 +1153,18 @@ async function showScheduleDialog() {
     // チャート描画
     function renderChart() {
         const periodType = periodSelect.value;
-        const member = memberSelect.value;
+        const selectedMember = memberSelect.value;
         const currentDate = window.currentViewDate || new Date();
 
         updateCurrentDateDisplay();
 
-        let filtered = rebuildedTasks;
-        if (member) filtered = filtered.filter(r => (r['氏名'] === member));
+        let filteredMembers;
+
+        if (selectedMember){
+            filteredMembers = rebuildedTasks.filter(r => (r['氏名'] === selectedMember));
+        }else{
+            filteredMembers = rebuildedTasks;
+        }
         // 日付範囲計算
         let startDate, endDate;
         
@@ -1046,7 +1191,7 @@ async function showScheduleDialog() {
         }
 
         // 期間内のタスクのみフィルタリング
-        const periodTasks = filtered.filter(task => 
+        const periodTasks = filteredMembers.filter(task => 
             task.開始日時 <= endDate && task.終了日時 >= startDate
         );
 
@@ -1069,90 +1214,99 @@ async function showScheduleDialog() {
         const header = createChartHeader(startDate, endDate, periodType);
         table.appendChild(header);
 
-        (member ? [member] : memberArray).forEach(m => {
-            const tr = document.createElement('tr');
-            const td = document.createElement('td');
-            td.textContent = m;
-            td.style.cssText = 'background:#f8f9fa; padding:12px; font-weight:bold;';
-            tr.appendChild(td);
-
-            const cells = [];
-            for (let c = 0; c < colCount; c++) {
-                const cell = document.createElement('td');
-                cell.style.cssText = 'padding:0; min-width:30px; height:30px; position:relative;';
-                cells.push(cell);
-                tr.appendChild(cell);
+        // 行作成
+        filteredMembers.forEach(member => {
+            const memberTasks = periodTasks.filter(task => task['氏名'] === member);
+            if (memberTasks.length > 0) {
+                const row = createMemberRow(member, memberTasks, startDate, endDate, periodType);
+                table.appendChild(row);
             }
-
-            // タスクバー
-            const bars = filtered.filter(r => r['氏名'] === m).map(r => {
-                let s = r['開始日時'];
-                let e = r['終了日時'];
-                let startIdx = 0, endIdx = 0;
-                if (periodType === 'day') {
-                    startIdx = Math.max(0, s.getHours());
-                    endIdx = Math.min(23, e.getHours());
-                } else if (periodType === 'week') {
-                    const base = new Date(start);
-                    base.setHours(0,0,0,0);
-                    startIdx = Math.max(0, Math.floor((s - base) / (1000*60*60*24)));
-                    endIdx = Math.min(6, Math.floor((e - base) / (1000*60*60*24)));
-                } else {
-                    startIdx = Math.max(0, s.getDate() - 1);
-                    endIdx = Math.min(colCount - 1, e.getDate() - 1);
-                }
-                return {
-                    record: r,
-                    startIdx,
-                    endIdx,
-                    color: getStatusColor(r['タスク']),
-                };
-            });
-
-            // レイヤー割り当て
-            const layers = [];
-            bars.forEach(bar => {
-                let layer = 0;
-                while (true) {
-                    if (!layers[layer]) layers[layer] = [];
-                    const overlap = layers[layer].some(b =>
-                        !(bar.endIdx < b.startIdx || bar.startIdx > b.endIdx)
-                    );
-                    if (!overlap) {
-                        layers[layer].push(bar);
-                        bar.layer = layer;
-                        break;
-                    }
-                    layer++;
-                }
-            });
-
-            bars.forEach(bar => {
-                const barDiv = document.createElement('div');
-                barDiv.textContent = bar.record['タスク'];
-                barDiv.style.cssText = `
-                    position:absolute;
-                    left:2px;
-                    top:${2 + bar.layer * 24}px;
-                    height:22px;
-                    background:${bar.color.bg};
-                    color:${bar.color.fg};
-                    border-radius:3px;
-                    font-size:11px;
-                    display:flex;
-                    align-items:center;
-                    justify-content:center;
-                    cursor:pointer;
-                    z-index:2;
-                    box-shadow:0 1px 3px rgba(0,0,0,0.15);
-                `;
-                barDiv.style.width = `calc(${bar.endIdx - bar.startIdx + 1}00% - 4px)`;
-                barDiv.onclick = () => showDetailDialog(bar.record);
-                cells[bar.startIdx].appendChild(barDiv);
-            });
-
-            table.appendChild(tr);
         });
+
+        // (selectedMember ? [selectedMember] : memberArray).forEach(m => {
+        //     const tr = document.createElement('tr');
+        //     const td = document.createElement('td');
+        //     td.textContent = m;
+        //     td.style.cssText = 'background:#f8f9fa; padding:12px; font-weight:bold;';
+        //     tr.appendChild(td);
+
+        //     const cells = [];
+        //     for (let c = 0; c < colCount; c++) {
+        //         const cell = document.createElement('td');
+        //         cell.style.cssText = 'padding:0; min-width:30px; height:30px; position:relative;';
+        //         cells.push(cell);
+        //         tr.appendChild(cell);
+        //     }
+
+        //     // タスクバー
+        //     const bars = filteredMembers.filter(r => r['氏名'] === m).map(r => {
+        //         let s = r['開始日時'];
+        //         let e = r['終了日時'];
+        //         let startIdx = 0, endIdx = 0;
+        //         if (periodType === 'day') {
+        //             startIdx = Math.max(0, s.getHours());
+        //             endIdx = Math.min(23, e.getHours());
+        //         } else if (periodType === 'week') {
+        //             const base = new Date(start);
+        //             base.setHours(0,0,0,0);
+        //             startIdx = Math.max(0, Math.floor((s - base) / (1000*60*60*24)));
+        //             endIdx = Math.min(6, Math.floor((e - base) / (1000*60*60*24)));
+        //         } else {
+        //             startIdx = Math.max(0, s.getDate() - 1);
+        //             endIdx = Math.min(colCount - 1, e.getDate() - 1);
+        //         }
+        //         return {
+        //             record: r,
+        //             startIdx,
+        //             endIdx,
+        //             color: getStatusColor(r['タスク']),
+        //         };
+        //     });
+
+        //     // レイヤー割り当て
+        //     const layers = [];
+        //     bars.forEach(bar => {
+        //         let layer = 0;
+        //         while (true) {
+        //             if (!layers[layer]) layers[layer] = [];
+        //             const overlap = layers[layer].some(b =>
+        //                 !(bar.endIdx < b.startIdx || bar.startIdx > b.endIdx)
+        //             );
+        //             if (!overlap) {
+        //                 layers[layer].push(bar);
+        //                 bar.layer = layer;
+        //                 break;
+        //             }
+        //             layer++;
+        //         }
+        //     });
+
+        //     bars.forEach(bar => {
+        //         const barDiv = document.createElement('div');
+        //         barDiv.textContent = bar.record['タスク'];
+        //         barDiv.style.cssText = `
+        //             position:absolute;
+        //             left:2px;
+        //             top:${2 + bar.layer * 24}px;
+        //             height:22px;
+        //             background:${bar.color.bg};
+        //             color:${bar.color.fg};
+        //             border-radius:3px;
+        //             font-size:11px;
+        //             display:flex;
+        //             align-items:center;
+        //             justify-content:center;
+        //             cursor:pointer;
+        //             z-index:2;
+        //             box-shadow:0 1px 3px rgba(0,0,0,0.15);
+        //         `;
+        //         barDiv.style.width = `calc(${bar.endIdx - bar.startIdx + 1}00% - 4px)`;
+        //         barDiv.onclick = () => showDetailDialog(bar.record);
+        //         cells[bar.startIdx].appendChild(barDiv);
+        //     });
+
+        //     table.appendChild(tr);
+        // });
 
         chartArea.appendChild(table);
     }
