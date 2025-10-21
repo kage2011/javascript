@@ -3,22 +3,46 @@ let members = [];
 let tasks = [];
 let schedule_readed = false;
 
-const colors = {
-    '計画':             '#2ecc71',   // 明るいグリーン：前向き・進行中の印象
-    'ロス取り':         '#3498db',   // ブルー：改善・分析のイメージ
-    '改造':             '#95a5a6',   // グレー：中立・技術的変更
-    'OCS':              '#e67e22',   // オレンジ：注意・特別対応
-    '保全カレンダー':   '#e74c3c',   // レッド：重要・保守作業
-    '休み':             '#f1c40f',   // イエロー：明るく分かりやすい
-    '出張':             '#8e44ad',   // パープル：外部対応・非日常
-    '研修':             '#1abc9c',   // エメラルド：学び・成長
-    '打ち合わせ':       '#7f8c8d',   // グレー：中立・調整
-    '新規設備':         '#16a085',   // 深いグリーン：新規・技術的
-    'レイアウト':       '#2980b9',   // 濃いブルー：設計・構造
-    'オーバーホール':    '#c0392b',   // 濃いレッド：大規模・重要
-    'DX関連業務':       '#9b59b6',   // ラベンダー：先進・デジタル
-    'その他':           '#bdc3c7',   // ライトグレー：分類外
-};
+// ステータス色取得（背景色と文字色を返す）
+function getContrastColor(hex) {
+    if (!hex) return '#ffffff';
+    // # を除去
+    const c = hex.replace('#','');
+    const r = parseInt(c.substring(0,2),16);
+    const g = parseInt(c.substring(2,4),16);
+    const b = parseInt(c.substring(4,6),16);
+    // 輝度を計算（WCAGに近い簡易法）
+    const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
+    return luminance > 0.6 ? '#000000' : '#ffffff';
+}
+
+function getStatusColor(status) {
+    const colors = {
+        '計画':             '#2ecc71',
+        'ロス取り':         '#FF4C4C',
+        '改造':             '#FF9900',
+        'OCS':              '#9933CC',
+        '保全カレンダー':   '#33CC33',
+        '休み':             '#CCCCCC',
+        '出張':             '#996633',
+        '研修':             '#FFFF66',
+        '打ち合わせ':       '#3399FF',
+        '新規設備':         '#FF6600',
+        'レイアウト':       '#CC99FF',
+        'オーバーホール':    '#990000',
+        'DX関連業務':       '#00CCCC',
+        'その他':           '#000000',
+        '自社製品組み立て':  '#66CC66',
+        '自社製品設計':      '#FFCC00',
+        '部品内製':          '#663300',
+        '見積り':           '#00CCFF',
+        '書類作成':          '#666666',
+        '新商品開発':        '#FF3399',
+    };
+    const bg = colors[status] || '#95a5a6';
+    const fg = getContrastColor(bg);
+    return { bg, fg };
+}
 
 // メンバー取得
 function member_load() {
@@ -87,7 +111,129 @@ function showMemberSelectDialogCommon(selected, onOk) {
         if (!departmentMap[dept]) departmentMap[dept] = [];
         departmentMap[dept].push(member);
     });
-    const departments = Object.keys(departmentMap).sort();
+
+    // 所属に基づいてタブを判定する関数
+    function determineTabsForMember(affiliation) {
+        const tabs = [];
+        
+        if (!affiliation) return tabs;
+        
+        const firstChar = affiliation.charAt(0);
+        
+        // 品質保証課
+        if (affiliation.includes('品質保証')) {
+            tabs.push('品質保証課');
+        }
+        
+        // １課
+        if (affiliation.includes('坪井') || firstChar === '１' || affiliation.includes('製造')) {
+            tabs.push('１課');
+        }
+        
+        // ２課
+        if (firstChar === '２' || affiliation.includes('製造')) {
+            tabs.push('２課');
+        }
+        
+        // ３課
+        if (firstChar === '３' || affiliation.includes('製造')) {
+            tabs.push('３課');
+        }
+        
+        // ４課
+        if (firstChar === '４' || affiliation.includes('製造')) {
+            tabs.push('４課');
+        }
+        
+        // ５課
+        if (firstChar === '５' || affiliation.includes('出荷検査') || affiliation.includes('製造')) {
+            tabs.push('５課');
+        }
+        
+        // ６課
+        if (affiliation.includes('馬郡') || firstChar === '６' || affiliation.includes('製造')) {
+            tabs.push('６課');
+        }
+        
+        // 営業課
+        if (affiliation.includes('営業') || affiliation.includes('業務')) {
+            tabs.push('営業課');
+        }
+        
+        // 生産管理
+        if (affiliation.includes('生産管理') || affiliation.includes('業務')) {
+            tabs.push('生産管理課');
+        }
+        
+        // 技術
+        if (affiliation.includes('技術')) {
+            tabs.push('技術課');
+        }
+        
+        // 工機
+        if (affiliation.includes('技術部') || affiliation.includes('工機')) {
+            tabs.push('工機課');
+        }
+        
+        // 治工具
+        if (affiliation.includes('技術部') || affiliation.includes('治工具')) {
+            tabs.push('治工具課');
+        }
+        
+        // 開発
+        if (affiliation.includes('技術部') || affiliation.includes('開発')) {
+            tabs.push('開発課');
+        }
+        
+        // 改善推進課
+        if (affiliation.includes('改善推進') || affiliation.includes('製造部')) {
+            tabs.push('改善推進課');
+        }
+        
+        // 熱処理課
+        if (affiliation.includes('熱処理')) {
+            tabs.push('熱処理課');
+        }
+        
+        // 経理課
+        if (affiliation.includes('経理課') || affiliation.includes('総務部')) {
+            tabs.push('経理課');
+        }
+        
+        // 総務課
+        if (affiliation.includes('総務')) {
+            tabs.push('総務課');
+        }
+        
+        if(!tabs.length){
+            tabs.push(affiliation);
+        }
+
+        return tabs;
+    }
+
+    // 各タブに所属するメンバーを振り分け
+    const tabMemberMap = {};
+
+    // 全メンバーを取得して振り分け
+    Object.values(departmentMap).forEach(deptMembers => {
+        deptMembers.forEach(member => {
+            const affiliation = member['所属'] ? member['所属'].value[0].code : '';
+            const name = member['氏名'].value;
+            console.log(member);
+            const assignedTabs = determineTabsForMember(affiliation);
+            assignedTabs.forEach(tab => {
+                if (!tabMemberMap[tab]){
+                    tabMemberMap[tab] = [];
+                }
+                if (!tabMemberMap[tab].some(m => m['氏名'].value === name)) {
+                    tabMemberMap[tab].push(member);
+                }
+            });
+        });
+    });
+
+    // const departments = Object.keys(departmentMap).sort();
 
     // タブコンテナ（横長・複数段）
     const tabContainer = document.createElement('div');
@@ -102,33 +248,67 @@ function showMemberSelectDialogCommon(selected, onOk) {
     contentContainer.style.cssText = 'min-height: 300px; max-height: 350px; overflow-y: auto; margin-bottom: 20px;';
 
     const tabContents = {};
+
+    // 並び順を指定
+    const tabOrder = [
+        '総務課', '経理課', '営業課', '生産管理課', '品質保証課',
+        '技術課', '治工具課', '開発課', '工機課', '改善推進課',
+        '１課', '２課', '３課', '４課', '５課', '６課', '熱処理課'
+    ];
+
+    // tabNamesを並び順でソートし、未指定タブは後ろに
+    let tabNames = Object.keys(tabMemberMap);
+    tabNames.sort((a, b) => {
+        const idxA = tabOrder.indexOf(a);
+        const idxB = tabOrder.indexOf(b);
+        if (idxA === -1 && idxB === -1) return a.localeCompare(b, 'ja');
+        if (idxA === -1) return 1;
+        if (idxB === -1) return -1;
+        return idxA - idxB;
+    });
+
+    // 初期選択タブのインデックスを取得（ログインユーザーの所属部署に基づく）
+    let initialTabIndex = 0;
+    // if (userDepartment) {
+    //     const userTabs = determineTabsForMember(userDepartment);
+    //     if (userTabs.length > 0) {
+    //         const idx = tabNames.indexOf(userTabs[0]);
+    //         if (idx !== -1) initialTabIndex = idx;
+    //     }
+    // }
     
-    departments.forEach((dept, index) => {
+    tabNames.forEach((tabName, index) => {
+        // メンバーがいないタブはスキップ
+        if (tabMemberMap[tabName].length === 0) return;
+
         // タブボタン
         const tab = document.createElement('button');
-        tab.textContent = dept;
+        tab.textContent = tabName;
         tab.type = 'button';
         tab.style.cssText = `
             flex: 1 1 10%; /* 横長・3段想定 */
             min-width: 60px;
             max-width: 11%;
             margin-bottom: 2px;
-            padding: 12px 0;
-            background-color: ${index === 0 ? '#3498db' : '#ecf0f1'};
-            color: ${index === 0 ? 'white' : '#2c3e50'};
+            padding: 6px 0;
+            background-color: ${index === initialTabIndex ? '#3498db' : '#ecf0f1'};
+            color: ${index === initialTabIndex ? 'white' : '#2c3e50'};
             border: none;
             border-radius: 4px 4px 0 0;
             cursor: pointer;
-            font-size: 15px;
+            font-size: 10px;
             font-weight: bold;
             transition: all 0.2s;
         `;
-        
+
         // タブコンテンツ
         const content = document.createElement('div');
-        content.style.cssText = `display: ${index === 0 ? 'block' : 'none'};`;
-        
-        departmentMap[dept].forEach(member => {
+        content.style.cssText = `display: ${index === initialTabIndex ? 'block' : 'none'};`;
+
+        // ボタンを格納するための配列
+        const memberButtons = {};
+
+        tabMemberMap[tabName].forEach(member => {
             const name = member['氏名'].value;
             const btn = document.createElement('button');
             btn.textContent = name;
@@ -141,26 +321,44 @@ function showMemberSelectDialogCommon(selected, onOk) {
                 border:2px solid ${isSelected ? '#2980b9' : '#bdc3c7'};
                 border-radius:4px; cursor:pointer; font-size:14px; transition:all 0.2s;
             `;
+            // ボタン参照を保存
+            if (!memberButtons[name]) memberButtons[name] = [];
+            memberButtons[name].push(btn);
+
             btn.onclick = () => {
                 const idx = selectedMembers.indexOf(name);
                 if (idx === -1) {
+                    // すべての同名ボタンを選択状態に
                     selectedMembers.push(name);
-                    btn.style.backgroundColor = '#3498db';
-                    btn.style.color = 'white';
-                    btn.style.borderColor = '#2980b9';
+                    Object.values(tabContents).forEach(tabContent => {
+                        Array.from(tabContent.querySelectorAll('button')).forEach(otherBtn => {
+                            if (otherBtn.textContent === name) {
+                                otherBtn.style.backgroundColor = '#3498db';
+                                otherBtn.style.color = 'white';
+                                otherBtn.style.borderColor = '#2980b9';
+                            }
+                        });
+                    });
                 } else {
+                    // すべての同名ボタンを非選択状態に
                     selectedMembers.splice(idx, 1);
-                    btn.style.backgroundColor = '#ecf0f1';
-                    btn.style.color = '#2c3e50';
-                    btn.style.borderColor = '#bdc3c7';
+                    Object.values(tabContents).forEach(tabContent => {
+                        Array.from(tabContent.querySelectorAll('button')).forEach(otherBtn => {
+                            if (otherBtn.textContent === name) {
+                                otherBtn.style.backgroundColor = '#ecf0f1';
+                                otherBtn.style.color = '#2c3e50';
+                                otherBtn.style.borderColor = '#bdc3c7';
+                            }
+                        });
+                    });
                 }
             };
             content.appendChild(btn);
         });
-        
-        tabContents[dept] = content;
+
+        tabContents[tabName] = content;
         contentContainer.appendChild(content);
-        
+
         // タブクリックイベント
         tab.onclick = () => {
             // すべてのタブを非アクティブに
@@ -744,7 +942,7 @@ async function showScheduleDialog() {
                     record: r,
                     startIdx,
                     endIdx,
-                    color: colors[r['タスク']] || '#7f8c8d'
+                    color: getStatusColor(task.taskName)
                 };
             });
 
