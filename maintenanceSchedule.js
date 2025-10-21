@@ -625,6 +625,28 @@ function addScheduleButton() {
 
 // スケジュールダイアログ
 async function showScheduleDialog() {
+
+    // 日付ナビゲーション処理
+    function navigateDate(direction) {
+        const periodType = document.getElementById('period-select').value;
+        const currentDate = window.currentViewDate || new Date();
+
+        switch (periodType) {
+            case 'day':
+                currentDate.setDate(currentDate.getDate() + direction);
+                break;
+            case 'week':
+                currentDate.setDate(currentDate.getDate() + (direction * 7));
+                break;
+            case 'month':
+                currentDate.setMonth(currentDate.getMonth() + direction);
+                break;
+        }
+
+        window.currentViewDate = currentDate;
+        renderChart();
+    }
+
     const exist = document.getElementById('schedule-dialog-overlay');
     if (exist) exist.remove();
 
@@ -717,6 +739,11 @@ async function showScheduleDialog() {
     controlPanel.style.cssText = 'display:flex; gap:15px; align-items:center; flex-wrap:wrap; margin-bottom:16px;';
 
     // 期間選択
+    const periodLabel = document.createElement('label');
+    periodLabel.textContent = '表示期間:';
+    periodLabel.style.fontWeight = 'bold';
+
+    // 期間選択
     const periodSelect = document.createElement('select');
     periodSelect.innerHTML = `
         <option value="day">今日</option>
@@ -724,12 +751,89 @@ async function showScheduleDialog() {
         <option value="month">今月</option>
     `;
     periodSelect.style.cssText = 'padding:5px 10px; border-radius:4px; border:1px solid #ccc;';
-    controlPanel.appendChild(periodSelect);
+
+    // 日付ナビゲーション
+    const navContainer = document.createElement('div');
+    navContainer.style.cssText = `
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        background: white;
+        padding: 5px;
+        border-radius: 4px;
+        border: 1px solid #ddd;
+    `;
+
+    const prevBtn = document.createElement('button');
+    prevBtn.textContent = '◀';
+    prevBtn.id = 'prev-btn';
+    prevBtn.style.cssText = `
+        padding: 5px 10px;
+        background: #ecf0f1;
+        border: 1px solid #bdc3c7;
+        border-radius: 3px;
+        cursor: pointer;
+        font-weight: bold;
+    `;
+    prevBtn.onmouseover = () => prevBtn.style.background = '#d5dbdb';
+    prevBtn.onmouseout = () => prevBtn.style.background = '#ecf0f1';
+    prevBtn.onclick = () => navigateDate(-1);
+
+    const currentDateDisplay = document.createElement('span');
+    currentDateDisplay.id = 'current-date-display';
+    currentDateDisplay.style.cssText = `
+        font-weight: bold;
+        min-width: 120px;
+        text-align: center;
+        color: #2c3e50;
+    `;
+
+    const nextBtn = document.createElement('button');
+    nextBtn.textContent = '▶';
+    nextBtn.id = 'next-btn';
+    nextBtn.style.cssText = `
+        padding: 5px 10px;
+        background: #ecf0f1;
+        border: 1px solid #bdc3c7;
+        border-radius: 3px;
+        cursor: pointer;
+        font-weight: bold;
+    `;
+    nextBtn.onmouseover = () => nextBtn.style.background = '#d5dbdb';
+    nextBtn.onmouseout = () => nextBtn.style.background = '#ecf0f1';
+    nextBtn.onclick = () => navigateDate(1);
+
+    const todayBtn = document.createElement('button');
+    todayBtn.textContent = '今日';
+    todayBtn.style.cssText = `
+        padding: 5px 10px;
+        background: #e8f5e8;
+        border: 1px solid #a8d8a8;
+        border-radius: 3px;
+        cursor: pointer;
+        font-weight: bold;
+        color: #27ae60;
+    `;
+    todayBtn.onmouseover = () => todayBtn.style.background = '#d4edda';
+    todayBtn.onmouseout = () => todayBtn.style.background = '#e8f5e8';
+    todayBtn.onclick = () => {
+        window.currentViewDate = new Date();
+        renderChart();
+    };
+
+    navContainer.appendChild(prevBtn);
+    navContainer.appendChild(currentDateDisplay);
+    navContainer.appendChild(nextBtn);
+    navContainer.appendChild(todayBtn);
 
     // メンバー選択
     const memberSelect = document.createElement('select');
     memberSelect.innerHTML = '<option value="">全員</option>' + memberArray.map(m => `<option value="${m}">${m}</option>`).join('');
     memberSelect.style.cssText = 'padding:5px 10px; border-radius:4px; border:1px solid #ccc;';
+
+    controlPanel.appendChild(periodLabel);
+    controlPanel.appendChild(periodSelect);
+    controlPanel.appendChild(navContainer);
     controlPanel.appendChild(memberSelect);
 
     dialog.appendChild(controlPanel);
