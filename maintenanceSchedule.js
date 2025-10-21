@@ -955,6 +955,40 @@ async function showScheduleDialog() {
     overlay.appendChild(dialog);
     document.body.appendChild(overlay);
 
+    // 現在の表示日付を更新
+    function updateCurrentDateDisplay() {
+        const display = document.getElementById('current-date-display');
+        const periodType = document.getElementById('period-select').value;
+        const currentDate = window.currentViewDate || new Date();
+
+        if (!display) return;
+
+        let displayText = '';
+        switch (periodType) {
+            case 'day':
+                displayText = currentDate.toLocaleDateString('ja-JP', {
+                    year: 'numeric',
+                    month: 'numeric',
+                    day: 'numeric',
+                    weekday: 'short'
+                });
+                break;
+            case 'week':
+                const weekStart = getWeekStart(currentDate);
+                const weekEnd = new Date(weekStart);
+                weekEnd.setDate(weekStart.getDate() + 6);
+                displayText = `${weekStart.getMonth() + 1}/${weekStart.getDate()} - ${weekEnd.getMonth() + 1}/${weekEnd.getDate()}`;
+                break;
+            case 'month':
+                displayText = currentDate.toLocaleDateString('ja-JP', {
+                    year: 'numeric',
+                    month: 'long'
+                });
+                break;
+        }
+        display.textContent = displayText;
+    }
+
     // 週の開始日を取得（月曜日始まり）
     function getWeekStart(date) {
         const d = new Date(date); // 新しいDateオブジェクトを作成
@@ -970,6 +1004,8 @@ async function showScheduleDialog() {
         const periodType = periodSelect.value;
         const member = memberSelect.value;
         const currentDate = window.currentViewDate || new Date();
+
+        updateCurrentDateDisplay();
 
         let filtered = rebuildedTasks;
         if (member) filtered = filtered.filter(r => (r['氏名'] === member));
