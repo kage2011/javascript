@@ -1332,12 +1332,12 @@ async function showScheduleDialog() {
 
         updateCurrentDateDisplay();
 
-        let filteredMembers;
+        let filteredTasks;
 
         if (selectedMember){
-            filteredMembers = rebuildedTasks.filter(r => (r['氏名'] === selectedMember));
+            filteredTasks = rebuildedTasks.filter(r => (r['氏名'] === selectedMember));
         }else{
-            filteredMembers = rebuildedTasks;
+            filteredTasks = rebuildedTasks;
         }
         // 日付範囲計算
         let startDate, endDate;
@@ -1365,7 +1365,7 @@ async function showScheduleDialog() {
         }
 
         // 期間内のタスクのみフィルタリング
-        const periodTasks = filteredMembers.filter(task => 
+        const periodTasks = filteredTasks.filter(task => 
             task.開始日時 <= endDate && task.終了日時 >= startDate
         );
 
@@ -1389,7 +1389,7 @@ async function showScheduleDialog() {
         table.appendChild(header);
 
         // 行作成
-        filteredMembers.forEach(member => {
+        memberArray.forEach(member => {
             const memberTasks = periodTasks.filter(task => task['氏名'] === member['氏名']);
             if (memberTasks.length > 0) {
                 const row = createMemberRow(memberTasks, startDate, endDate, periodType);
