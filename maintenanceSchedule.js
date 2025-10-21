@@ -724,6 +724,93 @@ function createChartHeader(startDate, endDate, periodType) {
     return thead;
 }
 
+// タスクバー要素を作成する関数
+function createTaskBarElement(taskBar, currentCol, startCol, endCol, layerIndex, maxLayers) {
+    const taskElement = document.createElement('div');
+    
+    // 連続したタスクバーのスタイルを計算
+    let leftOffset = 0;
+    let rightOffset = 0;
+    let borderRadius = '3px';
+    
+    if (currentCol === startCol && currentCol === endCol) {
+        // 単一セル
+        leftOffset = 2;
+        rightOffset = 2;
+        borderRadius = '3px';
+    } else if (currentCol === startCol) {
+        // 開始セル
+        leftOffset = 2;
+        rightOffset = 0;
+        borderRadius = '3px 0 0 3px';
+    } else if (currentCol === endCol) {
+        // 終了セル
+        leftOffset = 0;
+        rightOffset = 2;
+        borderRadius = '0 3px 3px 0';
+    } else {
+        // 中間セル
+        leftOffset = 0;
+        rightOffset = 0;
+        borderRadius = '0';
+    }
+    
+    // レイヤーに基づいて縦位置を計算
+    const taskHeight = 18;
+    const taskMargin = 2;
+    const topOffset = 5 + layerIndex * (taskHeight + taskMargin);
+    
+    const bgColor = (taskBar.color && taskBar.color.bg) ? taskBar.color.bg : '#95a5a6';
+    const fgColor = (taskBar.color && taskBar.color.fg) ? taskBar.color.fg : '#ffffff';
+    
+    taskElement.style.cssText = `
+        position: absolute;
+        top: ${topOffset}px;
+        left: ${leftOffset}px;
+        right: ${rightOffset}px;
+        height: ${taskHeight}px;
+        background: ${bgColor};
+        color: ${fgColor};
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 10px;
+        font-weight: bold;
+        border-radius: ${borderRadius};
+        cursor: pointer;
+        z-index: 5;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+    `;
+
+    // テキストは開始セルにのみ表示
+    if (currentCol === startCol) {
+        taskElement.textContent = taskBar.task.taskName;
+        taskElement.title = `${taskBar.task.taskName}\n期間: ${taskBar.task.startDate.toLocaleDateString()} - ${taskBar.task.endDate.toLocaleDateString()}`;
+    }
+    
+    // クリックイベント
+    taskElement.onclick = (e) => {
+        e.stopPropagation();
+        showTaskDetailDialog(taskBar.task);
+    };
+
+    // ホバー効果
+    taskElement.onmouseover = () => {
+        taskElement.style.opacity = '0.8';
+        taskElement.style.transform = 'scale(1.02)';
+    };
+    
+    taskElement.onmouseout = () => {
+        taskElement.style.opacity = '1';
+        taskElement.style.transform = 'scale(1)';
+    };
+
+    return taskElement;
+}
+
 // タスクバーの表示位置を計算する関数
 function calculateTaskBar(task, startDate, endDate, periodType, totalCols) {
     let taskStartCol = -1;
