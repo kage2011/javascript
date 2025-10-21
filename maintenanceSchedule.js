@@ -955,6 +955,16 @@ async function showScheduleDialog() {
     overlay.appendChild(dialog);
     document.body.appendChild(overlay);
 
+    // 週の開始日を取得（月曜日始まり）
+    function getWeekStart(date) {
+        const d = new Date(date); // 新しいDateオブジェクトを作成
+        const day = d.getDay();
+        const diff = d.getDate() - day + (day === 0 ? -6 : 1);
+        const weekStart = new Date(d.getFullYear(), d.getMonth(), d.getDate() + (diff - d.getDate()));
+        weekStart.setHours(0, 0, 0, 0); // 時刻をリセット
+        return weekStart;
+    }
+
     // チャート描画
     function renderChart() {
         const periodType = periodSelect.value;
