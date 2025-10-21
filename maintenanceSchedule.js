@@ -724,6 +724,40 @@ function createChartHeader(startDate, endDate, periodType) {
     return thead;
 }
 
+// タスクの重複を解決するためのレイヤー配置を計算する新しい関数
+function calculateTaskLayers(taskBars) {
+    const layers = [];
+    
+    // タスクを開始時間順にソート
+    const sortedTasks = [...taskBars].sort((a, b) => a.startCol - b.startCol);
+    
+    sortedTasks.forEach(taskBar => {
+        let layerIndex = 0;
+        let placed = false;
+        
+        // 既存のレイヤーで重複しない場所を探す
+        while (!placed) {
+            if (!layers[layerIndex]) {
+                layers[layerIndex] = [];
+            }
+            
+            // このレイヤーで重複するタスクがあるかチェック
+            const hasOverlap = layers[layerIndex].some(existingTask => 
+                !(taskBar.endCol < existingTask.startCol || taskBar.startCol > existingTask.endCol)
+            );
+            
+            if (!hasOverlap) {
+                layers[layerIndex].push(taskBar);
+                placed = true;
+            } else {
+                layerIndex++;
+            }
+        }
+    });
+    
+    return layers;
+}
+
 // メンバー行作成
 function createMemberRow(tasks, startDate, endDate, periodType) {
     const row = document.createElement('tr');
