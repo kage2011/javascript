@@ -755,7 +755,7 @@ function calculateTaskBar(task, startDate, endDate, periodType, totalCols) {
         }
 
         // タスクがこの時間帯に含まれるかチェック
-        const isTaskInPeriod = task.startDate < colEnd && task.endDate >= colStart;
+        const isTaskInPeriod = task['開始日時'] < colEnd && task['終了日時'] >= colStart;
         
         if (isTaskInPeriod) {
             if (taskStartCol === -1) {
@@ -773,7 +773,7 @@ function calculateTaskBar(task, startDate, endDate, periodType, totalCols) {
         task: task,
         startCol: taskStartCol,
         endCol: taskEndCol,
-        color: getStatusColor(task.taskName)
+        color: getStatusColor(task['タスク'])
     };
 }
 
