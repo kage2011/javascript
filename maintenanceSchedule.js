@@ -507,10 +507,18 @@ function showWriterSelectDialog(inputElem, onOk) {
 }
 
 // メンバー選択ボタン追加
-function addbutton(node) {
+function addMemberSelectButton(node) {
+    // 既存のボタンを削除（重複防止）
+    const existingButton = document.getElementById('member-select-button');
+    if (existingButton) {
+        existingButton.remove();
+    }
+
+    // ボタンを作成
     const button = document.createElement('button');
+    button.id = 'member-select-button';
     button.textContent = 'メンバー選択';
-    button.className = 'kb-button kb-button-primary';
+    button.type = 'button';
     button.style.cssText = `
         padding: 10px 24px;
         background-color: #3498db;
@@ -523,6 +531,7 @@ function addbutton(node) {
         transition: background 0.2s;
         margin-bottom: 8px;
     `;
+
     button.onmouseenter = () => button.style.backgroundColor = '#217dbb';
     button.onmouseleave = () => button.style.backgroundColor = '#3498db';
     button.onclick = async () => {
@@ -788,6 +797,7 @@ async function showScheduleDialog() {
         const taskMembers = task['参加メンバー']?.split(',').map(m => m.trim()) || [];
         taskMembers.forEach(m => {
             if (!m) return;
+
             rebuildedTasks.push({
                 '氏名': m,
                 '開始日時': task['開始日時'] ? new Date(task['開始日時']) : null,
@@ -1037,7 +1047,7 @@ async function showScheduleDialog() {
 
         // 期間内のタスクのみフィルタリング
         const periodTasks = filtered.filter(task => 
-            task.startDate <= endDate && task.endDate >= startDate
+            task.開始日時 <= endDate && task.終了日時 >= startDate
         );
 
         if (periodTasks.length === 0) {
@@ -1525,7 +1535,7 @@ window.addEventListener('load', function () {
                 if (elem.nodeType === Node.ELEMENT_NODE && elem.querySelector('[field-id="参加メンバー"]')) {
                     var node = elem.querySelector('[field-id="参加メンバー"]');
                     node.querySelector('input').disabled = true;
-                    addbutton(node);
+                    addMemberSelectButton(node);
                     addScheduleButton();
                 }
             });
