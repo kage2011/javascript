@@ -957,7 +957,7 @@ async function showScheduleDialog() {
 
     // チャート描画
     function renderChart() {
-        const period = periodSelect.value;
+        const periodType = periodSelect.value;
         const member = memberSelect.value;
         const currentDate = window.currentViewDate || new Date();
 
@@ -1032,10 +1032,10 @@ async function showScheduleDialog() {
                 let s = r['開始日時'];
                 let e = r['終了日時'];
                 let startIdx = 0, endIdx = 0;
-                if (period === 'day') {
+                if (periodType === 'day') {
                     startIdx = Math.max(0, s.getHours());
                     endIdx = Math.min(23, e.getHours());
-                } else if (period === 'week') {
+                } else if (periodType === 'week') {
                     const base = new Date(start);
                     base.setHours(0,0,0,0);
                     startIdx = Math.max(0, Math.floor((s - base) / (1000*60*60*24)));
