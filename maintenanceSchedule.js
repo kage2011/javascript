@@ -623,6 +623,98 @@ function addScheduleButton() {
     wrapper.appendChild(btn);
 }
 
+// チャートヘッダー作成
+function createChartHeader(startDate, endDate, periodType) {
+    const thead = document.createElement('thead');
+    const row = document.createElement('tr');
+    
+    // メンバー列
+    const memberHeader = document.createElement('th');
+    memberHeader.textContent = 'メンバー';
+    memberHeader.style.cssText = `
+        background: #34495e;
+        color: white;
+        padding: 12px;
+        text-align: center;
+        min-width: 100px;
+        position: sticky;
+        left: 0;
+        z-index: 2;
+    `;
+    row.appendChild(memberHeader);
+
+    // 日付列
+    let colCount;
+    let colWidth;
+    
+    switch (periodType) {
+        case 'day':
+            // 時間単位（24時間）
+            colCount = 24;
+            colWidth = '30px';
+            for (let hour = 0; hour < 24; hour++) {
+                const hourHeader = document.createElement('th');
+                hourHeader.textContent = `${hour}:00`;
+                hourHeader.style.cssText = `
+                    background: #3498db;
+                    color: white;
+                    padding: 8px 4px;
+                    text-align: center;
+                    min-width: ${colWidth};
+                    font-size: 11px;
+                    writing-mode: vertical-rl;
+                `;
+                row.appendChild(hourHeader);
+            }
+            break;
+            
+        case 'week':
+            // 日単位（7日）
+            colCount = 7;
+            colWidth = '80px';
+            const currentDate = new Date(startDate);
+            for (let day = 0; day < 7; day++) {
+                const dayHeader = document.createElement('th');
+                const dayNames = ['日', '月', '火', '水', '木', '金', '土'];
+                dayHeader.textContent = `${currentDate.getMonth() + 1}/${currentDate.getDate()} (${dayNames[currentDate.getDay()]})`;
+                dayHeader.style.cssText = `
+                    background: #3498db;
+                    color: white;
+                    padding: 8px 4px;
+                    text-align: center;
+                    min-width: ${colWidth};
+                    font-size: 11px;
+                    writing-mode: vertical-rl;
+                `;
+                row.appendChild(dayHeader);
+                currentDate.setDate(currentDate.getDate() + 1);
+            }
+            break;
+            
+        case 'month':
+            // 日単位（月の日数）
+            const daysInMonth = new Date(endDate.getFullYear(), endDate.getMonth() + 1, 0).getDate();
+            colWidth = '25px';
+            for (let day = 1; day <= daysInMonth; day++) {
+                const dayHeader = document.createElement('th');
+                dayHeader.textContent = day.toString();
+                dayHeader.style.cssText = `
+                    background: #3498db;
+                    color: white;
+                    padding: 8px 2px;
+                    text-align: center;
+                    min-width: ${colWidth};
+                    font-size: 11px;
+                `;
+                row.appendChild(dayHeader);
+            }
+            break;
+    }
+
+    thead.appendChild(row);
+    return thead;
+}
+
 // スケジュールダイアログ
 async function showScheduleDialog() {
 
@@ -867,66 +959,58 @@ async function showScheduleDialog() {
     function renderChart() {
         const period = periodSelect.value;
         const member = memberSelect.value;
+        const currentDate = window.currentViewDate || new Date();
+
         let filtered = rebuildedTasks;
         if (member) filtered = filtered.filter(r => (r['氏名'] === member));
-        let start, end;
-        const today = new Date();
-        if (period === 'day') {
-            start = new Date(today.getFullYear(), today.getMonth(), today.getDate());
-            end = new Date(start); end.setHours(23,59,59,999);
-        } else if (period === 'week') {
-            const day = today.getDay() || 7;
-            start = new Date(today); start.setDate(today.getDate() - day + 1); start.setHours(0,0,0,0);
-            end = new Date(start); end.setDate(start.getDate() + 6); end.setHours(23,59,59,999);
-        } else {
-            start = new Date(today.getFullYear(), today.getMonth(), 1);
-            end = new Date(today.getFullYear(), today.getMonth() + 1, 0, 23,59,59,999);
+        // 日付範囲計算
+        let startDate, endDate;
+        
+        switch (periodType) {
+            case 'day':
+                startDate = new Date(currentDate);
+                endDate = new Date(currentDate);
+                startDate.setHours(0, 0, 0, 0);
+                endDate.setHours(23, 59, 59, 999);
+                break;
+            case 'week':
+                startDate = getWeekStart(currentDate);
+                endDate = new Date(startDate);
+                endDate.setDate(startDate.getDate() + 6);
+                startDate.setHours(0, 0, 0, 0);
+                endDate.setHours(23, 59, 59, 999);
+                break;
+            case 'month':
+                startDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
+                endDate = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0);
+                startDate.setHours(0, 0, 0, 0);
+                endDate.setHours(23, 59, 59, 999);
+                break;
         }
-        filtered = filtered.filter(r => {
-            const s = r['開始日時'];
-            const e = r['終了日時'];
-            return e >= start && s <= end;
-        });
+
+        // 期間内のタスクのみフィルタリング
+        const periodTasks = filtered.filter(task => 
+            task.startDate <= endDate && task.endDate >= startDate
+        );
+
+        if (periodTasks.length === 0) {
+            chartArea.innerHTML = '<div style="padding: 40px; text-align: center; color: #666;">この期間に表示する計画がありません</div>';
+            return;
+        }
 
         chartArea.innerHTML = '';
+
+        // チャートテーブル作成
         const table = document.createElement('table');
-        table.style.cssText = 'width:100%; border-collapse:collapse; font-size:14px;';
-        const thead = document.createElement('thead');
-        const tr = document.createElement('tr');
-        const th1 = document.createElement('th');
-        th1.textContent = 'メンバー';
-        th1.style.cssText = 'background:#34495e; color:white; padding:12px; min-width:100px;';
-        tr.appendChild(th1);
-        let colCount = 0;
-        if (period === 'day') {
-            colCount = 24;
-            for (let h = 0; h < 24; h++) {
-                const th = document.createElement('th');
-                th.textContent = `${h}:00`;
-                th.style.cssText = 'background:#3498db; color:white; padding:8px 4px; font-size:11px;';
-                tr.appendChild(th);
-            }
-        } else if (period === 'week') {
-            colCount = 7;
-            const d = new Date(start);
-            for (let i = 0; i < 7; i++) {
-                const th = document.createElement('th');
-                th.textContent = `${d.getMonth() + 1}/${d.getDate()}`;
-                th.style.cssText = 'background:#3498db; color:white; padding:8px 4px; font-size:11px;';
-                tr.appendChild(th);
-                d.setDate(d.getDate() + 1);
-            }
-        } else {
-            colCount = end.getDate();
-            for (let i = 1; i <= colCount; i++) {
-                const th = document.createElement('th');
-                th.textContent = i;
-                th.style.cssText = 'background:#3498db; color:white; padding:8px 2px; font-size:11px;';
-                tr.appendChild(th);
-            }
-        }
-        thead.appendChild(tr);
-        table.appendChild(thead);
+        table.style.cssText =`
+            width:100%; 
+            border-collapse:collapse; 
+            font-size:14px;
+        `;
+
+        // ヘッダー作成
+        const header = createChartHeader(startDate, endDate, periodType);
+        table.appendChild(header);
 
         (member ? [member] : memberArray).forEach(m => {
             const tr = document.createElement('tr');
