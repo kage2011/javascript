@@ -725,13 +725,13 @@ function createChartHeader(startDate, endDate, periodType) {
 }
 
 // メンバー行作成
-function createMemberRow(member, tasks, startDate, endDate, periodType) {
+function createMemberRow(tasks, startDate, endDate, periodType) {
     const row = document.createElement('tr');
     row.style.cssText = 'border-bottom: 1px solid #eee;';
 
     // メンバー名セル
     const memberCell = document.createElement('td');
-    memberCell.textContent = member;
+    memberCell.textContent = tasks['氏名'];
     memberCell.style.cssText = `
         background: #f8f9fa;
         padding: 12px;
@@ -1216,9 +1216,9 @@ async function showScheduleDialog() {
 
         // 行作成
         filteredMembers.forEach(member => {
-            const memberTasks = periodTasks.filter(task => task['氏名'] === member);
+            const memberTasks = periodTasks.filter(task => task['氏名'] === member['氏名']);
             if (memberTasks.length > 0) {
-                const row = createMemberRow(member, memberTasks, startDate, endDate, periodType);
+                const row = createMemberRow(memberTasks, startDate, endDate, periodType);
                 table.appendChild(row);
             }
         });
