@@ -905,7 +905,7 @@ function createMemberRow(tasks, startDate, endDate, periodType) {
 
     // メンバー名セル
     const memberCell = document.createElement('td');
-    memberCell.textContent = tasks['氏名'];
+    memberCell.textContent = tasks[0]['氏名'];
     memberCell.style.cssText = `
         background: #f8f9fa;
         padding: 12px;
