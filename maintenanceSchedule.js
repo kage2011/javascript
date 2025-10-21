@@ -837,6 +837,7 @@ async function showScheduleDialog() {
 
     // 期間選択
     const periodSelect = document.createElement('select');
+    periodSelect.id = 'period-select';
     periodSelect.innerHTML = `
         <option value="day">今日</option>
         <option value="week" selected>今週</option>
