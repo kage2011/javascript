@@ -787,8 +787,8 @@ function createTaskBarElement(taskBar, currentCol, startCol, endCol, layerIndex,
 
     // テキストは開始セルにのみ表示
     if (currentCol === startCol) {
-        taskElement.textContent = taskBar.task.taskName;
-        taskElement.title = `${taskBar.task.taskName}\n期間: ${taskBar.task.startDate.toLocaleDateString()} - ${taskBar.task.endDate.toLocaleDateString()}`;
+        taskElement.textContent = taskBar.task['タスク'];
+        taskElement.title = `${taskBar.task['タスク']}\n期間: ${taskBar.task['開始日時'].toLocaleDateString()} - ${taskBar.task['終了日時'].toLocaleDateString()}`;
     }
     
     // クリックイベント
