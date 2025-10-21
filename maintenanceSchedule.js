@@ -794,7 +794,7 @@ function createTaskBarElement(taskBar, currentCol, startCol, endCol, layerIndex,
     // クリックイベント
     taskElement.onclick = (e) => {
         e.stopPropagation();
-        showTaskDetailDialog(taskBar.task);
+        showDetailDialog(taskBar.task);
     };
 
     // ホバー効果
