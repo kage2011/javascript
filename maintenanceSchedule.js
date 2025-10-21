@@ -724,6 +724,59 @@ function createChartHeader(startDate, endDate, periodType) {
     return thead;
 }
 
+// タスクバーの表示位置を計算する関数
+function calculateTaskBar(task, startDate, endDate, periodType, totalCols) {
+    let taskStartCol = -1;
+    let taskEndCol = -1;
+
+    // タスクの開始と終了列を計算
+    for (let col = 0; col < totalCols; col++) {
+        let colStart, colEnd;
+
+        switch (periodType) {
+            case 'day':
+                colStart = new Date(startDate);
+                colStart.setHours(col, 0, 0, 0);
+                colEnd = new Date(colStart);
+                colEnd.setHours(col + 1, 0, 0, 0);
+                break;
+            case 'week':
+                colStart = new Date(startDate.getFullYear(), startDate.getMonth(), startDate.getDate() + col);
+                colStart.setHours(0, 0, 0, 0);
+                colEnd = new Date(colStart.getFullYear(), colStart.getMonth(), colStart.getDate() + 1);
+                colEnd.setHours(0, 0, 0, 0);
+                break;
+            case 'month':
+                colStart = new Date(startDate.getFullYear(), startDate.getMonth(), col + 1);
+                colStart.setHours(0, 0, 0, 0);
+                colEnd = new Date(colStart.getFullYear(), colStart.getMonth(), colStart.getDate() + 1);
+                colEnd.setHours(0, 0, 0, 0);
+                break;
+        }
+
+        // タスクがこの時間帯に含まれるかチェック
+        const isTaskInPeriod = task.startDate < colEnd && task.endDate >= colStart;
+        
+        if (isTaskInPeriod) {
+            if (taskStartCol === -1) {
+                taskStartCol = col;
+            }
+            taskEndCol = col;
+        }
+    }
+
+    if (taskStartCol === -1) {
+        return null; // タスクが表示範囲外
+    }
+
+    return {
+        task: task,
+        startCol: taskStartCol,
+        endCol: taskEndCol,
+        color: getStatusColor(task.taskName)
+    };
+}
+
 // タスクの重複を解決するためのレイヤー配置を計算する新しい関数
 function calculateTaskLayers(taskBars) {
     const layers = [];
