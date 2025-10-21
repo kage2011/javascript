@@ -1390,7 +1390,7 @@ async function showScheduleDialog() {
 
         // 行作成
         memberArray.forEach(member => {
-            const memberTasks = periodTasks.filter(task => task['氏名'] === member['氏名']);
+            const memberTasks = periodTasks.filter(task => task['氏名'] === member);
             if (memberTasks.length > 0) {
                 const row = createMemberRow(memberTasks, startDate, endDate, periodType);
                 table.appendChild(row);
