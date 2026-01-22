@@ -31,6 +31,8 @@
         // const statusbarAction = document.querySelector('.gaia-mobile-v2-app-record-actionbar-buttons');
         const statusbarAction = document.querySelector('.gaia-mobile-v2-viewpanel-contents');
         const div = document.createElement('div');
+        div.style.display = 'flex'; // 横並びにする 
+        div.style.gap = '8px'; // ボタン間の余白（任意）
         if (statusbarAction) {
             div.appendChild(forwardButton);
             div.appendChild(replyButton);
