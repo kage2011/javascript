@@ -28,7 +28,8 @@
         
         
         // kintoneの標準ボタンエリアに挿入
-        const statusbarAction = document.querySelector('.gaia-mobile-v2-app-record-actionbar-buttons');
+        // const statusbarAction = document.querySelector('.gaia-mobile-v2-app-record-actionbar-buttons');
+        const statusbarAction = document.querySelector('.gaia-mobile-v2-app-record-showtoolbar-center');
         if (statusbarAction) {
             // ボタンをコンテナに追加
             statusbarAction.appendChild(forwardButton);
@@ -50,7 +51,8 @@
         const checkForField = () => {
             checkCount++;
             
-            const targetElement = document.querySelector('.gaia-mobile-v2-app-record-actionbar');
+            // const targetElement = document.querySelector('.gaia-mobile-v2-app-record-actionbar');
+            const targetElement = document.querySelector('.gaia-mobile-v2-app-record-showtoolbar');
             if (targetElement) {
                 addbuttons(event);
                 return; // 処理完了
