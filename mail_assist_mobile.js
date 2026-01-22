@@ -29,13 +29,17 @@
         
         // kintoneの標準ボタンエリアに挿入
         // const statusbarAction = document.querySelector('.gaia-mobile-v2-app-record-actionbar-buttons');
-        const statusbarAction = document.querySelector('.gaia-mobile-v2-viewpanel-contents');
+        const statusbarAction = document.querySelector('.gaia-mobile-v2-viewpanel-contents');]
+        const div = document.createElement('div');
         if (statusbarAction) {
+            div.appendChild(forwardButton);
+            div.appendChild(replyButton);
+            div.appendChild(replyAllButton);
+            statusbarAction.appendChild(div);
             // ボタンをコンテナに追加
-            statusbarAction.appendChild(forwardButton);
-            statusbarAction.appendChild(replyButton);
-            statusbarAction.appendChild(replyAllButton);
-            //statusbarAction.appendChild(buttonContainer);
+            // statusbarAction.appendChild(forwardButton);
+            // statusbarAction.appendChild(replyButton);
+            // statusbarAction.appendChild(replyAllButton);
         }
         
     }
