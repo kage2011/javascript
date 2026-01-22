@@ -29,7 +29,7 @@
         
         // kintoneの標準ボタンエリアに挿入
         // const statusbarAction = document.querySelector('.gaia-mobile-v2-app-record-actionbar-buttons');
-        const statusbarAction = document.querySelector('.gaia-mobile-v2-viewpanel-contents');]
+        const statusbarAction = document.querySelector('.gaia-mobile-v2-viewpanel-contents');
         const div = document.createElement('div');
         if (statusbarAction) {
             div.appendChild(forwardButton);
