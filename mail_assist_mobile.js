@@ -47,7 +47,7 @@
     }
 
     kintone.events.on('mobile.app.record.edit.show', (event) => {
-        const cancelBtn = document.querySelector('.gaia-ui-actionmenu-cancel');
+        const cancelBtn = document.querySelector('.gaia-mobile-v2-app-record-edittoolbar-cancel');
         cancelBtn.addEventListener('click', async (e) => {
             const copiedTo = parseInt(sessionStorage.getItem('copiedTo'));
             const copiedFrom = parseInt(sessionStorage.getItem('copiedFrom'));
