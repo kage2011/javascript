@@ -46,7 +46,29 @@
         
     }
 
+    kintone.events.on('mobile.app.record.edit.show', (event) => {
+        const cancelBtn = document.querySelector('.gaia-ui-actionmenu-cancel');
+        cancelBtn.addEventListener('click', async (e) => {
+            const copiedTo = parseInt(sessionStorage.getItem('copiedTo'));
+            const copiedFrom = parseInt(sessionStorage.getItem('copiedFrom'));
+            const recordID = event.recordId;
+            if ( copiedTo === recordID){
+                e.preventDefault();
+                // レコード削除
+                await kintone.api(kintone.api.url('/k/v1/records.json', true), 'DELETE', {
+                app: kintone.app.getId(),
+                ids: [copiedTo]
+                });
 
+                // 元の詳細画面に戻る
+                location.href = `/k/${kintone.app.getId()}/show#record=${copiedFrom}`;
+
+            }
+        });
+        return event;
+    });
+
+    
     // レコード詳細画面表示時のイベント
     kintone.events.on('mobile.app.record.detail.show', (event) => {
         console.log('シンプル定期チェック開始');
