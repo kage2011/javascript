@@ -207,11 +207,11 @@
             const response = await kintone.api(kintone.api.url('/k/v1/record.json', true), 'POST', body);
             
             // 新規作成レコードのIDを保存しておく
+            const recordID = parseInt(response.id);
             sessionStorage.setItem('copiedFrom', fromId);
             sessionStorage.setItem('copiedTo', recordID);
 
             // レコード作成画面を開く
-            const recordID = parseInt(response.id);
             location.href = `/k/m/${appId}/show?record=${recordID}#mode=edit`;
             
             console.log('転送レコード作成完了:', response);
@@ -247,11 +247,11 @@
             const response = await kintone.api(kintone.api.url('/k/v1/record.json', true), 'POST', body);
             
             // 新規作成レコードのIDを保存しておく
+            const recordID = parseInt(response.id);
             sessionStorage.setItem('copiedFrom', fromId);
             sessionStorage.setItem('copiedTo', recordID);
 
             // レコード作成画面を開く
-            const recordID = parseInt(response.id);
             location.href = `/k/m/${appId}/show?record=${recordID}#mode=edit`;
             
             console.log('返信レコード作成完了:', response);
@@ -291,11 +291,11 @@
             const response = await kintone.api(kintone.api.url('/k/v1/record.json', true), 'POST', body);
             
             // 新規作成レコードのIDを保存しておく
+            const recordID = parseInt(response.id);
             sessionStorage.setItem('copiedFrom', fromId);
             sessionStorage.setItem('copiedTo', recordID);
 
             // レコード作成画面を開く
-            const recordID = parseInt(response.id);
             location.href = `/k/m/${appId}/show?record=${recordID}#mode=edit`;
             
             console.log('返信レコード作成完了:', response);
