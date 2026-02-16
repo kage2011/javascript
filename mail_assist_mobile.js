@@ -48,26 +48,41 @@
 
     kintone.events.on('mobile.app.record.edit.show', (event) => {
         const cancelBtn = document.querySelector('.gaia-mobile-v2-app-record-edittoolbar-cancel');
+        
+        // キャプチャフェーズでイベントを捕捉（より早い段階で処理）
         cancelBtn.addEventListener('click', async (e) => {
             const copiedTo = parseInt(sessionStorage.getItem('copiedTo'));
             const copiedFrom = parseInt(sessionStorage.getItem('copiedFrom'));
             const recordID = event.recordId;
-            if ( copiedTo === recordID){
+            
+            if (copiedTo === recordID) {
+                // ★ 重要：すべてのイベント伝播を停止
                 e.preventDefault();
-                // レコード削除
-                await kintone.api(kintone.api.url('/k/v1/records.json', true), 'DELETE', {
-                app: kintone.app.getId(),
-                ids: [copiedTo]
-                });
-
-                // 元の詳細画面に戻る
-                location.href = `/k/${kintone.app.getId()}/show#record=${copiedFrom}`;
-
+                e.stopPropagation();
+                e.stopImmediatePropagation();
+                
+                try {
+                    // レコード削除
+                    await kintone.api(kintone.api.url('/k/v1/records.json', true), 'DELETE', {
+                        app: kintone.app.getId(),
+                        ids: [copiedTo]
+                    });
+                    
+                    // sessionStorageをクリア
+                    sessionStorage.removeItem('copiedTo');
+                    sessionStorage.removeItem('copiedFrom');
+                    
+                    // 元の詳細画面に戻る
+                    location.href = `/k/m/${kintone.app.getId()}/show#record=${copiedFrom}`;
+                } catch (error) {
+                    console.error('削除エラー:', error);
+                    alert('レコードの削除に失敗しました');
+                }
             }
-        });
+        }, true); // ★ 第3引数をtrueにしてキャプチャフェーズで実行
+        
         return event;
     });
-
     
     // レコード詳細画面表示時のイベント
     kintone.events.on('mobile.app.record.detail.show', (event) => {
