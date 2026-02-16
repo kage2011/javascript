@@ -16,15 +16,15 @@
         
         // 転送ボタン
         const forwardButton = createKintoneButton('転送する', 'forward');
-        forwardButton.addEventListener('click', () => handleForward(record, appId));
+        forwardButton.addEventListener('click', () => handleForward(record, appId, event.recordId));
         
         // 返信ボタン
         const replyButton = createKintoneButton('返信する', 'reply');
-        replyButton.addEventListener('click', () => handleReply(record, appId));
+        replyButton.addEventListener('click', () => handleReply(record, appId, event.recordId));
         
         // 全員に返信ボタン
         const replyAllButton = createKintoneButton('全員に返信', 'reply-all');
-        replyAllButton.addEventListener('click', () => handleReplyAll(record, appId));
+        replyAllButton.addEventListener('click', () => handleReplyAll(record, appId, event.recordId));
         
         
         // kintoneの標準ボタンエリアに挿入
@@ -169,7 +169,7 @@
     }
 
     // 転送処理
-    async function handleForward(record, appId) {
+    async function handleForward(record, appId, fromId) {
         try {
             // 添付ファイルの処理
             const originalAttachments = record[CONFIG.ATTACH_FILE_FIELD]?.value || [];
@@ -223,7 +223,7 @@
     }
   
     // 返信処理
-    async function handleReply(record, appId) {
+    async function handleReply(record, appId, fromId) {
         try{            
             // 元のレコードの値をコピー
             const content = record[CONFIG.CONTENT_FIELD]?.value || '';
@@ -263,7 +263,7 @@
     }
   
     // 全員に返信処理（現在は返信と同じ）
-    async function handleReplyAll(record, appId) {
+    async function handleReplyAll(record, appId, fromId) {
         try{
             const user = kintone.getLoginUser();            
             // 元のレコードの値をコピー
