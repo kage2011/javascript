@@ -73,7 +73,7 @@
                     sessionStorage.removeItem('copiedFrom');
                     
                     // 元の詳細画面に戻る
-                    location.href = `/k/m/${kintone.app.getId()}/show#record=${copiedFrom}`;
+                    location.href = `/k/m/${kintone.mobile.app.getId()}/show#record=${copiedFrom}`;
                 } catch (error) {
                     console.error('削除エラー:', error);
                     alert('レコードの削除に失敗しました');
