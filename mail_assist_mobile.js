@@ -54,6 +54,7 @@
             const copiedTo = parseInt(sessionStorage.getItem('copiedTo'));
             const copiedFrom = parseInt(sessionStorage.getItem('copiedFrom'));
             const recordID = event.recordId;
+            const appid = kintone.mobile.app.getId();
             
             if (copiedTo === recordID) {
                 // ★ 重要：すべてのイベント伝播を停止
@@ -64,7 +65,7 @@
                 try {
                     // レコード削除
                     await kintone.api(kintone.api.url('/k/v1/records.json', true), 'DELETE', {
-                        app: kintone.mobile.app.getId(),
+                        app: appid,
                         ids: [copiedTo]
                     });
                     
@@ -73,7 +74,7 @@
                     sessionStorage.removeItem('copiedFrom');
                     
                     // 元の詳細画面に戻る
-                    location.href = `/k/m/${kintone.mobile.app.getId()}/show#record=${copiedFrom}`;
+                    location.href = `/k/m/${appid}/show#record=${copiedFrom}`;
                 } catch (error) {
                     console.error('削除エラー:', error);
                     alert('レコードの削除に失敗しました');
