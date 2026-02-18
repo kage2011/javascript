@@ -64,6 +64,7 @@
   const EMPLOYEE_APP_ID = 221;
 
   kintone.events.on('app.record.create.show', async function (event) {
+    event.record['依頼書No'].disabled = true;
     const record = event.record;
     event.record['修理担当者'].disabled = true;
     // 1. ログインユーザー情報取得
