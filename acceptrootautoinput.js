@@ -92,7 +92,7 @@
     var kaihatsuSecond = [];
 
     const departmentData = {
-      '工機': { first: kokiFirst, second: kokSecond },
+      '工機': { first: kokiFirst, second: kokiSecond },
       '改善推進': { first: kaizenFirst, second: kaizenSecond },
       '開発': { first: kaihatsuFirst, second: kaihatsuSecond }
     };
