@@ -85,7 +85,7 @@
     const sectionManager = [{'code':userInfo[0]['課長調整'].value[0].code,'name':userInfo[0]['課長調整'].value[0].name}];
     const sectionDirector = [{'code':userInfo[0]['部門調整'].value[0].code,'name':userInfo[0]['部門調整'].value[0].name}];
     var kokiFirst = [];
-    var kokSecond = [];
+    var kokiSecond = [];
     var kaizenFirst = [];
     var kaizenSecond = [];
     var kaihatsuFirst = [];
