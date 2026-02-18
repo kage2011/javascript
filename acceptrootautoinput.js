@@ -126,12 +126,12 @@
       record['提出部署課長'].value = loginUserData;
       record['提出部署部長'].value = loginUserData;
     }else{
-      record['工機課係長'].value = kokiFirst;
-      record['工機課課長'].value = kokiSecond;
-      record['改善推進課係長'].value = kaizenFirst;
-      record['改善推進課課長'].value = kaizenSecond;
-      record['開発課係長'].value = kaihatsuFirst;
-      record['開発課課長'].value = kaihatsuSecond;
+      record['工機課係長'].value = kokiSecond;
+      record['工機課課長'].value = kokiFirst;
+      record['改善推進課係長'].value = kaizenSecond;
+      record['改善推進課課長'].value = kaizenFirst;
+      record['開発課係長'].value = kaihatsuSecond;
+      record['開発課課長'].value = kaihatsuFirst;
       record['提出部署課長'].value = sectionManager;
       record['提出部署部長'].value = sectionDirector;
     }
