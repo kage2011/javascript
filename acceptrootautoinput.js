@@ -83,7 +83,7 @@
     const userInfo = selfResp.records.filter(item => item["社員番号"].value === userCode);
     const loginUserData = [{'code':loginUser.code,'name':loginUser.name}]
     const sectionManager = [{'code':userInfo[0]['課長調整'].value[0].code,'name':userInfo[0]['課長調整'].value[0].name}];
-    const sectionDirector = [{'code':userInfo[0]['部門調整'].value[0].code,'name':userInfo[0]['課長調整'].value[0].name}];
+    const sectionDirector = [{'code':userInfo[0]['部門調整'].value[0].code,'name':userInfo[0]['部門調整'].value[0].name}];
     var kokiFirst = [];
     var kokSecond = [];
     var kaizenFirst = [];
@@ -91,18 +91,28 @@
     var kaihatsuFirst = [];
     var kaihatsuSecond = [];
 
-    selfResp.records.forEach( record =>{
-      if (record['組織選択'].value[0].name.includes('工機') && record['役職'].value.includes('一般')){
-        kokiFirst.push({'code':record['課長調整'].value[0].code,'name':record['課長調整'].value[0].name});
-        kokSecond.push({'code':record['一次考課者'].value[0].code,'name':record['一次考課者'].value[0].name});
-      }
-      if (record['組織選択'].value[0].name.includes('改善推進') && record['役職'].value.includes('一般')){
-        kaizenFirst.push({'code':record['課長調整'].value[0].code,'name':record['課長調整'].value[0].name});
-        kaizenSecond.push({'code':record['一次考課者'].value[0].code,'name':record['一次考課者'].value[0].name});
-      }
-      if (record['組織選択'].value[0].name.includes('開発') && record['役職'].value.includes('一般')){
-        kaihatsuFirst.push({'code':record['課長調整'].value[0].code,'name':record['課長調整'].value[0].name});
-        kaihatsuSecond.push({'code':record['一次考課者'].value[0].code,'name':record['一次考課者'].value[0].name});
+    const departmentData = {
+      '工機': { first: kokiFirst, second: kokSecond },
+      '改善推進': { first: kaizenFirst, second: kaizenSecond },
+      '開発': { first: kaihatsuFirst, second: kaihatsuSecond }
+    };
+
+    selfResp.records.forEach(record => {
+      if (record['役職'].value.includes('一般')) return;
+
+      const org = record['組織選択'].value[0].name;
+      const dept = Object.keys(departmentData).find(key => org.includes(key));
+
+      if (dept) {
+        if (record['役職'].value.includes('課長')){
+          const firstItem = {'code': record['社員番号'].value, 'name': record['氏名'].value};
+          departmentData[dept].first.some(item => item.code === firstItem.code) || departmentData[dept].first.push(firstItem);
+        }
+        if (record['役職'].value.includes('係長')){
+          const secondItem = {'code': record['社員番号'].value, 'name': record['氏名'].value};
+          departmentData[dept].second.some(item => item.code === secondItem.code) || departmentData[dept].second.push(secondItem);
+        }
+
       }
     })
     if (TEST_MODE){
@@ -116,7 +126,7 @@
       record['提出部署部長'].value = loginUserData;
     }else{
       record['工機課係長'].value = kokiFirst;
-      record['工機課課長'].value = kokSecond;
+      record['工機課課長'].value = kokiSecond;
       record['改善推進課係長'].value = kaizenFirst;
       record['改善推進課課長'].value = kaizenSecond;
       record['開発課係長'].value = kaihatsuFirst;
