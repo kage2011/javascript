@@ -105,20 +105,20 @@
       }
     })
     if (TEST_MODE){
-      record['工機課一次受理'].value = loginUserData;
-      record['工機課二次受理'].value = loginUserData;
-      record['改善推進課一次受理'].value = loginUserData;
-      record['改善推進課二次受理'].value = loginUserData;
-      record['開発課一次受理'].value = loginUserData;
-      record['開発課二次受理'].value = loginUserData;
+      record['工機課係長'].value = loginUserData;
+      record['工機課課長'].value = loginUserData;
+      record['改善推進課係長'].value = loginUserData;
+      record['改善推進課課長'].value = loginUserData;
+      record['開発課係長'].value = loginUserData;
+      record['開発課課長'].value = loginUserData;
       record['提出部署課長'].value = loginUserData;
     }else{
-      record['工機課一次受理'].value = kokiFirst;
-      record['工機課二次受理'].value = kokSecond;
-      record['改善推進課一次受理'].value = kaizenFirst;
-      record['改善推進課二次受理'].value = kaizenSecond;
-      record['開発課一次受理'].value = kaihatsuFirst;
-      record['開発課二次受理'].value = kaihatsuSecond;
+      record['工機課係長'].value = kokiFirst;
+      record['工機課課長'].value = kokSecond;
+      record['改善推進課係長'].value = kaizenFirst;
+      record['改善推進課課長'].value = kaizenSecond;
+      record['開発課係長'].value = kaihatsuFirst;
+      record['開発課課長'].value = kaihatsuSecond;
       record['提出部署課長'].value = sectionManager;
     }
 
