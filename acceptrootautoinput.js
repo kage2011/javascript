@@ -83,6 +83,7 @@
     const userInfo = selfResp.records.filter(item => item["社員番号"].value === userCode);
     const loginUserData = [{'code':loginUser.code,'name':loginUser.name}]
     const sectionManager = [{'code':userInfo[0]['課長調整'].value[0].code,'name':userInfo[0]['課長調整'].value[0].name}];
+    const sectionDirector = [{'code':userInfo[0]['部門調整'].value[0].code,'name':userInfo[0]['課長調整'].value[0].name}];
     var kokiFirst = [];
     var kokSecond = [];
     var kaizenFirst = [];
@@ -112,6 +113,7 @@
       record['開発課係長'].value = loginUserData;
       record['開発課課長'].value = loginUserData;
       record['提出部署課長'].value = loginUserData;
+      record['提出部署部長'].value = loginUserData;
     }else{
       record['工機課係長'].value = kokiFirst;
       record['工機課課長'].value = kokSecond;
@@ -120,6 +122,7 @@
       record['開発課係長'].value = kaihatsuFirst;
       record['開発課課長'].value = kaihatsuSecond;
       record['提出部署課長'].value = sectionManager;
+      record['提出部署部長'].value = sectionDirector;
     }
 
     return event;
