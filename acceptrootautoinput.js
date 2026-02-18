@@ -60,7 +60,7 @@
       WORKER_FIELD: '作業者'            
   };
 
-  const TEST_MODE = true;
+  const TEST_MODE = false;
   const EMPLOYEE_APP_ID = 221;
 
   kintone.events.on('app.record.create.show', async function (event) {
