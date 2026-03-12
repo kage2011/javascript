@@ -22,3 +22,9 @@
 1. `legacy/` に `_old` / `_temp` を移動
 2. 役割別に `forms/`, `mail/`, `notice/`, `schedule/` へ整理
 3. 実運用ファイルの命名統一（例: `create_terst.js` -> `create_test.js`）
+
+
+## legacy について
+
+- 旧版/一時版は `legacy/` に移動しました。
+- 当面は互換スタブを残しています（段階的に参照更新予定）。
