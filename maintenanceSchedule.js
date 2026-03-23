@@ -219,7 +219,7 @@ function showMemberSelectDialogCommon(selected, onOk) {
     // 全メンバーを取得して振り分け
     Object.values(departmentMap).forEach(deptMembers => {
         deptMembers.forEach(member => {
-            const affiliation = member['所属'] ? member['所属'].value[0].code : '';
+            const affiliation = member['所属']?.value?.[0]?.code || '';
             const name = member['氏名'].value;
             console.log(member);
             const assignedTabs = determineTabsForMember(affiliation);
